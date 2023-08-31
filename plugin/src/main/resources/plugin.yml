@@ -1,0 +1,5 @@
+name: DMCP
+version: '${project.version}'
+main: me.xrexy.dmcp.DMCP
+api-version: 1.20
+authors: [xrexy]
