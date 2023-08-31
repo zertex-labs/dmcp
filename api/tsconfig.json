@@ -16,12 +16,12 @@
     // "emitDeclarationOnly": false,
     // "allowImportingTsExtensions": true,
     "useUnknownInCatchVariables": true,
-    
+
     "composite": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    // god damn absolute paths are so cancer to setup with node... if someone wants to lose some hair please open a PR
+    // "baseUrl": "./",
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // }
   }
 }

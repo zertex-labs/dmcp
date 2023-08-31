@@ -1,8 +1,11 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { Client } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pg from 'pg';
 
-const pgClient = new Client({
-  connectionString: process.env.NEON_DATABASE_URL
+const pgClient = new pg.Client({
+  connectionString: process.env.NEON_DATABASE_URL!,
+  ssl: {
+    rejectUnauthorized: false,
+  }
 });
 
 await pgClient.connect();

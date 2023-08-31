@@ -5,7 +5,11 @@
   "main": "./src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts"
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts",
+    "db:generate": "drizzle-kit generate:mysql",
+		"db:push": "drizzle-kit push:pg",
+		"db:up": "drizzle-kit up:pg",
+		"studio": "drizzle-kit studio --port 4000 --verbose"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +30,12 @@
     "drizzle-orm": "^0.28.5",
     "fastify": "^4.22.0",
     "fastify-socket.io": "^4.0.0",
+    "module-alias": "^2.2.3",
     "pg": "^8.11.3",
     "socket.io": "^4.7.2"
+  },
+  "_moduleAliases": {
+    "@": "./src",
+    "$lib": "./src/lib"
   }
 }
