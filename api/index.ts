@@ -6,6 +6,8 @@ import { registerRoutes } from './routes';
 
 import handleAccessToken from './helpers/handleAccessToken';
 
+const REQUIRED_ENV_VARS = ['WS_ACCESS_TOKEN', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
+
 const app = Fastify({
   logger: true
 });
@@ -18,8 +20,9 @@ app.register(socketioServer, {
 });
 
 async function start() {
-  if (!process.env.WS_ACCESS_TOKEN) {
-    app.log.error('WS_ACCESS_TOKEN not set in .env');
+  const missingEnvVars = REQUIRED_ENV_VARS.filter((envVar) => !process.env[envVar]);
+  if (missingEnvVars.length) {
+    app.log.error(`Missing environment variables: ${missingEnvVars.join(', ')}`);
     return;
   }
 
