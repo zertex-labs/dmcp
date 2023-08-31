@@ -12,8 +12,4 @@ export function registerRoutes(app: FastifyInstance) {
 
     app.io.on('connection', (socket) => {});
   });
-
-  app.post('/test', (req, reply) => {
-    return db.insert(tables.test).values(Array(5).fill({}))
-  });
 }
