@@ -6,7 +6,12 @@ import { registerRoutes } from './routes';
 
 import handleAccessToken from './helpers/handleAccessToken';
 
-const REQUIRED_ENV_VARS = ['WS_ACCESS_TOKEN', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
+const REQUIRED_ENV_VARS = [
+  'WS_ACCESS_TOKEN',
+  'UPSTASH_REDIS_REST_URL',
+  'UPSTASH_REDIS_REST_TOKEN',
+  'NEON_DATABASE_URL'
+] as const;
 
 const app = Fastify({
   logger: true
@@ -16,13 +21,17 @@ app.register(socketioServer, {
   allowRequest(req, fn) {
     const res = handleAccessToken(req.headers.authorization);
     fn(res.message, res.ok);
-  },
+  }
 });
 
 async function start() {
-  const missingEnvVars = REQUIRED_ENV_VARS.filter((envVar) => !process.env[envVar]);
+  const missingEnvVars = REQUIRED_ENV_VARS.filter(
+    (envVar) => !process.env[envVar]
+  );
   if (missingEnvVars.length) {
-    app.log.error(`Missing environment variables: ${missingEnvVars.join(', ')}`);
+    app.log.error(
+      `Missing environment variables: ${missingEnvVars.join(', ')}`
+    );
     return;
   }
 
