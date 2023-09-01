@@ -3,9 +3,8 @@ import 'dotenv/config';
 
 import Fastify from 'fastify';
 import socketioServer from 'fastify-socket.io';
-import { registerRoutes } from './routes';
 
-import handleAccessToken from './helpers/handleAccessToken';
+import { registerRoutes, handleAccessToken } from './lib/helpers/index';
 
 const REQUIRED_ENV_VARS = [
   'WS_ACCESS_TOKEN',

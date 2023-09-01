@@ -1,6 +1,4 @@
-import { Socket } from 'socket.io';
-
-export default function handle(token: string | undefined): {
+export function handleAccessToken(token: string | undefined): {
   ok: boolean;
   message?: string;
 } {
@@ -16,3 +14,5 @@ export default function handle(token: string | undefined): {
 
   return { ok: true };
 }
+
+export default handleAccessToken;

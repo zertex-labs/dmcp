@@ -1,8 +1,6 @@
 
 import { FastifyInstance } from 'fastify';
 
-import { tables, db } from '../lib/drizzle';
-
 export function registerRoutes(app: FastifyInstance) {
   app.ready((err) => {
     if (err) {
@@ -13,3 +11,5 @@ export function registerRoutes(app: FastifyInstance) {
     app.io.on('connection', (socket) => {});
   });
 }
+
+export default registerRoutes;

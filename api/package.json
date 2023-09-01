@@ -7,9 +7,9 @@
   "scripts": {
     "start": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts",
     "db:generate": "drizzle-kit generate:mysql",
-		"db:push": "drizzle-kit push:pg",
-		"db:up": "drizzle-kit up:pg",
-		"studio": "drizzle-kit studio --port 4000 --verbose"
+    "db:push": "drizzle-kit push:pg",
+    "db:up": "drizzle-kit up:pg",
+    "studio": "drizzle-kit studio --port 4000 --verbose"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^2.2.2",
     "@upstash/redis": "^1.22.0",
     "better-sqlite3": "^8.5.2",
     "dotenv": "^16.3.1",
