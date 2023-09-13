@@ -31,6 +31,7 @@
     "fastify-socket.io": "^4.0.0",
     "module-alias": "^2.2.3",
     "pg": "^8.11.3",
+    "pino-pretty": "^10.2.0",
     "socket.io": "^4.7.2"
   },
   "_moduleAliases": {

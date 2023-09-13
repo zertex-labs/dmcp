@@ -14,7 +14,11 @@ const REQUIRED_ENV_VARS = [
 ] as const;
 
 const app = Fastify({
-  logger: true
+  logger: {
+    transport: {
+      target: 'pino-pretty' // pretty print logs in DEV
+    }
+  }
 });
 
 app.register(socketioServer, {
@@ -48,3 +52,4 @@ async function start() {
 }
 
 start();
+
