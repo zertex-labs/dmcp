@@ -11,9 +11,6 @@
     "db:up": "drizzle-kit up:pg",
     "studio": "drizzle-kit studio --port 4000 --verbose"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/pg": "^8.10.2",
     "@types/ws": "^8.5.5",
@@ -23,19 +20,14 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@fastify/websocket": "^8.2.0",
     "@upstash/redis": "^1.22.0",
     "better-sqlite3": "^8.5.2",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.5",
     "fastify": "^4.22.0",
-    "fastify-socket.io": "^4.0.0",
     "module-alias": "^2.2.3",
     "pg": "^8.11.3",
-    "pino-pretty": "^10.2.0",
-    "socket.io": "^4.7.2"
-  },
-  "_moduleAliases": {
-    "@": "./src",
-    "$lib": "./src/lib"
+    "pino-pretty": "^10.2.0"
   }
 }

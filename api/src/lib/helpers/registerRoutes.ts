@@ -7,8 +7,6 @@ export function registerRoutes(app: FastifyInstance) {
       app.log.error(err);
       process.exit(1);
     }
-
-    app.io.on('connection', (socket) => {});
   });
 }
 

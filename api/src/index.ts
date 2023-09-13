@@ -1,37 +1,29 @@
-import 'module-alias/register';
 import 'dotenv/config';
+import 'module-alias/register';
 
+import fs from 'fs';
 import Fastify from 'fastify';
-import socketioServer from 'fastify-socket.io';
 
-import { registerRoutes, handleAccessToken } from './lib/helpers/index';
-
-const REQUIRED_ENV_VARS = [
-  'WS_ACCESS_TOKEN',
-  'UPSTASH_REDIS_REST_URL',
-  'UPSTASH_REDIS_REST_TOKEN',
-  'NEON_DATABASE_URL'
-] as const;
+import { registerRoutes } from './lib/helpers/index';
+import { registerWS } from './lib/helpers/ws';
 
 const app = Fastify({
   logger: {
-    transport: {
-      target: 'pino-pretty' // pretty print logs in DEV
-    }
-  }
-});
-
-app.register(socketioServer, {
-  allowRequest(req, fn) {
-    const res = handleAccessToken(req.headers.authorization);
-    fn(res.message, res.ok);
+    transport: { target: 'pino-pretty' }
   }
 });
 
 async function start() {
-  const missingEnvVars = REQUIRED_ENV_VARS.filter(
+  const requiredEnvVars = JSON.parse(
+    fs.readFileSync('./env.json', 'utf8')
+  ) as string[];
+
+  app.log.info(`Required environment variables: ${requiredEnvVars.join(', ')}`);
+
+  const missingEnvVars = requiredEnvVars.filter(
     (envVar) => !process.env[envVar]
   );
+
   if (missingEnvVars.length) {
     app.log.error(
       `Missing environment variables: ${missingEnvVars.join(', ')}`
@@ -39,12 +31,23 @@ async function start() {
     return;
   }
 
+  app.log.info('All environment variables are present.');
+
   try {
+    registerWS(app);
     registerRoutes(app);
 
-    await app.listen({
-      port: process.env.PORT ? Number(process.env.PORT) : 3000
-    });
+    app.listen(
+      {
+        port: process.env.PORT ? Number(process.env.PORT) : 3000
+      },
+      (err) => {
+        if (err) {
+          app.log.error(err);
+          process.exit(1);
+        }
+      }
+    );
   } catch (err) {
     app.log.error(err);
     process.exit(1);
@@ -52,4 +55,3 @@ async function start() {
 }
 
 start();
-

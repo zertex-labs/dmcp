@@ -2,7 +2,6 @@ export function handleAccessToken(token: string | undefined): {
   ok: boolean;
   message?: string;
 } {
-  // let token = socket.handshake.headers.authorization;
   if (!token) {
     return { ok: false, message: 'Unauthorized; token is required' };
   }
