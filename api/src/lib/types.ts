@@ -16,11 +16,13 @@ export type RouteOptions = FastifyRouteOptions<
   unknown
 >;
 
-export type ApiRoute = {
-  // handler: (req: FastifyRequest, reply: FastifyReply) => void;
-  handler: FastifyRouteOptions['handler'];
-  additional?: Omit<FastifyRouteOptions, 'handler' | 'method' | 'url'>;
-};
+export type ApiRoute<HasAdditional extends boolean = false> =
+  HasAdditional extends true
+    ? {
+        handler: FastifyRouteOptions['handler'];
+        additional?: Omit<FastifyRouteOptions, 'handler' | 'method' | 'url'>;
+      }
+    : FastifyRouteOptions['handler'];
 
 export type ApiRoutes = Partial<
   Record<HTTPMethod, Omit<RouteOptions, 'method' | 'url'>>

@@ -35,15 +35,14 @@ export const constructRouteOptions = async ({
   }
 
   for (const method of HTTPMethods) {
-    const route: ApiRoute = module?.[method];
+    const route = module?.[method];
     if (route) {
-      const { handler, additional = {} } = route;
-      console.log(additional);
+      console.log(route, `route ${url}`)
       routes.push({
-        handler,
+        handler: typeof route == 'function' ? route : route.handler,
         method,
         url,
-        ...additional
+        ...(route?.additional ?? {})
       });
     }
   }
