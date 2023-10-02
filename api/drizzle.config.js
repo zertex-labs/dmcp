@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 /** @type { import("drizzle-kit").Config } */
 export default {
-  schema: './src/lib/drizzle/schema.ts',
+  schema: './src/lib/drizzle/schema',
   out: './drizzle',
   driver: 'pg',
   dbCredentials: {

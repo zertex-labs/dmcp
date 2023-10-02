@@ -1,23 +1,22 @@
 import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-export const ALL_PETS = ['FOX', 'CAT', 'DOG', 'PANDA'] as const;
-export type PetType = (typeof ALL_PETS)[number];
-
-export const PETS = ALL_PETS.reduce(
-  (acc, pet) => {
-    acc[pet] = pet;
-    return acc;
-  },
-  {} as Record<PetType, PetType>
-);
+import { users } from '.';
+import { ALL_PETS } from '../../constants';
 
 export const petsTable = pgTable('pets', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
-  owner: text('owner').notNull(), // discord user id
+  ownerId: text('id').primaryKey().notNull().references(() => users.id), // discord snowflake
 
   displayName: text('display_name').notNull().default('Unnamed Pet'),
   type: text('type', {
     enum: ALL_PETS
   }).notNull(),
-  maxCount: integer('max_count').notNull().default(3)
 });
+
+export const petRelations = relations(petsTable, ({ one }) => ({
+  owner: one(users, {
+    fields: [users.id as any],
+    references: [petsTable.ownerId as any]
+  })
+}));

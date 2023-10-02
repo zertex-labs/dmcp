@@ -1,2 +1,2 @@
-export { petsTable as pets } from './pets';
-export { userTable as user } from './user';
+export { petsTable as pets, petRelations } from './pets';
+export { userTable as users, userRelations } from './user';
