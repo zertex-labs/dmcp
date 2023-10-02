@@ -1,2 +1,0 @@
-{"level":"info","message":"18:function getMinutes() { [native code] } - 2:9:2023 | Info: Registered event guildMemberAdd (/home/endeavour/Code/dmcp/bot/src/events/guildMemberAdd.ts)"}
-{"level":"info","message":"18:function getMinutes() { [native code] } - 2:9:2023 | Info: Registered event interactionCreate (/home/endeavour/Code/dmcp/bot/src/events/interactionCreate.ts)"}
