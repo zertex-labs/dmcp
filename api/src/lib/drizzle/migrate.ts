@@ -1,1 +1,0 @@
-const connectionString = process.env.POSTGRES_URL;

@@ -1,6 +1,4 @@
 import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { ALL_PERMISSIONS } from '../../config/permissions';
-import { ALL_ROLES } from '../../config/roles';
 
 export const ALL_PETS = ['FOX', 'CAT', 'DOG', 'PANDA'] as const;
 export type PetType = (typeof ALL_PETS)[number];
@@ -13,7 +11,7 @@ export const PETS = ALL_PETS.reduce(
   {} as Record<PetType, PetType>
 );
 
-export const pets = pgTable('pets', {
+export const petsTable = pgTable('pets', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   owner: text('owner').notNull(), // discord user id
 
@@ -22,17 +20,4 @@ export const pets = pgTable('pets', {
     enum: ALL_PETS
   }).notNull(),
   maxCount: integer('max_count').notNull().default(3)
-});
-
-export const user = pgTable('user', {
-  id: text('id').primaryKey().notNull(), // discord user id
-  serverId: text('server_id').notNull(), // discord server id
-  role: text('role', {
-    enum: ALL_ROLES
-  }).default('DEFAULT'),
-  permissions: text('permissions', {
-    enum: ALL_PERMISSIONS
-  })
-    .array()
-    .notNull()
 });
