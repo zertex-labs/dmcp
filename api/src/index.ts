@@ -1,11 +1,11 @@
+import '@total-typescript/ts-reset';
 import 'dotenv/config';
-import 'module-alias/register';
 
 import fs from 'fs';
 import Fastify from 'fastify';
 
-import { registerRoutes } from './lib/helpers/index';
-import { registerWS } from './lib/helpers/ws';
+import { registerWS } from './lib/handlers/ws';
+import { fileRouting } from './lib/plugins';
 
 const app = Fastify({
   logger: {
@@ -33,9 +33,17 @@ async function start() {
 
   app.log.info('All environment variables are present.');
 
+  app.addHook('onRoute', (route) => {
+    if (route.method == 'HEAD') return;
+    app.log.info(`Route loaded: ${route.method} ${route.url}`);
+  });
+
   try {
     registerWS(app);
-    registerRoutes(app);
+    await app.register(fileRouting, {
+      dir: './routes',
+      prefix: 'api'
+    });
 
     app.listen(
       {
