@@ -9,3 +9,4 @@ export type ClientEvent = keyof UsableClientEvents;
 export type Event<Event extends ClientEvent> = (
   ...args: UsableClientEvents[Event]
 ) => void;
+

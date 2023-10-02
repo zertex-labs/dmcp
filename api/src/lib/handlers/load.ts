@@ -23,7 +23,6 @@ export const constructRouteOptions = async ({
   const module = await import(`file:${path}`); // TODO linux?
   let routes: RouteOptions[] = [];
   if (module.routes as ApiRoutes) {
-    console.log('with module.routes');
     for (const [method, rest] of Object.entries(module.routes as ApiRoutes)) {
       routes.push({
         method: method as HTTPMethod,
@@ -37,7 +36,6 @@ export const constructRouteOptions = async ({
   for (const method of HTTPMethods) {
     const route = module?.[method];
     if (route) {
-      console.log(route, `route ${url}`)
       routes.push({
         handler: typeof route == 'function' ? route : route.handler,
         method,

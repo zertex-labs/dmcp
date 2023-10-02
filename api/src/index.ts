@@ -10,7 +10,8 @@ import { fileRouting } from './lib/plugins';
 const app = Fastify({
   logger: {
     transport: { target: 'pino-pretty' }
-  }
+  },
+  disableRequestLogging: true,
 });
 
 async function start() {
@@ -43,6 +44,14 @@ async function start() {
     await app.register(fileRouting, {
       dir: './routes',
       prefix: 'api'
+    });
+
+    app.addSchema({
+      $id: 'commonSchema',
+      type: 'object',
+      properties: {
+        id: { type: 'string' }
+      }
     });
 
     app.listen(

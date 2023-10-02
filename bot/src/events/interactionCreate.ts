@@ -1,4 +1,4 @@
-import { Event } from '../types';
+import { Event, Prettify } from '../types';
 
 const run: Event<'interactionCreate'> = (interaction) => {
   if (interaction.isChatInputCommand()) {
