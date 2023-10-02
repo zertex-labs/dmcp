@@ -5,10 +5,7 @@ import path from 'path';
 import { UsableClient } from '../client';
 import { ClientCommand, Command } from '../types';
 
-// @ts-ignore satisfies is braindead
-const commandOptions = ['stringOptions'] as const satisfies (keyof Command)[]
-
-const {DISCORD_CLIENT_ID, GUILD_ID } = process.env;
+const { DISCORD_CLIENT_ID, GUILD_ID } = process.env;
 
 export async function registerCommands(client: UsableClient) {
   const commandsPath = path.join(__dirname, '..', 'commands');
@@ -18,10 +15,13 @@ export async function registerCommands(client: UsableClient) {
 
   let slashCommands = commandFiles.map((x) => {
     const cmd = require(path.join(commandsPath, x)).default as Command;
-    const clientCmd = { ...cmd, options: [...commandOptions.flatMap(co => cmd?.[co] || [])] } satisfies ClientCommand
-    client.commands.set(clientCmd.name, clientCmd)
+    let builder = cmd?.withBuilder ?? {};
 
-    return clientCmd
+    delete cmd.withBuilder;
+
+    let data = { ...builder, ...cmd };
+    client.commands.set(data.name, data);
+    return data;
   });
 
   try {

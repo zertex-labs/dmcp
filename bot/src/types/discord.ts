@@ -1,4 +1,8 @@
-import { ApplicationCommandOptionType, Interaction as CringeInteraction } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  Interaction as CringeInteraction,
+  SlashCommandBuilder
+} from 'discord.js';
 
 import { UsableClient } from '../client';
 import { MaybePromise } from '.';
@@ -16,7 +20,7 @@ type CommandStringOption = {
   name: string;
   description: string;
   required?: boolean;
-  type: ApplicationCommandOptionType
+  type: ApplicationCommandOptionType;
   choices?: {
     name: string;
     value: string;
@@ -30,9 +34,9 @@ type CommonCommand = {
 };
 
 export type Command = CommonCommand & {
-  stringOptions?: CommandStringOption[];
+  withBuilder?: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
 };
 
 export type ClientCommand = CommonCommand & {
-  options?: (CommandStringOption)[];
+  options?: CommandStringOption[];
 };
