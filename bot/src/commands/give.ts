@@ -37,16 +37,16 @@ export default {
       'type'
     ]);
 
-    console.log(interaction.user.id, type, name);
-
     const res = await apiClient.post('/pets/giveToUser', {
       userId: interaction.user.id,
       petType: type,
       petName: name
+    }, {
+      validateStatus: () => true
     })
 
     if(res.status !== 200) {
-      console.error('Error giving pet to user', res)
+      console.error('Error giving pet to user', res.data)
       return void interaction.reply('Error giving pet to user')
     }
 

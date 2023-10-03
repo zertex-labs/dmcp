@@ -25,7 +25,7 @@ export async function registerCommands(client: UsableClient) {
   });
 
   try {
-    console.log(
+    client.log(
       `Started refreshing ${slashCommands.length} slash (/) commands.`
     );
 
@@ -41,9 +41,9 @@ export async function registerCommands(client: UsableClient) {
         body: slashCommands
       });
     }
-    console.log(`Refreshed ${slashCommands.length} slash (/) commands.`);
-  } catch (error) {
-    console.error(error);
+    client.log(`Refreshed ${slashCommands.length} slash (/) commands.`);
+  } catch (error: any) {
+    client.log(error?.message ?? error);
   }
 }
 

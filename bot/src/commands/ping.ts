@@ -5,10 +5,8 @@ export default {
   description: 'This command returns a pong',
   
   run: async ({ client, interaction }) => {
-    if (!interaction.isCommand()) {
-      console.log('This is not a command');
-      return;
-    }
+    if (!interaction.isCommand()) return;
+    
     interaction.reply('Pong!');
   }
 } satisfies Command;

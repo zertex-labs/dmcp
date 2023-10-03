@@ -9,14 +9,16 @@ export function registerEvents(client: UsableClient) {
     .filter((x) => x.endsWith('.ts'))
     .forEach((fileName) => {
       const event = require(`${eventsPath}/${fileName}`);
-      const eventName = removeExtension(fileName);
+      let eventName = removeExtension(fileName);
       if (!event?.run) {
         client.log(
           `Event ${eventName} (${eventsPath}/${fileName}) does not have a run function`
         );
         process.exit(void 0);
       }
-      client[eventName.startsWith('$') ? 'once' : 'on'](eventName, (...args) =>
+      let isOnce = eventName.startsWith('$');
+      eventName = eventName.substring(isOnce ? 1 : 0);
+      client[isOnce ? 'once' : 'on'](eventName, (...args) =>
         event.run(client, ...args)
       );
       client.log(`Registered event ${eventName} (${eventsPath}/${fileName})`);

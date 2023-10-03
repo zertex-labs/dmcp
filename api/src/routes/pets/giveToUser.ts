@@ -2,6 +2,7 @@ import { ALL_PETS, type PetType } from '../../lib/constants';
 import { createPet } from '../../modules/pets/pets.services';
 import { getUser } from '../../modules/users/users.services';
 import { ApiRoute } from '../../lib/types';
+import { DatabaseError } from 'pg';
 
 type Body = {
   userId: string;
@@ -11,7 +12,6 @@ type Body = {
 
 export const POST: ApiRoute<true> = {
   handler: async (req, res) => {
-    console.log(req.body);
     const { petType, userId, petName } = req.body as Body;
 
     try {
@@ -20,6 +20,7 @@ export const POST: ApiRoute<true> = {
         return res.status(404).send({ message: 'User not found' });
       }
     } catch (e) {
+      console.log(e);
       res.status(500).send({ message: 'Internal error' });
     }
     try {
@@ -29,6 +30,7 @@ export const POST: ApiRoute<true> = {
         displayName: petName
       });
     } catch (e) {
+      console.log(e)
       res.status(500).send({ message: 'Internal error' });
     }
   },
@@ -52,7 +54,7 @@ export const POST: ApiRoute<true> = {
             maxLength: 32
           }
         },
-        required: ['userId', 'petType', 'petName'],
+        required: ['userId', 'petType', 'petName']
       }
     }
   }

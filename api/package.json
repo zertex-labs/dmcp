@@ -23,6 +23,7 @@
     "@fastify/websocket": "^8.2.0",
     "@total-typescript/ts-reset": "^0.5.1",
     "@upstash/redis": "^1.22.0",
+    "axios": "^1.5.1",
     "better-sqlite3": "^8.5.2",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.5",

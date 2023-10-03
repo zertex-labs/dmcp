@@ -14,16 +14,6 @@ export class UsableClient extends Client {
     this.logger = new Logger(path.join(__dirname, '..', 'Logs.log'));
 
     this.rest.setToken(process.env.DISCORD_BOT_TOKEN!);
-
-    this.on('ready', () => {
-      console.log('Logged in as ' + this.user?.tag);
-    });
-
-    this.on('error', (err) => {
-      this.log(err?.message ?? err);
-      console.error('Everything Broke!', err);
-      process.exit();
-    });
   }
 
   log(text: string) {

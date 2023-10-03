@@ -4,7 +4,7 @@ import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { pets } from '.';
 
 export const userTable = pgTable('user', {
-  id: text('id').primaryKey().notNull() // discord snowflake
+  id: text('id').primaryKey() // discord snowflake
 });
 
 export const userRelations = relations(userTable, ({ many }) => ({

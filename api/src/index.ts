@@ -6,6 +6,7 @@ import Fastify from 'fastify';
 
 import { registerWS } from './lib/handlers/ws';
 import { fileRouting } from './lib/plugins';
+import { discordUUIDSchema } from './lib/fastifySchemas';
 
 const app = Fastify({
   logger: {
