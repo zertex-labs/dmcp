@@ -1,6 +1,6 @@
 import { Event, Prettify } from '../types';
 
-const run: Event<'interactionCreate'> = (interaction) => {
+export const run: Event<'interactionCreate'> = (client, interaction) => {
   if (interaction.isChatInputCommand()) {
     const { client } = interaction;
     const command = client.commands.find(
@@ -10,4 +10,3 @@ const run: Event<'interactionCreate'> = (interaction) => {
   }
 };
 
-export default run;

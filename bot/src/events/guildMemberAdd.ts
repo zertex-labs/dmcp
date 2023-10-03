@@ -1,7 +1,7 @@
 import { Event } from '../types';
 import axios from 'axios';
 
-const run: Event<'guildMemberAdd'> = async (client,member) => {
+export const run: Event<'guildMemberAdd'> = async (client, member) => {
   if (member.user.bot) return;
 
   const res = await axios.put<{ id: string }>(
@@ -20,4 +20,3 @@ const run: Event<'guildMemberAdd'> = async (client,member) => {
   console.log('id', id);
 };
 
-export default run;

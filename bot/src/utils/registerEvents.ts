@@ -8,10 +8,16 @@ export function registerEvents(client: UsableClient) {
   fs.readdirSync(eventsPath)
     .filter((x) => x.endsWith('.ts'))
     .forEach((fileName) => {
-      const event = require(`${eventsPath}/${fileName}`).default;
+      const event = require(`${eventsPath}/${fileName}`);
       const eventName = removeExtension(fileName);
+      if (!event?.run) {
+        client.log(
+          `Event ${eventName} (${eventsPath}/${fileName}) does not have a run function`
+        );
+        process.exit(void 0);
+      }
       client[eventName.startsWith('$') ? 'once' : 'on'](eventName, (...args) =>
-        event.execute(client, ...args)
+        event.run(client, ...args)
       );
       client.log(`Registered event ${eventName} (${eventsPath}/${fileName})`);
     });
