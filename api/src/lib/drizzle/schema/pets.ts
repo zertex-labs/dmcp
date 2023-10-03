@@ -6,8 +6,7 @@ import { ALL_PETS } from '../../constants';
 
 export const petsTable = pgTable('pets', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
-  ownerId: text('id')
-    .primaryKey()
+  ownerId: text('owner_id')
     .notNull()
     .references(() => users.id), // discord snowflake
 

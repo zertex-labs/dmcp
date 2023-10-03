@@ -6,3 +6,4 @@ export type Prettify<T> = {
 
 export * from './discord'
 export * from './event'
+export * from './pets'
