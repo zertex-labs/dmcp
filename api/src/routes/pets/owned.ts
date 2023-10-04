@@ -4,15 +4,15 @@ import { getUser } from '../../modules/users/users.services';
 import { ApiRoute } from '../../lib/types';
 import { DatabaseError } from 'pg';
 
-type Body = {
+type Query = {
   userId: string;
 };
 
 const { API_SECRET, DISCORD_BOT_SECRET } = process.env;
 
-export const POST: ApiRoute<true> = {
+export const GET: ApiRoute<true> = {
   handler: async (req, res) => {
-    const { userId } = req.body as Body;
+    const { userId } = req.query as Query;
 
     const authorization = req.headers.authorization;
     if (authorization !== API_SECRET) {
@@ -40,7 +40,7 @@ export const POST: ApiRoute<true> = {
         },
         required: ['authorization']
       },
-      body: {
+      querystring: {
         type: 'object',
         properties: {
           userId: {

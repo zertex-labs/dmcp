@@ -14,6 +14,15 @@ export function registerWS(app: FastifyInstance) {
     }
   });
 
+  app.decorate('hui', {
+    hello: 'world',
+  })
+
+  app.get('/hui', async (request, reply) => {
+    console.log(request);
+    return 'hui';
+  })
+  
   app.register(async function (fastify) {
     fastify.get(
       '/ws',

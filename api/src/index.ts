@@ -8,6 +8,8 @@ import { registerWS } from './lib/handlers/ws';
 import { fileRouting } from './lib/plugins';
 import { discordUUIDSchema } from './lib/fastifySchemas';
 
+import {getAllFoodItems} from './lib/redis'
+
 const app = Fastify({
   logger: {
     transport: { target: 'pino-pretty' }
@@ -19,6 +21,8 @@ async function start() {
   const requiredEnvVars = JSON.parse(
     fs.readFileSync('./env.json', 'utf8')
   ) as string[];
+
+    getAllFoodItems();
 
   app.log.info(`Required environment variables: ${requiredEnvVars.join(', ')}`);
 
