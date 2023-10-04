@@ -1,79 +1,19 @@
-import '@total-typescript/ts-reset';
-import 'dotenv/config';
+// import { swagger } from "@elysiajs/swagger";
+import { Elysia } from "elysia";
+import { config } from "./config";
+import { ctx } from "./context";
+import { api } from "./controllers/*";
 
-import fs from 'fs';
-import Fastify from 'fastify';
+const app = new Elysia()
+  .use(api)
+  .onError(({ code, error, request }) => {
+    // log.error(` ${request.method} ${request.url}`, code, error);
+    console.error(error);
+  })
+  .listen(3000);
 
-import { registerWS } from './lib/handlers/ws';
-import { fileRouting } from './lib/plugins';
-import { discordUUIDSchema } from './lib/fastifySchemas';
+export type App = typeof app;
 
-import {getAllFoodItems} from './lib/redis'
-
-const app = Fastify({
-  logger: {
-    transport: { target: 'pino-pretty' }
-  },
-  disableRequestLogging: true,
-});
-
-async function start() {
-  const requiredEnvVars = JSON.parse(
-    fs.readFileSync('./env.json', 'utf8')
-  ) as string[];
-
-    getAllFoodItems();
-
-  app.log.info(`Required environment variables: ${requiredEnvVars.join(', ')}`);
-
-  const missingEnvVars = requiredEnvVars.filter(
-    (envVar) => !process.env[envVar]
-  );
-
-  if (missingEnvVars.length) {
-    app.log.error(
-      `Missing environment variables: ${missingEnvVars.join(', ')}`
-    );
-    return;
-  }
-
-  app.log.info('All environment variables are present.');
-
-  app.addHook('onRoute', (route) => {
-    if (route.method == 'HEAD') return;
-    app.log.info(`Route loaded: ${route.method} ${route.url}`);
-  });
-
-  try {
-    registerWS(app);
-    await app.register(fileRouting, {
-      dir: './routes',
-      prefix: 'api'
-    });
-
-    app.addSchema({
-      $id: 'commonSchema',
-      type: 'object',
-      properties: {
-        id: { type: 'string' }
-      }
-    });
-
-    app.listen(
-      {
-        port: process.env.PORT ? Number(process.env.PORT) : 3000
-      },
-      (err) => {
-        if (err) {
-          app.log.error(err);
-          process.exit(1);
-        }
-      }
-    );
-  } catch (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
-}
-
-start();
+console.log(
+  `app is listening on http://${app.server?.hostname}:${app.server?.port}`,
+);
