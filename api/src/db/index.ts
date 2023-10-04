@@ -17,6 +17,4 @@ export const db = drizzle(pgClient, {
   schema,
 });
 
-
-
 export default db;
