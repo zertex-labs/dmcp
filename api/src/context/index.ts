@@ -23,15 +23,17 @@ export const ctx = new Elysia({
 })
   .decorate("db", db)
   .decorate("redis", redis)
+
+  .state("config", config)
   .state("food", await getAllFoodItems())
   .state("pets", await getAllPets())
+
   .use(logger(loggerConfig))
-  .use(
-    // @ts-expect-error
-    config.env.NODE_ENV === "development"
-      ? new HoltLogger().getLogger()
-      : (a) => a
-  )
+
+  .derive(async ({ headers }) => ({
+    isApiSecretPresent: () => headers["x-api-secret"] === config.env.API_SECRET,
+  }))
+
   .onStart(({ log }) => {
     if (log && config.env.NODE_ENV === "production") {
       log.info("Server started");

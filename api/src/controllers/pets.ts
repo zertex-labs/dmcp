@@ -1,8 +1,7 @@
 import { Elysia, t } from "elysia";
 import { ctx } from "../context";
-import { AvailablePet, availablePets } from "../redis";
-import { Mutable, StringEnum } from "../types";
 import { pets } from "../db/schema";
+import { availablePets } from "../redis";
 
 export const petsController = new Elysia({
   prefix: "/pets",
@@ -28,6 +27,11 @@ export const petsController = new Elysia({
         .returning({ uuid: pets.uuid });
     },
     {
+      beforeHandle: ({ isApiSecretPresent, log }) => {
+        if (!isApiSecretPresent()) {
+          return new Response("Not Authorized", { status: 401 });
+        }
+      },
       body: t.Object({
         petType: t.Union(availablePets.map((x) => t.Literal(x))),
         ownerId: t.String(),
