@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "start": "tsx src/main.ts",
-    "dev": "tsx watch src/main.ts"
+    "dev": "tsx watch src/main.ts",
+    "clearLog": "bun run ./scripts/clearLog.ts"
   },
   "keywords": [],
   "author": "",
