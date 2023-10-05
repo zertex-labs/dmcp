@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "properties": {
+    "WHEAT": {
+      "$ref": "#/definitions/food"
+    }
+  },
+  "required": ["WHEAT"],
+  "additionalProperties": false,
+  "definitions": {
+    "food": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "type": "number",
+          "minimum": 0.1
+        },
+        "baseChance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rarityOverwrites": {
+          "propertyNames": {
+            "$ref": "../enums/rarities.json"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "price": {
+                "type": "number",
+                "minimum": 0.1
+              },
+              "baseChance": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": ["price", "baseChance"]
+          }
+        }
+      },
+      "required": ["price", "baseChance", "rarityOverwrites"]
+    }
+  }
+}
