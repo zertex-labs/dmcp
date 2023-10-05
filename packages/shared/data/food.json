@@ -3,10 +3,24 @@
   "WHEAT": {
     "price": 0.5,
     "baseChance": 0.01,
+    "rarityOverwrites": {}
+  },
+  "CARROT": {
+    "price": 0.3,
+    "baseChance": 0.1,
+    "rarityOverwrites": {}
+  },
+  "CHORUS_FRUIT": {
+    "price": 10,
+    "baseChance": 0.001,
     "rarityOverwrites": {
       "MYTHICAL": {
-        "baseChance": 1,
-        "price": 0.3
+        "price": 10,
+        "baseChance": 0.1
+      },
+      "LEGENDARY": {
+        "price": 12,
+        "baseChance": 0.1
       }
     }
   }
