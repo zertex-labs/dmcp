@@ -1,0 +1,10 @@
+{
+  "include": ["src/**/*", "src/data/**/*.json"],
+  "files": ["package.json"],
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "baseUrl": "."
+  }
+}

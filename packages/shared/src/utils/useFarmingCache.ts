@@ -1,4 +1,4 @@
-import { AvailablePet } from '../types';
+import type { AvailablePet, User } from "../src/types";
 
 type FarmingCache = ReturnType<typeof __makeStore>;
 
@@ -11,12 +11,13 @@ export function useFarmingCache(): FarmingCache {
 
 function __makeStore() {
   const cache = new Map<string, any>();
-
+  
   function getPetBonuses(petType: AvailablePet) {
-    return;
+    return  
   }
 
-  function farm(user: User) {}
+  function farm(user: User) {
+  }
 
   return {
     get cache() {

@@ -1,13 +1,16 @@
 {
   "name": "shared",
-  "module": "main.ts",
   "type": "module",
-  "main": "main.ts",
+  "main": "src/main.ts",
   "private": true,
+  "include": ["src/**/*"],
   "devDependencies": {
     "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "syncEnums": "bun run scripts/syncEnums.ts"
   }
 }

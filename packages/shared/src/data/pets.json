@@ -1,0 +1,23 @@
+{
+  "$schema": "./schemas/pets.json",
+  "COW": {
+    "rarity": "",
+    "maxLevel": 2,
+    "bonuses": {
+      "PERK_FARMING": {
+        "baseValue": 0.3,
+        "maxValue": 3
+      }
+    }
+  },
+  "FOX": {
+    "rarity": "MYTHICAL",
+    "maxLevel": 2,
+    "bonuses": {
+      "PERK_SPEED": {
+        "baseValue": 0.5,
+        "maxValue": 5
+      }
+    }
+  }
+}

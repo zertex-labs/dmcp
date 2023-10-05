@@ -1,0 +1,9 @@
+{
+  "enum": [
+    "COMMON",
+    "UNCOMMON",
+    "EPIC",
+    "MYTHICAL",
+    "LEGENDARY"
+  ]
+}
