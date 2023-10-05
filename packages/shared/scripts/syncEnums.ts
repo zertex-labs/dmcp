@@ -27,7 +27,7 @@ const sync = (path: string, data: any) =>
 
   {
     console.log(`[${i}] Syncing pet keys... (${availablePets.join(', ')})`);
-    perf = performance.now(), i++;
+    (perf = performance.now()), i++;
     const schemaBefore = await Bun.file('src/data/schemas/pets.json').json();
 
     const newSchema = {

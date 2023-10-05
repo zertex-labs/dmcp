@@ -3,7 +3,9 @@
   "type": "module",
   "main": "src/main.ts",
   "private": true,
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "devDependencies": {
     "bun-types": "latest"
   },
