@@ -7,6 +7,26 @@ export const petsController = new Elysia({
   prefix: "/pets",
 })
   .use(ctx)
+  .get(
+    "/owned/:userId",
+    async ({ params, db }) => {
+      const { userId } = params;
+
+      return await db.query.pets.findMany({
+        where: (pets, { eq }) => eq(pets.ownerId, userId),
+        with: {
+          owner: true,
+        },
+      });
+    },
+    {
+      beforeHandle: ({ isApiSecretPresent }) => {
+        if (!isApiSecretPresent()) {
+          return new Response("Not Authorized", { status: 401 });
+        }
+      },
+    }
+  )
   .put(
     "/giveToUser",
     async (ctx) => {
@@ -27,7 +47,7 @@ export const petsController = new Elysia({
         .returning({ uuid: pets.uuid });
     },
     {
-      beforeHandle: ({ isApiSecretPresent, log }) => {
+      beforeHandle: ({ isApiSecretPresent }) => {
         if (!isApiSecretPresent()) {
           return new Response("Not Authorized", { status: 401 });
         }
