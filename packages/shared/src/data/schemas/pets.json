@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "properties": {
+    "FOX": {
+      "$ref": "#/definitions/pet"
+    },
+    "COW": {
+      "$ref": "#/definitions/pet"
+    },
+    "COCK": {
+      "$ref": "#/definitions/pet"
+    }
+  },
+  "required": [
+    "FOX",
+    "COW",
+    "COCK"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "pet": {
+      "type": "object",
+      "properties": {
+        "maxLevel": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "rarity": {
+          "$ref": "../enums/rarities.json"
+        },
+        "bonuses": {
+          "propertyNames": {
+            "$ref": "../enums/bonuses.json"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "baseValue": {
+                "type": "number",
+                "minimum": 0.01
+              },
+              "maxValue": {
+                "type": "number",
+                "minimum": 0.01
+              }
+            },
+            "required": [
+              "baseValue",
+              "maxValue"
+            ]
+          }
+        }
+      },
+      "required": [
+        "maxLevel",
+        "rarity",
+        "bonuses"
+      ]
+    }
+  }
+}
