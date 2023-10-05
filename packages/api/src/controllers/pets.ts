@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia';
 import { availablePets } from 'shared';
 
 import { ctx } from '../context';
-import { pets } from '../db/schema';
+import { pets, users } from '../db/schema';
 
 export const petsController = new Elysia({
   prefix: '/pets'
@@ -10,14 +10,19 @@ export const petsController = new Elysia({
   .use(ctx)
   .get(
     '/owned/:userId',
-    async ({ params, db }) => {
+    async ({ params, db, log }) => {
       const { userId } = params;
 
-      return await db.query.pets.findMany({
+      const res = await db.query.pets.findMany({
         where: (pets, { eq }) => eq(pets.ownerId, userId),
         with: {
           owner: true
         }
+      });
+      log.error(res);
+
+      return new Response(JSON.stringify(res), {
+        status: 200, 
       });
     },
     {
@@ -31,13 +36,26 @@ export const petsController = new Elysia({
   .put(
     '/giveToUser',
     async (ctx) => {
-      const { petType, ownerId, displayName } = ctx.body;
+      const { petType, displayName } = ctx.body;
+      let { ownerId } = ctx.body;
       const user = await ctx.db.query.users.findFirst({
         where: (users, { eq }) => eq(users.id, ownerId)
       });
       if (!user) {
-        return new Response('User Not Found', { status: 404 });
+        let insertRes = await ctx.db
+          .insert(users)
+          .values({
+            id: ownerId
+          })
+          .returning({ userId: users.id });
+
+        if (insertRes.length === 0) {
+          return new Response('Internal Server Error', { status: 500 });
+        }
+
+        ownerId = insertRes[0].userId;
       }
+
       return await ctx.db
         .insert(pets)
         .values({

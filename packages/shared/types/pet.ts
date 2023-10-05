@@ -16,9 +16,15 @@ export type PetSkeleton = {
 
 export type Pet = {
   uuid: string;
-  type: AvailablePet;
   ownerId: string;
+  
   displayName: string;
+  type: AvailablePet;
+
+  level: number;
+
+  upgradeSlots: AvailableBonus[];
+  boughtSlot: boolean;
 
   createdAt: string;
   updatedAt: string;

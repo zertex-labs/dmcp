@@ -31,13 +31,12 @@ type CommonCommand = {
   name: string;
   description: string;
   run: (o: RunOptions) => MaybePromise<void>;
+  autocomplete?: (o: RunOptions) => MaybePromise<void>;
 };
 
 export type Command = CommonCommand & {
-  withBuilder?: Omit<
-    SlashCommandBuilder,
-    'addSubcommand' | 'addSubcommandGroup'
-  >;
+  // use new SlashCommandBuilder() to create a builder. Their typings are broken (well mine are but..)
+  withBuilder?: any;
 };
 
 export type ClientCommand = CommonCommand & {

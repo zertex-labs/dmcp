@@ -28,7 +28,9 @@ export const ctx = new Elysia({
   .state('food', await getAllFoodItems())
   .state('pets', await getAllPets())
 
-  .use(logger(loggerConfig))
+  .use(logger({
+    enabled:  true
+  }))
 
   .derive(async ({ headers }) => ({
     isApiSecretPresent: () => headers['x-api-secret'] === config.env.API_SECRET

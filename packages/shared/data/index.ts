@@ -2,5 +2,6 @@
 
 import food from './food.json';
 import pets from './pets.json';
+import adminIds from './adminIds.json';
 
-export { food, pets };
+export { food, pets, adminIds };

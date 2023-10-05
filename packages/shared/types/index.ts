@@ -13,3 +13,4 @@ export * from './food';
 export * from './bonus';
 export * from './pet';
 export * from './user';
+export * from './status';
