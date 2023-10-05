@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const env = createEnv({
   server: {
+    LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default('info'),
     WS_ACCESS_TOKEN: z.string().min(8),
     API_SECRET: z.string().min(8),
     UPSTASH_REDIS_REST_URL: z.string().url(),

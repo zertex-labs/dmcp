@@ -6,8 +6,7 @@ import { api } from "./controllers/*";
 
 const app = new Elysia()
   .use(api)
-  .onError(({ code, error, request }) => {
-    // log.error(` ${request.method} ${request.url}`, code, error);
+  .onError(({ code, error, request, log }) => {
     console.error(error);
   })
   .listen(3000);
@@ -15,5 +14,6 @@ const app = new Elysia()
 export type App = typeof app;
 
 console.log(
-  `app is listening on http://${app.server?.hostname}:${app.server?.port}`,
+  `app is listening on http://${app.server?.hostname}:${app.server?.port}`
 );
+

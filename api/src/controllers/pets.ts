@@ -4,10 +4,6 @@ import { AvailablePet, availablePets } from "../redis";
 import { Mutable, StringEnum } from "../types";
 import { pets } from "../db/schema";
 
-const isValidPet = (petType: string): petType is AvailablePet => {
-  return availablePets.includes(petType as any);
-}
-
 export const petsController = new Elysia({
   prefix: "/pets",
 })
@@ -16,9 +12,6 @@ export const petsController = new Elysia({
     "/giveToUser",
     async (ctx) => {
       const { petType, ownerId, displayName } = ctx.body;
-      if (!isValidPet(petType)) {
-        return new Response("Invalid Pet Type", { status: 400 });
-      }
       const user = await ctx.db.query.users.findFirst({
         where: (users, { eq }) => eq(users.id, ownerId),
       });
@@ -31,12 +24,12 @@ export const petsController = new Elysia({
           ownerId,
           displayName,
           type: petType,
-        }) 
+        })
         .returning({ uuid: pets.uuid });
     },
     {
       body: t.Object({
-        petType: t.String(),
+        petType: t.Union(availablePets.map((x) => t.Literal(x))),
         ownerId: t.String(),
         displayName: t.String(),
       }),
@@ -44,3 +37,4 @@ export const petsController = new Elysia({
   );
 
 //TODO: Add endpoints
+

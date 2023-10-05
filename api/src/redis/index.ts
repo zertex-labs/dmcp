@@ -23,8 +23,6 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
     }
   } while (cursor !== 0);
 
-  console.log(items);
-
   return items as any;
 }
 
@@ -32,3 +30,4 @@ export const redis = Redis.fromEnv();
 
 export * from "./food";
 export * from "./pets";
+
