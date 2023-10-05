@@ -33,6 +33,9 @@ export default {
         )
     )
     .addSubcommand((sub) =>
+      sub.setName('active').setDescription('Get your active pet')
+    )
+    .addSubcommand((sub) =>
       sub
         .setName('give')
         .setDescription('Give user a pet')
@@ -65,6 +68,8 @@ export default {
 
     let pets: Pet[] = [];
     const cached = petsCache.get(interaction.user.id);
+
+    console.log('isCached', cached);
     if (cached) pets = cached;
     else {
       const ownedRes = await axios.get<Pet[]>(
@@ -83,6 +88,8 @@ export default {
       }
       const { data } = ownedRes;
 
+      console.log('not cached', data)
+
       petsCache.set(interaction.user.id, data);
       pets = data;
     }
@@ -97,7 +104,9 @@ export default {
   run: async ({ client, interaction }) => {
     if (!interaction.isCommand()) return;
 
-    const subcommand = getSubcommand<['give', 'select']>(interaction.options);
+    const subcommand = getSubcommand<['give', 'select', 'active']>(
+      interaction.options
+    );
     switch (subcommand) {
       case 'give':
         if (!adminIds.includes(interaction.user.id))
@@ -157,7 +166,7 @@ export default {
 
         const [name, uuid] = uuidAndName.split('@');
 
-        interaction.reply(`Selecting pet...`);
+        let reply = await interaction.reply(`Selecting pet...`);
 
         const selectRes = await axios.put(
           `http://localhost:3000/api/users/${interaction.user.id}/selectPet`,
@@ -172,10 +181,35 @@ export default {
 
         if (selectRes.status !== 200) {
           console.error('Error selecting pet', selectRes.data);
-          return void interaction.reply('Error selecting pet, please try again later');
+          return void reply.edit('Error selecting pet, please try again later');
         }
 
-        interaction.reply(`Selected pet ${name} and ${uuid}`);
+        reply.edit(`Selected pet ${name} and ${uuid}`);
+
+        break;
+      case 'active':
+        const activeReply = await interaction.reply('Getting active pet...');
+
+        const activeRes = await axios.get<Pet>(
+          `http://localhost:3000/api/users/${interaction.user.id}/activePet`,
+          {
+            validateStatus: () => true,
+            headers: {
+              'x-api-secret': process.env.API_SECRET
+            }
+          }
+        );
+
+        if (activeRes.status !== 200) {
+          console.error('Error getting active pet', activeRes.data);
+          return void activeReply.edit(
+            'Error getting active pet, please try again later'
+          );
+        }
+
+        const { data: pet } = activeRes;
+
+        activeReply.edit(`Your active pet is ${pet.displayName}(Lvl. ${pet.level})`);
 
         break;
     }
