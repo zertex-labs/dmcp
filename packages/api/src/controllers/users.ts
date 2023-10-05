@@ -3,7 +3,7 @@ import { ctx } from "../context";
 
 export const usersController = new Elysia({
   prefix: "/users",
-})
-.use(ctx)
+}).use(ctx);
 
 //TODO: Add endpoints
+

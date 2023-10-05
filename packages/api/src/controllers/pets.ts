@@ -1,7 +1,8 @@
 import { Elysia, t } from "elysia";
+import { availablePets } from "shared";
+
 import { ctx } from "../context";
 import { pets } from "../db/schema";
-import { availablePets } from "../redis";
 
 export const petsController = new Elysia({
   prefix: "/pets",

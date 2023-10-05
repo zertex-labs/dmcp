@@ -1,11 +1,11 @@
+import { logger } from "@bogeychan/elysia-logger";
 import { Elysia } from "elysia";
+import pretty from "pino-pretty";
+
+import { config } from "../config";
 import { db } from "../db";
 import { redis } from "../redis";
 import { getAllFoodItems, getAllPets } from "../redis/";
-import pretty from "pino-pretty";
-import { config } from "../config";
-import { logger } from "@bogeychan/elysia-logger";
-import { HoltLogger } from "@tlscipher/holt";
 
 const loggerConfig =
   config.env.NODE_ENV === "development"

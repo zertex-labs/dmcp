@@ -1,0 +1,8 @@
+{
+  "name": "dmcp-root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
+

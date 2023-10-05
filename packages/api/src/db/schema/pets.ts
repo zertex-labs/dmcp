@@ -1,17 +1,16 @@
+import { relations } from "drizzle-orm";
 import {
+  boolean,
+  integer,
+  json,
   pgTable,
   text,
-  uuid,
   timestamp,
-  integer,
-  boolean,
-  json,
+  uuid,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { availablePets, type AvailableBonus } from "shared";
 
 import { users } from ".";
-import { availablePets } from "../../redis";
-import { AvailableBonus } from "../../types";
 
 export const petsTable = pgTable("pets", {
   uuid: uuid("uuid").primaryKey().defaultRandom(),
@@ -41,3 +40,4 @@ export const petRelations = relations(petsTable, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
