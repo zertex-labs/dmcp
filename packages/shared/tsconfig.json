@@ -1,6 +1,6 @@
 {
-  "include": ["src/**/*", "src/data/**/*.json"],
-  "files": ["package.json"],
+  "include": ["data", "data/**/*.json", "utils", "types"],
+  "files": ["main.ts"],
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,

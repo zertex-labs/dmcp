@@ -1,6 +1,5 @@
 // import { swagger } from "@elysiajs/swagger";
 import { Elysia } from 'elysia';
-
 import { api } from './controllers/*';
 
 const app = new Elysia()

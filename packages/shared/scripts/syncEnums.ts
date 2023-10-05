@@ -1,4 +1,4 @@
-import { rarities, availableBonuses, availablePets } from '../src/types';
+import { rarities, availableBonuses, availablePets } from '../types';
 
 const sync = (path: string, data: any) =>
   Bun.write(path, JSON.stringify(data, null, 2));

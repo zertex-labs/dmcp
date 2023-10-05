@@ -1,7 +1,7 @@
 {
   "name": "shared",
   "type": "module",
-  "main": "src/main.ts",
+  "main": "main.ts",
   "private": true,
   "include": [
     "src/**/*"
