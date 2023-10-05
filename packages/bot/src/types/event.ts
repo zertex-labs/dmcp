@@ -11,4 +11,3 @@ export type Event<Event extends ClientEvent> = (
   client: UsableClient,
   ...args: UsableClientEvents[Event]
 ) => void;
-

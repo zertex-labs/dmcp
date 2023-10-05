@@ -1,7 +1,8 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { Command, PetWithOwner, Pet } from '../types';
 import getOptions from '../utils/getOptions';
 import { apiClient } from '../client';
+import { Command } from '../types';
+import { PetWithOwner } from 'shared';
 
 const choices = ['pets', 'balance'] as const;
 type Choice = (typeof choices)[number];
@@ -40,7 +41,7 @@ export default {
           }
         );
         const pets = petsResponse.data;
-        if(pets.length == 0) {
+        if (pets.length == 0) {
           interaction.reply({
             embeds: [
               new EmbedBuilder()

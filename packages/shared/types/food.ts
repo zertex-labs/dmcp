@@ -1,6 +1,6 @@
-import type { Rarity, RarityOverwrite } from ".";
+import type { Rarity, RarityOverwrite } from '.';
 
-export const availableFoods = ["carrot", "chorus_fruit", "wheat"] as const;
+export const availableFoods = ['carrot', 'chorus_fruit', 'wheat'] as const;
 export type AvailableFood = (typeof availableFoods)[number];
 
 export type Food = {
@@ -8,4 +8,3 @@ export type Food = {
   price: number;
   rarityOverwrites: Record<Rarity, RarityOverwrite[]>;
 };
-

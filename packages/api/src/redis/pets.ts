@@ -1,5 +1,6 @@
-import type { AvailablePet, Pet } from "shared";
+import type { AvailablePet, PetSkeleton } from 'shared';
 
-import { getAllItems } from ".";
+import { getAllItems } from '.';
 
-export const getAllPets = () => getAllItems<AvailablePet, Pet>("_pet-*");
+export const getAllPets = () =>
+  getAllItems<AvailablePet, PetSkeleton>('_pet-*');

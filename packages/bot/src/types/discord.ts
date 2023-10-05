@@ -34,7 +34,10 @@ type CommonCommand = {
 };
 
 export type Command = CommonCommand & {
-  withBuilder?: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
+  withBuilder?: Omit<
+    SlashCommandBuilder,
+    'addSubcommand' | 'addSubcommandGroup'
+  >;
 };
 
 export type ClientCommand = CommonCommand & {

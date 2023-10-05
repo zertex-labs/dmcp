@@ -21,4 +21,4 @@ export class UsableClient extends Client {
   }
 }
 
-export * from './axios'
+export * from './axios';

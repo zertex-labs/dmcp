@@ -1,12 +1,13 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { Command, ALL_PETS, PetType } from '../types';
-import { getOptions } from '../utils/getOptions';
-import axios from 'axios';
+import { AvailablePet, availablePets } from 'shared';
+
 import { apiClient } from '../client';
+import { getOptions } from '../utils/getOptions';
+import { Command } from '../types';
 
 type StringOptions = {
   name: string;
-  type: PetType;
+  type: AvailablePet;
 };
 
 export default {
@@ -25,7 +26,7 @@ export default {
       opt
         .setName('type')
         .setDescription('Type of the pet')
-        .addChoices(...ALL_PETS.map((pet) => ({ name: pet, value: pet })))
+        .addChoices(...availablePets.map((pet) => ({ name: pet, value: pet })))
         .setRequired(true)
     ),
   run: async ({ client, interaction }) => {
@@ -37,19 +38,23 @@ export default {
       'type'
     ]);
 
-    const res = await apiClient.post('/pets/giveToUser', {
-      userId: interaction.user.id,
-      petType: type,
-      petName: name
-    }, {
-      validateStatus: () => true
-    })
+    const res = await apiClient.post(
+      '/pets/giveToUser',
+      {
+        userId: interaction.user.id,
+        petType: type,
+        petName: name
+      },
+      {
+        validateStatus: () => true
+      }
+    );
 
-    if(res.status !== 200) {
-      console.error('Error giving pet to user', res.data)
-      return void interaction.reply('Error giving pet to user')
+    if (res.status !== 200) {
+      console.error('Error giving pet to user', res.data);
+      return void interaction.reply('Error giving pet to user');
     }
 
-    interaction.reply('Pet given to user')
+    interaction.reply('Pet given to user');
   }
 } satisfies Command;

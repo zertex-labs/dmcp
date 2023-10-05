@@ -9,4 +9,3 @@ export const run: Event<'interactionCreate'> = (client, interaction) => {
     command?.run({ interaction, client });
   }
 };
-

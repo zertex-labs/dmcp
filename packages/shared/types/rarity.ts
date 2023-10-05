@@ -1,12 +1,12 @@
-import type { Food } from ".";
+import type { Food } from '.';
 
 export const rarities = [
-  "COMMON",
-  "UNCOMMON",
-  "EPIC",
-  "MYTHICAL",
-  "LEGENDARY",
+  'COMMON',
+  'UNCOMMON',
+  'EPIC',
+  'MYTHICAL',
+  'LEGENDARY'
 ] as const;
 export type Rarity = (typeof rarities)[number];
 
-export type RarityOverwrite = Omit<Food, "rarityOverwrites">;
+export type RarityOverwrite = Omit<Food, 'rarityOverwrites'>;

@@ -19,4 +19,3 @@ export const run: Event<'guildMemberAdd'> = async (client, member) => {
 
   console.log('id', id);
 };
-

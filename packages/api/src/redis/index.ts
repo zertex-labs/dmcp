@@ -1,4 +1,4 @@
-import { Redis } from "@upstash/redis/nodejs";
+import { Redis } from '@upstash/redis/nodejs';
 
 export async function getAllItems<Keys extends PropertyKey, Stored>(
   match: string
@@ -13,7 +13,7 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
     const keys = result[1];
 
     if (keys.length > 0) {
-      const items = await redis.json.mget(keys, "$");
+      const items = await redis.json.mget(keys, '$');
       for (let i = 0; i < items.length; i++) {
         const item = items[i][0];
         const key = keys[i]!;
@@ -28,6 +28,5 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
 
 export const redis = Redis.fromEnv();
 
-export * from "./food";
-export * from "./pets";
-
+export * from './food';
+export * from './pets';

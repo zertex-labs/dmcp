@@ -1,7 +1,6 @@
-import type { AvailableFood, Food } from "shared";
+import type { AvailableFood, Food } from 'shared';
 
-import { getAllItems } from ".";
+import { getAllItems } from '.';
 
 export const getAllFoodItems = () =>
-  getAllItems<AvailableFood, Food>("_food-*");
-
+  getAllItems<AvailableFood, Food>('_food-*');
