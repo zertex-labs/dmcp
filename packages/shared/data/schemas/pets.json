@@ -1,17 +1,17 @@
 {
   "$schema": "http://json-schema.org/schema",
   "properties": {
-    "FOX": {
-      "$ref": "#/definitions/pet"
-    },
     "COW": {
       "$ref": "#/definitions/pet"
     },
-    "COCK": {
+    "FOX": {
       "$ref": "#/definitions/pet"
     }
   },
-  "required": ["FOX", "COW", "COCK"],
+  "required": [
+    "COW",
+    "FOX"
+  ],
   "additionalProperties": false,
   "definitions": {
     "pet": {
@@ -40,11 +40,18 @@
                 "minimum": 0.01
               }
             },
-            "required": ["baseValue", "maxValue"]
+            "required": [
+              "baseValue",
+              "maxValue"
+            ]
           }
         }
       },
-      "required": ["maxLevel", "rarity", "bonuses"]
+      "required": [
+        "maxLevel",
+        "rarity",
+        "bonuses"
+      ]
     }
   }
 }

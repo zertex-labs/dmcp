@@ -1,11 +1,21 @@
 {
   "$schema": "http://json-schema.org/schema",
   "properties": {
+    "CARROT": {
+      "$ref": "#/definitions/food"
+    },
+    "CHORUS_FRUIT": {
+      "$ref": "#/definitions/food"
+    },
     "WHEAT": {
       "$ref": "#/definitions/food"
     }
   },
-  "required": ["WHEAT"],
+  "required": [
+    "CARROT",
+    "CHORUS_FRUIT",
+    "WHEAT"
+  ],
   "additionalProperties": false,
   "definitions": {
     "food": {
@@ -35,11 +45,18 @@
                 "minimum": 0
               }
             },
-            "required": ["price", "baseChance"]
+            "required": [
+              "price",
+              "baseChance"
+            ]
           }
         }
       },
-      "required": ["price", "baseChance", "rarityOverwrites"]
+      "required": [
+        "price",
+        "baseChance",
+        "rarityOverwrites"
+      ]
     }
   }
 }
