@@ -17,7 +17,7 @@ export type PetSkeleton = {
 export type Pet = {
   uuid: string;
   ownerId: string;
-  
+
   displayName: string;
   type: AvailablePet;
 

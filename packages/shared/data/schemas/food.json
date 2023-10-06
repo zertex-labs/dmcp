@@ -11,11 +11,7 @@
       "$ref": "#/definitions/food"
     }
   },
-  "required": [
-    "CARROT",
-    "CHORUS_FRUIT",
-    "WHEAT"
-  ],
+  "required": ["CARROT", "CHORUS_FRUIT", "WHEAT"],
   "definitions": {
     "food": {
       "type": "object",
@@ -44,18 +40,11 @@
                 "minimum": 0
               }
             },
-            "required": [
-              "price",
-              "baseChance"
-            ]
+            "required": ["price", "baseChance"]
           }
         }
       },
-      "required": [
-        "price",
-        "baseChance",
-        "rarityOverwrites"
-      ]
+      "required": ["price", "baseChance", "rarityOverwrites"]
     }
   }
 }

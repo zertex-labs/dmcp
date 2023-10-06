@@ -21,7 +21,7 @@ export default {
       }
     );
 
-    if(userRes.status !== 200) {
+    if (userRes.status !== 200) {
       return void reply.edit('You need to create an account first');
     }
 

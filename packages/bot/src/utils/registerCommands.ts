@@ -25,11 +25,9 @@ export async function registerCommands(client: UsableClient) {
   });
 
   try {
-    client.log(
-      `Started refreshing ${slashCommands.length} commands.`
-    );
+    client.log(`Started refreshing ${slashCommands.length} commands.`);
 
-    client.log(`Commands: ${slashCommands.map((x) => x.name).join(', ')}`)
+    client.log(`Commands: ${slashCommands.map((x) => x.name).join(', ')}`);
 
     await client.rest.put(
       Routes.applicationGuildCommands(DISCORD_CLIENT_ID!, GUILD_ID!),

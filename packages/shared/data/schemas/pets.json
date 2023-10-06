@@ -8,10 +8,7 @@
       "$ref": "#/definitions/pet"
     }
   },
-  "required": [
-    "COW",
-    "FOX"
-  ],
+  "required": ["COW", "FOX"],
   "definitions": {
     "pet": {
       "type": "object",
@@ -31,11 +28,7 @@
           }
         }
       },
-      "required": [
-        "maxLevel",
-        "rarity",
-        "perks"
-      ]
+      "required": ["maxLevel", "rarity", "perks"]
     }
   }
 }

@@ -12,4 +12,4 @@ export * from './perks';
 export * from './pet';
 export * from './user';
 export * from './stats';
-export * from './upgrades'
+export * from './upgrades';

@@ -46,7 +46,7 @@ const calculateBonuses = (user: User): PlayerStat => {
       const key = _key as AvailablePerk;
       const { baseValue, maxValue } = bonus;
       const perc = baseValue + (level - 1) * maxValue;
-      console.log(perc)
+      console.log(perc);
 
       upgrades[key].forEach((t) => (upgradeChances[t] += perc));
 

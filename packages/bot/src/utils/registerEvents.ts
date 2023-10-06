@@ -21,6 +21,10 @@ export function registerEvents(client: UsableClient) {
       client[isOnce ? 'once' : 'on'](eventName, (...args) =>
         event.run(client, ...args)
       );
-      client.log(`Registered ${isOnce ? 'once' : 'on'}.${eventName} (${eventsPath}/${fileName})`);
+      client.log(
+        `Registered ${
+          isOnce ? 'once' : 'on'
+        }.${eventName} (${eventsPath}/${fileName})`
+      );
     });
 }
