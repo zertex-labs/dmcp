@@ -3,11 +3,11 @@
   "COW": {
     "rarity": "EPIC",
     "maxLevel": 2,
-    "perks": ["FARMING_FORTUNE"]
+    "perks": ["PERK_FARMING"]
   },
   "FOX": {
     "rarity": "MYTHICAL",
     "maxLevel": 2,
-    "perks": ["FARMING_SPEED"]
+    "perks": ["PERK_SPEED"]
   }
 }
