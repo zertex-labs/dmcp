@@ -40,7 +40,7 @@ const syncSchema = async ({
 type AnyFn = (...args: any) => MaybePromise<any>;
 
 const enumPath = (name: string) => `data/enums/${name}.json`;
-const uppercase = (str: string) => str.toUpperCase();
+
 type Step =
   | 'backup'
   | 'syncPerks'
@@ -60,7 +60,7 @@ const actions: Record<Step, AnyFn[]> = {
     () =>
       syncSchema({
         type: 'food',
-        data: [...availableFoods.map(uppercase)],
+        data: [...availableFoods],
         definition: 'food'
       })
   ],

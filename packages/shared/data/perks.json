@@ -5,6 +5,11 @@
       "baseValue": 0.1,
       "maxValue": 0.5,
       "appliesTo": ["FARMING_FORTUNE"]
+    },
+    "PERK_SPEED": {
+      "baseValue": 0.1,
+      "maxValue": 0.5,
+      "appliesTo": ["FARMING_SPEED"]
     }
   }
 }

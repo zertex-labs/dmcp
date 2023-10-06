@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "syncData": "bun run scripts/syncData.ts"
+    "syncData": "bun run scripts/syncData.ts",
+    "validateData": "bun run scripts/validateData.ts"
   }
 }
