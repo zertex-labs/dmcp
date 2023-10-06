@@ -1,0 +1,10 @@
+{
+  "$schema": "./schemas/upgrades.json",
+  "PET_UPGRADE_TODO": {
+    "appliesTo": {
+      "FARMING_FORTUNE": 0.25,
+      "FARMING_SPEED": 0.1
+    },
+    "price": 10
+  }
+}

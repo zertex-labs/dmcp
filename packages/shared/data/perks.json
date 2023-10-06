@@ -1,0 +1,10 @@
+{
+  "$schema": "./schemas/perks.json",
+  "data": {
+    "PERK_FARMING": {
+      "baseValue": 0.1,
+      "maxValue": 0.5,
+      "appliesTo": ["FARMING_FORTUNE"]
+    }
+  }
+}

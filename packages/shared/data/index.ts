@@ -3,5 +3,7 @@
 import food from './food.json';
 import pets from './pets.json';
 import adminIds from './adminIds.json';
+import perks from './perks.json';
+import upgrades from './upgrades.json';
 
-export { food, pets, adminIds };
+export { food, pets, adminIds, perks, upgrades };

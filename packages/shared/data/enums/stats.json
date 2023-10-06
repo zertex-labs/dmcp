@@ -1,0 +1,6 @@
+{
+  "enum": [
+    "FARMING_FORTUNE",
+    "FARMING_SPEED"
+  ]
+}
