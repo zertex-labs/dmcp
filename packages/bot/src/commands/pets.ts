@@ -88,7 +88,7 @@ export default {
       }
       const { data } = ownedRes;
 
-      console.log('not cached', data)
+      console.log('not cached', data);
 
       petsCache.set(interaction.user.id, data);
       pets = data;
@@ -209,7 +209,9 @@ export default {
 
         const { data: pet } = activeRes;
 
-        activeReply.edit(`Your active pet is ${pet.displayName}(Lvl. ${pet.level})`);
+        activeReply.edit(
+          `Your active pet is ${pet.displayName}(Lvl. ${pet.level})`
+        );
 
         break;
     }

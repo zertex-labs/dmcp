@@ -1,4 +1,4 @@
-import type { AvailableBonus, Rarity, User } from '.';
+import type { AvailablePerk, Rarity, User } from '.';
 
 export const availablePets = ['COW', 'FOX'] as const;
 export type AvailablePet = (typeof availablePets)[number];
@@ -6,7 +6,7 @@ export type AvailablePet = (typeof availablePets)[number];
 export type PetSkeleton = {
   rarity: Rarity;
   bonuses: Record<
-    AvailableBonus,
+    AvailablePerk,
     {
       base: number;
       max: number;
@@ -17,13 +17,13 @@ export type PetSkeleton = {
 export type Pet = {
   uuid: string;
   ownerId: string;
-  
+
   displayName: string;
   type: AvailablePet;
 
   level: number;
 
-  upgradeSlots: AvailableBonus[];
+  upgradeSlots: AvailablePerk[];
   boughtSlot: boolean;
 
   createdAt: string;

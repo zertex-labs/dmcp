@@ -7,6 +7,26 @@ export const usersController = new Elysia({
   prefix: '/users'
 })
   .use(ctx)
+  .get(
+    '/:userId',
+    async ({ params, db }) => {
+      const { userId } = params;
+
+      return db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.id, userId),
+        with: {
+          activePet: true
+        }
+      });
+    },
+    {
+      beforeHandle: ({ isApiSecretPresent }) => {
+        if (!isApiSecretPresent()) {
+          return new Response('Not Authorized', { status: 401 });
+        }
+      }
+    }
+  )
   .put(
     '/:userId/selectPet',
     async ({ body, params, db }) => {
@@ -33,28 +53,45 @@ export const usersController = new Elysia({
     {
       body: t.Object({
         petId: t.String()
-      })
+      }),
+      beforeHandle: ({ isApiSecretPresent }) => {
+        if (!isApiSecretPresent()) {
+          return new Response('Not Authorized', { status: 401 });
+        }
+      }
     }
   )
-  .get('/:userId/activePet', async ({ params, db }) => {
-    const { userId } = params;
+  .get(
+    '/:userId/activePet',
+    async ({ params, db }) => {
+      const { userId } = params;
 
-    const user = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.id, userId)
-    });
+      const user = await db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.id, userId)
+      });
 
-    if (!user) {
-      return new Response('User does not exist', { status: 404 });
+      if (!user) {
+        return new Response('User does not exist', { status: 404 });
+      }
+
+      let petId = user.activePetId;
+      if (!petId) {
+        return new Response('User does not have an active pet', {
+          status: 404
+        });
+      }
+
+      return db.query.pets.findFirst({
+        where: (pets, { eq }) => eq(pets.uuid, `${petId}`)
+      });
+    },
+    {
+      beforeHandle: ({ isApiSecretPresent }) => {
+        if (!isApiSecretPresent()) {
+          return new Response('Not Authorized', { status: 401 });
+        }
+      }
     }
-
-    let petId = user.activePetId;
-    if (!petId) {
-      return new Response('User does not have an active pet', { status: 404 });
-    }
-
-    return db.query.pets.findFirst({
-      where: (pets, { eq }) => eq(pets.uuid, `${petId}`)
-    });
-  });
+  );
 
 //TODO: Add endpoints

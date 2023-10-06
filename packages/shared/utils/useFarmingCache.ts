@@ -1,10 +1,11 @@
 import {
-  AvailableBonus,
+  AvailablePerk,
   AvailableFood,
-  PlayerStats,
+  PlayerStat,
   User,
   BASE_PLAYER_STATS,
-  PlayerPossibleStats
+  PlayerStat,
+  playerStats
 } from '../types';
 import createSingleton from './createSingleton';
 import { pets } from '../data';
@@ -19,27 +20,52 @@ type FarmingResponse = {
   total: number;
 };
 
-const upgrades: Record<AvailableBonus, PlayerPossibleStats[]> = {
+const upgrades: Record<AvailablePerk, PlayerStat[]> = {
   PERK_FARMING: ['farmingFortune'],
-  PERK_SPEED: ['speed']
+  PERK_SPEED: ['speed'],
+  COCK: ['speed', 'farmingFortune']
 };
 
-const calculateBonuses = (user: User): PlayerStats => {
+const calculateBonuses = (user: User): PlayerStat => {
   let stats = { ...BASE_PLAYER_STATS };
+
+  let upgradeChances = playerStats.reduce(
+    (acc, x) => {
+      acc[x] = 0;
+      return acc;
+    },
+    {} as Record<PlayerStat, number>
+  );
 
   if (user.activePet) {
     const { type, level, upgradeSlots } = user.activePet;
-    const { bonuses: baseBonuses } = pets[type];
+    const { perks: _uncastPerks } = pets[type];
+    const perks = _uncastPerks as AvailablePerk[];
 
-    const bonuses = Object.values(baseBonuses).map((bonus) => {
+    const bonuses = Object.entries(baseBonuses).map(([_key, bonus]) => {
+      const key = _key as AvailablePerk;
       const { baseValue, maxValue } = bonus;
-      const bonusValue = baseValue + (level - 1) * maxValue;
+      const perc = baseValue + (level - 1) * maxValue;
+      console.log(perc);
 
-      return bonusValue;
+      upgrades[key].forEach((t) => (upgradeChances[t] += perc));
+
+      return perc;
     });
 
-    console.log(bonuses);
+    console.log(bonuses, upgradeChances);
   }
+
+  // apply chances
+  Object.entries(upgradeChances).forEach(([_stat, percentageToIncrease]) => {
+    if (percentageToIncrease == 0) return;
+
+    const stat = _stat as PlayerStat;
+    const oldValue = stats[stat];
+    const toIncrease = oldValue * percentageToIncrease;
+    console.log(stat, oldValue, toIncrease);
+    stats[stat] += toIncrease;
+  });
 
   return stats;
 };
@@ -48,11 +74,13 @@ export const useFarmingCache = createSingleton(() => {
   const cache = new Map<string, FarmingResponse>();
 
   function farm(user: User) {
-    calculateBonuses(user);
+    console.log(user);
+    return calculateBonuses(user);
   }
 
   return {
     get: (key: string) => cache.get(key),
-    set: (key: string, value: any) => cache.set(key, value)
+    set: (key: string, value: any) => cache.set(key, value),
+    farm
   };
 });

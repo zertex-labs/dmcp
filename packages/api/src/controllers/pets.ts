@@ -22,7 +22,7 @@ export const petsController = new Elysia({
       log.error(res);
 
       return new Response(JSON.stringify(res), {
-        status: 200, 
+        status: 200
       });
     },
     {

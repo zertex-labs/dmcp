@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "PET_UPGRADE_TODO": {
+      "$ref": "#/definitions/upgrade"
+    }
+  },
+  "required": ["PET_UPGRADE_TODO"],
+  "definitions": {
+    "upgrade": {
+      "type": "object",
+      "required": ["appliesTo", "price"],
+      "properties": {
+        "price": {
+          "type": "number",
+          "minimum": 1
+        },
+        "appliesTo": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "../enums/stats.json"
+          },
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "COW": {
       "$ref": "#/definitions/pet"
@@ -8,11 +8,7 @@
       "$ref": "#/definitions/pet"
     }
   },
-  "required": [
-    "COW",
-    "FOX"
-  ],
-  "additionalProperties": false,
+  "required": ["COW", "FOX"],
   "definitions": {
     "pet": {
       "type": "object",
@@ -24,34 +20,15 @@
         "rarity": {
           "$ref": "../enums/rarities.json"
         },
-        "bonuses": {
-          "propertyNames": {
-            "$ref": "../enums/bonuses.json"
-          },
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "baseValue": {
-                "type": "number",
-                "minimum": 0.01
-              },
-              "maxValue": {
-                "type": "number",
-                "minimum": 0.01
-              }
-            },
-            "required": [
-              "baseValue",
-              "maxValue"
-            ]
+        "perks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "$ref": "../enums/stats.json"
           }
         }
       },
-      "required": [
-        "maxLevel",
-        "rarity",
-        "bonuses"
-      ]
+      "required": ["maxLevel", "rarity", "perks"]
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "CARROT": {
       "$ref": "#/definitions/food"
@@ -11,12 +11,7 @@
       "$ref": "#/definitions/food"
     }
   },
-  "required": [
-    "CARROT",
-    "CHORUS_FRUIT",
-    "WHEAT"
-  ],
-  "additionalProperties": false,
+  "required": ["CARROT", "CHORUS_FRUIT", "WHEAT"],
   "definitions": {
     "food": {
       "type": "object",
@@ -45,18 +40,11 @@
                 "minimum": 0
               }
             },
-            "required": [
-              "price",
-              "baseChance"
-            ]
+            "required": ["price", "baseChance"]
           }
         }
       },
-      "required": [
-        "price",
-        "baseChance",
-        "rarityOverwrites"
-      ]
+      "required": ["price", "baseChance", "rarityOverwrites"]
     }
   }
 }

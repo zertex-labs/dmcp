@@ -11,7 +11,7 @@ import { relations } from 'drizzle-orm';
 
 import { users } from '.';
 import { createId } from '@paralleldrive/cuid2';
-import { type AvailableBonus, availablePets } from 'shared';
+import { type PetUpgrade, availablePets } from 'shared';
 
 export const petsTable = pgTable('pets', {
   uuid: text('uuid').primaryKey().$defaultFn(createId),
@@ -25,7 +25,7 @@ export const petsTable = pgTable('pets', {
   level: integer('level').notNull().default(1),
 
   upgradeSlots: json('upgrade_slots')
-    .$type<AvailableBonus[]>()
+    .$type<PetUpgrade[]>()
     .notNull()
     .default([]),
 

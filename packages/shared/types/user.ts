@@ -1,8 +1,10 @@
-import type { Maybe, Pet } from '.';
+import type { Nullable, Pet } from '.';
 
 export type User = {
   id: string;
-  activePet: Maybe<Pet>;
   createdAt: string;
   updatedAt: string;
+
+  pets?: Pet[];
+  activePet?: Nullable<Pet>;
 };

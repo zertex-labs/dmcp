@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "data": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "../enums/perks.json"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "baseValue": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "maxValue": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "appliesTo": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "$ref": "../enums/stats.json"
+            }
+          }
+        },
+        "required": ["baseValue", "maxValue", "appliesTo"]
+      }
+    }
+  }
+}
