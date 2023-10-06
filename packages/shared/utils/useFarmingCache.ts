@@ -1,14 +1,15 @@
 import {
   AvailablePerk,
   AvailableFood,
-  PlayerStat,
   User,
-  BASE_PLAYER_STATS,
+  playerStats,
+  createBaseStats,
+  createBaseChances,
   PlayerStat,
-  playerStats
+  PerkType
 } from '../types';
 import createSingleton from './createSingleton';
-import { pets } from '../data';
+import { pets, perks as dataPerks, upgrades } from '../data';
 
 type FoodResponse = {
   item: AvailableFood;
@@ -20,44 +21,44 @@ type FarmingResponse = {
   total: number;
 };
 
-const upgrades: Record<AvailablePerk, PlayerStat[]> = {
-  PERK_FARMING: ['farmingFortune'],
-  PERK_SPEED: ['speed'],
-  COCK: ['speed', 'farmingFortune']
-};
-
-const calculateBonuses = (user: User): PlayerStat => {
-  let stats = { ...BASE_PLAYER_STATS };
-
-  let upgradeChances = playerStats.reduce(
-    (acc, x) => {
-      acc[x] = 0;
-      return acc;
-    },
-    {} as Record<PlayerStat, number>
-  );
+const calculateBonuses = (user: User) => {
+  const stats = createBaseStats();
+  const finalChances = createBaseChances();
 
   if (user.activePet) {
     const { type, level, upgradeSlots } = user.activePet;
-    const { perks: _uncastPerks } = pets[type];
-    const perks = _uncastPerks as AvailablePerk[];
+    const { perks: perkNames, maxLevel } = pets[type];
 
-    const bonuses = Object.entries(baseBonuses).map(([_key, bonus]) => {
-      const key = _key as AvailablePerk;
-      const { baseValue, maxValue } = bonus;
-      const perc = baseValue + (level - 1) * maxValue;
-      console.log(perc);
+    // apply perks to chances
+    const perks = perkNames.map(
+      (name) => dataPerks.data[name as AvailablePerk] as PerkType
+    );
 
-      upgrades[key].forEach((t) => (upgradeChances[t] += perc));
+    perks.forEach((perk) => {
+      const { appliesTo, baseValue, maxValue } = perk;
+      const perLevel = (maxValue - baseValue) / maxLevel;
 
-      return perc;
+      appliesTo.forEach((stat) => {
+        finalChances[stat] += baseValue + perLevel * level;
+      });
     });
 
-    console.log(bonuses, upgradeChances);
+    // apply upgrade slots to chances
+    upgradeSlots.forEach((upgradeSlot) => {
+      const upgrade = upgrades[upgradeSlot];
+      console.log(upgrades, upgradeSlot)
+      Object.entries(upgrade.appliesTo).forEach(([stat, value]) => {
+        finalChances[stat as PlayerStat] += value;
+      })
+    })
+
+    console.log(upgradeSlots)
   }
 
+  console.log(finalChances);
+
   // apply chances
-  Object.entries(upgradeChances).forEach(([_stat, percentageToIncrease]) => {
+  Object.entries(finalChances).forEach(([_stat, percentageToIncrease]) => {
     if (percentageToIncrease == 0) return;
 
     const stat = _stat as PlayerStat;

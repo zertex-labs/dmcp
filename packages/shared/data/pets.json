@@ -2,12 +2,12 @@
   "$schema": "./schemas/pets.json",
   "COW": {
     "rarity": "EPIC",
-    "maxLevel": 2,
+    "maxLevel": 5,
     "perks": ["PERK_FARMING"]
   },
   "FOX": {
     "rarity": "MYTHICAL",
-    "maxLevel": 2,
+    "maxLevel": 5,
     "perks": ["PERK_SPEED"]
   }
 }

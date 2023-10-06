@@ -1,4 +1,4 @@
-import type { AvailablePerk, Rarity, User } from '.';
+import type { AvailablePerk, PetUpgrade, Rarity, User } from '.';
 
 export const availablePets = ['COW', 'FOX'] as const;
 export type AvailablePet = (typeof availablePets)[number];
@@ -23,7 +23,7 @@ export type Pet = {
 
   level: number;
 
-  upgradeSlots: AvailablePerk[];
+  upgradeSlots: PetUpgrade[];
   boughtSlot: boolean;
 
   createdAt: string;
