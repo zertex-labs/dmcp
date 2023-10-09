@@ -2,25 +2,25 @@
   "$schema": "./schemas/food.json",
   "WHEAT": {
     "price": 0.5,
-    "baseChance": 0.01,
+    "chance": 0.01,
     "rarityOverwrites": {}
   },
   "CARROT": {
     "price": 0.3,
-    "baseChance": 0.1,
+    "chance": 0.1,
     "rarityOverwrites": {}
   },
   "CHORUS_FRUIT": {
     "price": 10,
-    "baseChance": 0.001,
+    "chance": 0.001,
     "rarityOverwrites": {
       "MYTHICAL": {
         "price": 10,
-        "baseChance": 0.1
+        "chance": 0.1
       },
       "LEGENDARY": {
         "price": 12,
-        "baseChance": 0.1
+        "chance": 0.1
       }
     }
   }

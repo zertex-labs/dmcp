@@ -20,9 +20,10 @@
           "type": "number",
           "minimum": 0.1
         },
-        "baseChance": {
+        "chance": {
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 1
         },
         "rarityOverwrites": {
           "propertyNames": {
@@ -35,16 +36,17 @@
                 "type": "number",
                 "minimum": 0.1
               },
-              "baseChance": {
+              "chance": {
                 "type": "number",
-                "minimum": 0
+                "minimum": 0,
+                "maximum": 1
               }
             },
-            "required": ["price", "baseChance"]
+            "required": ["price", "chance"]
           }
         }
       },
-      "required": ["price", "baseChance", "rarityOverwrites"]
+      "required": ["price", "chance", "rarityOverwrites"]
     }
   }
 }
