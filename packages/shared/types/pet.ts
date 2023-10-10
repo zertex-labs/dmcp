@@ -5,13 +5,8 @@ export type AvailablePet = (typeof availablePets)[number];
 
 export type PetSkeleton = {
   rarity: Rarity;
-  bonuses: Record<
-    AvailablePerk,
-    {
-      base: number;
-      max: number;
-    }
-  >;
+  maxLevel: number;
+  perks: AvailablePerk[];
 };
 
 export type Pet = {

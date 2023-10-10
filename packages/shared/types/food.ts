@@ -1,10 +1,11 @@
 import type { Rarity, RarityOverwrite } from '.';
 
-export const availableFoods = ['CARROT', 'CHORUS_FRUIT', 'WHEAT'] as const;
+export const availableFoods = ['CARROT', 'CHORUS_FRUIT', 'WHEAT', "SUGAR_CANE"] as const;
 export type AvailableFood = (typeof availableFoods)[number];
 
 export type Food = {
-  baseChance: number;
+  probability: number;
   price: number;
+  maxItems: number;
   rarityOverwrites: Record<Rarity, RarityOverwrite[]>;
 };

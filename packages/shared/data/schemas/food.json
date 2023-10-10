@@ -9,9 +9,12 @@
     },
     "WHEAT": {
       "$ref": "#/definitions/food"
+    },
+    "SUGAR_CANE": {
+      "$ref": "#/definitions/food"
     }
   },
-  "required": ["CARROT", "CHORUS_FRUIT", "WHEAT"],
+  "required": ["CARROT", "CHORUS_FRUIT", "WHEAT", "SUGAR_CANE"],
   "definitions": {
     "food": {
       "type": "object",
@@ -20,10 +23,13 @@
           "type": "number",
           "minimum": 0.1
         },
-        "chance": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+        "probability": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 1
         },
         "rarityOverwrites": {
           "propertyNames": {
@@ -36,17 +42,20 @@
                 "type": "number",
                 "minimum": 0.1
               },
-              "chance": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1
+              "probability": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "maxItems": {
+                "type": "integer",
+                "minimum": 1
               }
             },
-            "required": ["price", "chance"]
+            "required": ["price", "probability", "maxItems"]
           }
         }
       },
-      "required": ["price", "chance", "rarityOverwrites"]
+      "required": ["price", "probability", "rarityOverwrites", "maxItems"]
     }
   }
 }

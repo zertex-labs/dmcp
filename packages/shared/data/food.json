@@ -2,25 +2,36 @@
   "$schema": "./schemas/food.json",
   "WHEAT": {
     "price": 0.5,
-    "chance": 0.01,
+    "probability": 0,
+    "maxItems": 50,
     "rarityOverwrites": {}
   },
   "CARROT": {
     "price": 0.3,
-    "chance": 0.1,
+    "probability": 5,
+    "maxItems": 40,
+    "rarityOverwrites": {}
+  },
+  "SUGAR_CANE": {
+    "price": 0.5,
+    "probability": 4,
+    "maxItems": 40,
     "rarityOverwrites": {}
   },
   "CHORUS_FRUIT": {
     "price": 10,
-    "chance": 0.001,
+    "probability": 1,
+    "maxItems": 5,
     "rarityOverwrites": {
       "MYTHICAL": {
         "price": 10,
-        "chance": 0.1
+        "probability": 2,
+        "maxItems": 5
       },
       "LEGENDARY": {
         "price": 12,
-        "chance": 0.1
+        "probability": 1,
+        "maxItems": 10
       }
     }
   }

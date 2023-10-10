@@ -1,6 +1,7 @@
-import { User, randomNumber, useFarmingCache } from 'shared';
+import { User, randomNumber, useFarmingHandler } from 'shared';
 import { Command } from '../types';
 import axios from 'axios';
+import { EmbedBuilder } from 'discord.js';
 
 export default {
   name: 'farm',
@@ -25,6 +26,23 @@ export default {
       return void reply.edit('You need to create an account first');
     }
 
-    reply.edit(JSON.stringify(useFarmingCache().farm(userRes.data)));
+    const farmRes = useFarmingHandler().farm(userRes.data);
+
+    reply.edit({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('Farming')
+          .addFields(
+            ...farmRes.map((item) => ({
+              name: item.name,
+              value: `${item.amount} (1-${item.maxItems})`
+            }))
+          )
+          .addFields({
+            name: 'Total',
+            value: `${farmRes.reduce((acc, curr) => acc + curr.amount * curr.price, 0)}$ (${farmRes.reduce((acc, curr) => acc + curr.amount, 0)} crops)`
+          })
+      ]
+    });
   }
 } satisfies Command;
