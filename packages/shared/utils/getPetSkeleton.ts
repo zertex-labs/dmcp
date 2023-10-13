@@ -1,11 +1,10 @@
-import { pets } from '../data';
-
-import type { Pet, PetSkeleton } from 'types';
+import type { Pet, PetSkeleton } from 'types'
+import { pets } from '../data'
 
 export function getPetSkeleton(petOrType: Pet | Pet['type']) {
   return pets[
     typeof petOrType == 'object' ? petOrType.type : petOrType
-  ] as PetSkeleton;
+  ] as PetSkeleton
 }
 
-export default getPetSkeleton;
+export default getPetSkeleton

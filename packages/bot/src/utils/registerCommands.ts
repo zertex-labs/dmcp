@@ -1,50 +1,52 @@
-import { Routes } from 'discord.js';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs'
+import path from 'node:path'
+import { Routes } from 'discord.js'
 
-import { UsableClient } from '../client';
-import { ClientCommand, Command } from '../types';
+import type { UsableClient } from '../client'
+import type { Command } from '../types'
 
-const { DISCORD_CLIENT_ID, GUILD_ID } = process.env;
+const { DISCORD_CLIENT_ID, GUILD_ID } = process.env
 
 export async function registerCommands(client: UsableClient) {
-  const commandsPath = path.join(__dirname, '..', 'commands');
+  const commandsPath = path.join(__dirname, '..', 'commands')
   const commandFiles = fs
     .readdirSync(commandsPath)
-    .filter((file) => file.endsWith('.ts'));
+    .filter(file => file.endsWith('.ts'))
 
-  let slashCommands = commandFiles.map((x) => {
-    const cmd = require(path.join(commandsPath, x)).default as Command;
-    let builder = cmd?.withBuilder ?? {};
+  const slashCommands = commandFiles.map((x) => {
+    // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
+    const cmd = require(path.join(commandsPath, x)).default as Command
+    const builder = cmd?.withBuilder ?? {}
 
-    delete cmd.withBuilder;
+    delete cmd.withBuilder
 
-    let data = { ...builder, ...cmd };
-    client.commands.set(data.name, data);
-    return data;
-  });
+    const data = { ...builder, ...cmd }
+    client.commands.set(data.name, data)
+    return data
+  })
 
   try {
-    client.log(`Started refreshing ${slashCommands.length} commands.`);
+    client.log(`Started refreshing ${slashCommands.length} commands.`)
 
-    client.log(`Commands: ${slashCommands.map((x) => x.name).join(', ')}`);
+    client.log(`Commands: ${slashCommands.map(x => x.name).join(', ')}`)
 
     await client.rest.put(
       Routes.applicationGuildCommands(DISCORD_CLIENT_ID!, GUILD_ID!),
       {
-        body: slashCommands
-      }
-    );
+        body: slashCommands,
+      },
+    )
 
-    if (process.env.NODE_ENV == 'production') {
+    if (process.env.NODE_ENV === 'production') {
       await client.rest.put(Routes.applicationCommands(DISCORD_CLIENT_ID!), {
-        body: slashCommands
-      });
+        body: slashCommands,
+      })
     }
-    client.log(`Refreshed ${slashCommands.length} commands.`);
-  } catch (error: any) {
-    client.log(error?.message ?? error);
+    client.log(`Refreshed ${slashCommands.length} commands.`)
+  }
+  catch (error: any) {
+    client.log(error?.message ?? error)
   }
 }
 
-export default registerCommands;
+export default registerCommands

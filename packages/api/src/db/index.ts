@@ -1,20 +1,20 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres'
+import pg from 'pg'
 
-import * as schema from './schema';
-import { config } from '../config';
+import { config } from '../config'
+import * as schema from './schema'
 
 const pgClient = new pg.Client({
   connectionString: config.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
-});
+    rejectUnauthorized: false,
+  },
+})
 
-await pgClient.connect();
+await pgClient.connect()
 
 export const db = drizzle(pgClient, {
-  schema
-});
+  schema,
+})
 
-export default db;
+export default db

@@ -1,13 +1,13 @@
-import { ClientEvents as DiscordClientEvents, ClientEvents } from 'discord.js';
-import { Interaction } from './discord';
-import { UsableClient } from '../client';
+import type { ClientEvents as DiscordClientEvents } from 'discord.js'
+import type { UsableClient } from '../client'
+import type { Interaction } from './discord'
 
 export type UsableClientEvents = DiscordClientEvents & {
-  interactionCreate: [Interaction];
-};
+  interactionCreate: [Interaction]
+}
 
-export type ClientEvent = keyof UsableClientEvents;
+export type ClientEvent = keyof UsableClientEvents
 export type Event<Event extends ClientEvent> = (
   client: UsableClient,
   ...args: UsableClientEvents[Event]
-) => void;
+) => void

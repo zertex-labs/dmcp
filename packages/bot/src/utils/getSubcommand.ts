@@ -1,5 +1,7 @@
-export const getSubcommand = <Possible extends string[]>(
-  options: any
-): Possible[number] => options.getSubcommand();
+export function getSubcommand<Possible extends string[]>(
+  options: any,
+): Possible[number] {
+  return options.getSubcommand()
+}
 
-export default getSubcommand;
+export default getSubcommand

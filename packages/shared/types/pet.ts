@@ -1,30 +1,30 @@
-import type { AvailablePerk, PetUpgrade, Rarity, User } from '.';
+import type { AvailablePerk, PetUpgrade, Rarity, User } from '.'
 
-export const availablePets = ['COW', 'FOX'] as const;
-export type AvailablePet = (typeof availablePets)[number];
+export const availablePets = ['COW', 'FOX'] as const
+export type AvailablePet = (typeof availablePets)[number]
 
-export type PetSkeleton = {
-  rarity: Rarity;
-  maxLevel: number;
-  perks: AvailablePerk[];
-};
+export interface PetSkeleton {
+  rarity: Rarity
+  maxLevel: number
+  perks: AvailablePerk[]
+}
 
-export type Pet = {
-  uuid: string;
-  ownerId: string;
+export interface Pet {
+  uuid: string
+  ownerId: string
 
-  displayName: string;
-  type: AvailablePet;
+  displayName: string
+  type: AvailablePet
 
-  level: number;
+  level: number
 
-  upgradeSlots: PetUpgrade[];
-  boughtSlot: boolean;
+  upgradeSlots: PetUpgrade[]
+  boughtSlot: boolean
 
-  createdAt: string;
-  updatedAt: string;
-};
+  createdAt: string
+  updatedAt: string
+}
 
 export type PetWithOwner = Pet & {
-  owner: User;
-};
+  owner: User
+}

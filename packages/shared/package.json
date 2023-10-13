@@ -1,19 +1,19 @@
 {
   "name": "shared",
   "type": "module",
-  "main": "main.ts",
   "private": true,
+  "main": "main.ts",
   "include": [
     "src/**/*"
   ],
-  "devDependencies": {
-    "bun-types": "latest"
+  "scripts": {
+    "syncData": "bun run scripts/syncData.ts",
+    "validateData": "bun run scripts/validateData.ts"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "scripts": {
-    "syncData": "bun run scripts/syncData.ts",
-    "validateData": "bun run scripts/validateData.ts"
+  "devDependencies": {
+    "bun-types": "latest"
   }
 }

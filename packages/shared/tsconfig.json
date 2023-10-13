@@ -1,10 +1,13 @@
 {
-  "include": ["data", "data/**/*.json", "utils", "types"],
-  "files": ["main.ts"],
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "resolveJsonModule": true,
-    "outDir": "dist",
-    "baseUrl": "."
-  }
+    "outDir": "dist"
+  },
+  "files": ["main.ts"],
+  "include": ["data", "data/**/*.json", "composables", "types"],
+  "types": [
+    "bun-types" // add Bun global
+  ]
 }

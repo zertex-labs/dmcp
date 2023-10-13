@@ -1,44 +1,43 @@
-import {
+import type {
   ApplicationCommandOptionType,
   Interaction as CringeInteraction,
-  SlashCommandBuilder
-} from 'discord.js';
+} from 'discord.js'
 
-import { UsableClient } from '../client';
-import { MaybePromise } from '.';
+import type { MaybePromise } from 'shared'
+import type { UsableClient } from '../client'
 
-export type RunOptions = {
-  client: UsableClient;
-  interaction: Interaction;
-};
+export interface RunOptions {
+  client: UsableClient
+  interaction: Interaction
+}
 
 export type Interaction = CringeInteraction & {
-  client: UsableClient;
-};
+  client: UsableClient
+}
 
-type CommandStringOption = {
-  name: string;
-  description: string;
-  required?: boolean;
-  type: ApplicationCommandOptionType;
+interface CommandStringOption {
+  name: string
+  description: string
+  required?: boolean
+  type: ApplicationCommandOptionType
   choices?: {
-    name: string;
-    value: string;
-  }[];
-};
+    name: string
+    value: string
+  }[]
+}
 
-type CommonCommand = {
-  name: string;
-  description: string;
-  run: (o: RunOptions) => MaybePromise<void>;
-  autocomplete?: (o: RunOptions) => MaybePromise<void>;
-};
+interface CommonCommand {
+  name: string
+  description: string
+  run: (o: RunOptions) => MaybePromise<any>
+  autocomplete?: (o: RunOptions) => MaybePromise<void>
+}
 
 export type Command = CommonCommand & {
   // use new SlashCommandBuilder() to create a builder. Their typings are broken (well mine are but..)
-  withBuilder?: any;
-};
+  withBuilder?: any
+}
 
 export type ClientCommand = CommonCommand & {
-  options?: CommandStringOption[];
-};
+  options?: CommandStringOption[]
+}

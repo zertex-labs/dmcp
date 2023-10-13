@@ -1,13 +1,11 @@
-export const createSingleton = <T>(fn: () => T) => {
-  let instance: T | null = null;
+export function createSingleton<T>(fn: () => T) {
+  let instance: T | null = null
 
   return () => {
-    if (!instance) {
-      instance = fn();
-    }
+    if (!instance) instance = fn()
 
-    return Object.freeze(instance);
-  };
-};
+    return Object.freeze(instance)
+  }
+}
 
-export default createSingleton;
+export default createSingleton

@@ -1,4 +1,4 @@
-(() => {
-  Bun.write('src/Logs.log', '');
-  console.log('Cleared logs.');
-})();
+;(() => {
+  Bun.write('src/Logs.log', '')
+  console.log('Cleared logs.')
+})()

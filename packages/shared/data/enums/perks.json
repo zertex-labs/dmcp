@@ -1,6 +1,3 @@
 {
-  "enum": [
-    "PERK_SPEED",
-    "PERK_FARMING"
-  ]
+  "enum": ["PERK_SPEED", "PERK_FARMING"]
 }

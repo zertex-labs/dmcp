@@ -1,97 +1,89 @@
-import { Elysia, t } from 'elysia';
-import { ctx } from '../context';
-import { users } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { Elysia, t } from 'elysia'
+import { eq } from 'drizzle-orm'
+import { ctx } from '../context'
+import { users } from '../db/schema'
 
 export const usersController = new Elysia({
-  prefix: '/users'
+  prefix: '/users',
 })
   .use(ctx)
   .get(
     '/:userId',
     async ({ params, db }) => {
-      const { userId } = params;
+      const { userId } = params
 
       return db.query.users.findFirst({
         where: (users, { eq }) => eq(users.id, userId),
         with: {
-          activePet: true
-        }
-      });
+          activePet: true,
+        },
+      })
     },
     {
       beforeHandle: ({ isApiSecretPresent }) => {
-        if (!isApiSecretPresent()) {
-          return new Response('Not Authorized', { status: 401 });
-        }
-      }
-    }
+        if (!isApiSecretPresent())
+          return new Response('Not Authorized', { status: 401 })
+      },
+    },
   )
   .put(
     '/:userId/selectPet',
     async ({ body, params, db }) => {
-      const { userId } = params;
-      const { petId } = body;
+      const { userId } = params
+      const { petId } = body
 
       const petExists = db.query.pets.findFirst({
-        where: (pets, { eq, and }) =>
-          and(eq(pets.ownerId, userId), eq(pets.uuid, petId))
-      });
+        where: (pets, { eq, and }) => and(eq(pets.ownerId, userId), eq(pets.uuid, petId)),
+      })
 
-      if (!petExists) {
-        return new Response('Pet does not exist', { status: 404 });
-      }
+      if (!petExists) return new Response('Pet does not exist', { status: 404 })
 
       return db
         .update(users)
         .set({
-          activePetId: petId
+          activePetId: petId,
         })
         .where(eq(users.id, userId))
-        .returning({ userId: users.id, petId: users.activePetId });
+        .returning({ userId: users.id, petId: users.activePetId })
     },
     {
       body: t.Object({
-        petId: t.String()
+        petId: t.String(),
       }),
       beforeHandle: ({ isApiSecretPresent }) => {
-        if (!isApiSecretPresent()) {
-          return new Response('Not Authorized', { status: 401 });
-        }
-      }
-    }
+        if (!isApiSecretPresent())
+          return new Response('Not Authorized', { status: 401 })
+      },
+    },
   )
   .get(
     '/:userId/activePet',
     async ({ params, db }) => {
-      const { userId } = params;
+      const { userId } = params
 
       const user = await db.query.users.findFirst({
-        where: (users, { eq }) => eq(users.id, userId)
-      });
+        where: (users, { eq }) => eq(users.id, userId),
+      })
 
-      if (!user) {
-        return new Response('User does not exist', { status: 404 });
-      }
+      if (!user) return new Response('User does not exist', { status: 404 })
 
-      let petId = user.activePetId;
+      const petId = user.activePetId
       if (!petId) {
         return new Response('User does not have an active pet', {
-          status: 404
-        });
+          status: 404,
+        })
       }
 
       return db.query.pets.findFirst({
-        where: (pets, { eq }) => eq(pets.uuid, `${petId}`)
-      });
+        where: (pets, { eq }) => eq(pets.uuid, `${petId}`),
+      })
     },
     {
       beforeHandle: ({ isApiSecretPresent }) => {
-        if (!isApiSecretPresent()) {
-          return new Response('Not Authorized', { status: 401 });
-        }
-      }
-    }
-  );
+        if (!isApiSecretPresent())
+          return new Response('Not Authorized', { status: 401 })
+      },
+    },
+  )
 
-//TODO: Add endpoints
+// TODO: Add endpoints

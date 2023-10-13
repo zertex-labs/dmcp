@@ -1,6 +1,7 @@
 {
   "name": "api",
   "private": true,
+  "module": "src/index.js",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts"
@@ -22,6 +23,5 @@
     "@types/pg": "^8.10.3",
     "bun-types": "latest",
     "drizzle-kit": "^0.19.13"
-  },
-  "module": "src/index.js"
+  }
 }

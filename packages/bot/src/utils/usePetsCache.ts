@@ -1,25 +1,26 @@
-import { Pet, createSingleton } from 'shared';
+import type { Pet } from 'shared'
+import { createSingleton } from 'shared'
 
 export const usePetsCache = createSingleton(() => {
-  const cache = new Map<string, Pet[]>(); // userId -> pets
+  const cache = new Map<string, Pet[]>() // userId -> pets
 
   return {
     get: (userId: string) => {
-      return cache.get(userId);
+      return cache.get(userId)
     },
     set: (userId: string, pets: Pet[]) => {
-      cache.set(userId, pets);
+      cache.set(userId, pets)
     },
     remove: (userId: string) => {
-      cache.delete(userId);
+      cache.delete(userId)
     },
     flush: () => {
-      cache.clear();
+      cache.clear()
     },
     get cache() {
-      return cache;
-    }
-  };
-});
+      return cache
+    },
+  }
+})
 
-export default usePetsCache;
+export default usePetsCache

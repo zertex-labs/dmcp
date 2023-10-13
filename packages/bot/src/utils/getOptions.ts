@@ -1,12 +1,11 @@
-export const getOptions = <ReturnType>(
+export function getOptions<ReturnType>(
   options: { get: (key: string) => any },
-  keys: (keyof ReturnType)[]
-): ReturnType => {
-  const res = {} as any;
-  for (const key of keys as any) {
-    res[key] = options.get(key)?.value;
-  }
-  return res;
-};
+  keys: (keyof ReturnType)[],
+): ReturnType {
+  const res = {} as any
+  for (const key of keys as any) res[key] = options.get(key)?.value
 
-export default getOptions;
+  return res
+}
+
+export default getOptions

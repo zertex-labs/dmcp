@@ -5,16 +5,11 @@
       "$ref": "#/definitions/upgrade"
     }
   },
-  "required": [
-    "PET_UPGRADE_TODO"
-  ],
+  "required": ["PET_UPGRADE_TODO"],
   "definitions": {
     "upgrade": {
       "type": "object",
-      "required": [
-        "appliesTo",
-        "price"
-      ],
+      "required": ["appliesTo", "price"],
       "properties": {
         "price": {
           "type": "number",
