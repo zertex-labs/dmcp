@@ -13,15 +13,48 @@ import type { ServiceResponse } from './types'
  * @param userId The user's id
  * @returns a {@link ServiceResponse}<{@link User} | undefined>
  */
-export async function getUser(userId: string): Promise<ServiceResponse<User & Required<Pick<User, 'activePet'>> | undefined>> {
+export async function getUser(userId: string, withParams?: Partial<{
+  activePet: boolean
+  pets: boolean
+}>): Promise<ServiceResponse<User | undefined>> {
   try {
     const user = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, userId),
       with: {
-        activePet: true,
+        activePet: withParams?.activePet ? true : undefined,
+        pets: withParams?.pets ? true : undefined,
       },
     })
     return { status: 'success', data: user }
+  }
+  catch (e) {
+    console.error(e)
+    return predefinedServiceResponse.internalError
+  }
+}
+
+export async function userExists(userId: string): Promise<ServiceResponse<boolean>> {
+  const userRes = await getUser(userId)
+  if (userRes.status === 'error') return userRes // will be an internal error so we should bleed it through
+
+  return { status: 'success', data: !!userRes.data }
+}
+
+export async function createUser(data: typeof users.$inferInsert): Promise<ServiceResponse<string>> {
+  try {
+    const res = await db
+      .insert(users)
+      .values(data)
+      .returning({ userId: users.id })
+
+    if (res.length === 0) {
+      return {
+        status: 'error',
+        error: 'Failed to create user',
+      }
+    }
+
+    return { status: 'success', data: res[0].userId }
   }
   catch (e) {
     console.error(e)

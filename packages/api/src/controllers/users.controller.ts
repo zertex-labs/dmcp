@@ -1,9 +1,9 @@
 import { Elysia, t } from 'elysia'
 
 import { ctx } from '../context'
-import { getUser, selectPet } from '../services/users.service'
+import { createUser, getUser, selectPet } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
-import { response, serviceResponse } from '../utils/response'
+import { resolveServiceResponse, response } from '../utils/response'
 
 export const usersController = new Elysia({
   prefix: '/users',
@@ -12,12 +12,30 @@ export const usersController = new Elysia({
   .use(ctx)
   .get(
     '/:userId',
-    async ctx => serviceResponse(await getUser(ctx.params.userId)),
-    { beforeHandle: requireApiSecret },
+    async ctx => resolveServiceResponse(await getUser(ctx.params.userId, ctx.query)),
+    {
+      beforeHandle: requireApiSecret,
+      query: t.Object({
+        activePet: t.Optional(t.Boolean()),
+        pets: t.Optional(t.Boolean()),
+      }),
+    },
   )
+
+  .put(
+    '/create',
+    async ctx => resolveServiceResponse(await createUser(ctx.body)),
+    {
+      beforeHandle: requireApiSecret,
+      body: t.Object({
+        id: t.String(),
+      }),
+    },
+  )
+
   .post(
     '/:userId/selectPet',
-    async ctx => serviceResponse(await selectPet({ userId: ctx.params.userId, petId: ctx.body.petId })),
+    async ctx => resolveServiceResponse(await selectPet({ userId: ctx.params.userId, petId: ctx.body.petId })),
     {
       body: t.Object({
         petId: t.String(),
@@ -29,7 +47,7 @@ export const usersController = new Elysia({
     '/:userId/activePet',
     async (ctx) => {
       const userRes = await getUser(ctx.params.userId)
-      if (userRes.status === 'error') return serviceResponse(userRes) // will be an internal error
+      if (userRes.status === 'error') return resolveServiceResponse(userRes) // will be an internal error
 
       const user = userRes.data
       if (!user) return response.error('User not found', 404)
