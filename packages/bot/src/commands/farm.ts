@@ -27,7 +27,7 @@ export default {
     if (userRes.status !== 200)
       return void reply.edit('You need to create an account first')
 
-    const { farmingResponse, farmingUser } = await useFarmingHandler().farm(
+    const { farmingResponse } = await useFarmingHandler().farm(
       userRes.data,
     )
 

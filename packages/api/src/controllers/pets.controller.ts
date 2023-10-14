@@ -6,6 +6,7 @@ import { pets, users } from '../db/schema'
 
 export const petsController = new Elysia({
   prefix: '/pets',
+  name: 'api:pets',
 })
   .use(ctx)
   .get(

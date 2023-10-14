@@ -171,7 +171,7 @@ export default {
 
         const reply = await interaction.reply(`Selecting pet...`)
 
-        const selectRes = await axios.put(
+        const selectRes = await axios.post(
           `http://localhost:3000/api/users/${interaction.user.id}/selectPet`,
           { petId: uuid },
           {

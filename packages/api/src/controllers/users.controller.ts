@@ -5,6 +5,7 @@ import { users } from '../db/schema'
 
 export const usersController = new Elysia({
   prefix: '/users',
+  name: 'api:users',
 })
   .use(ctx)
   .get(
@@ -26,7 +27,7 @@ export const usersController = new Elysia({
       },
     },
   )
-  .put(
+  .post(
     '/:userId/selectPet',
     async ({ body, params, db }) => {
       const { userId } = params

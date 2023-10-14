@@ -36,8 +36,9 @@ export const ctx = new Elysia({
       : a => a,
   )
 
-  .derive(async ({ headers }) => ({
+  .derive(async ({ headers, store }) => ({
     isApiSecretPresent: () => headers['x-api-secret'] === config.env.API_SECRET,
+    isAdmin: (userId: string) => userId in store.localData.adminIds,
   }))
 
   .onStart(({ log }) => {
