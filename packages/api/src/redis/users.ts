@@ -1,6 +1,6 @@
 import type { AvailableFood, FarmingUser } from 'shared'
 
-import useFarmingHandler from 'shared/utils/useFarmingHandler'
+import useFarmingHandler from 'shared/composables/useFarmingHandler'
 
 import { redis } from '.'
 

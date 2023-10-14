@@ -1,4 +1,6 @@
 import type { FarmingUser } from 'shared'
+import useLeaderboard from 'shared/composables/useLeaderboard'
+
 import { getAllItems } from './getAllItems'
 
 const leaderboard = useLeaderboard()

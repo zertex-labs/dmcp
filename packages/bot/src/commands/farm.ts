@@ -2,7 +2,7 @@ import type { User } from 'shared'
 import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
 
-import useFarmingHandler from 'shared/utils/useFarmingHandler'
+import useFarmingHandler from 'shared/composables/useFarmingHandler'
 import type { Command } from '../types'
 
 export default {
