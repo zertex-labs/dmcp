@@ -8,8 +8,8 @@ export const userTable = pgTable('user', {
 
   activePetId: text('active_pet_id').references(() => pets.uuid),
 
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow(),
+  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 })
 
 export const userRelations = relations(userTable, ({ many, one }) => ({

@@ -14,7 +14,7 @@ import { users } from '.'
 
 export const petsTable = pgTable('pets', {
   uuid: text('uuid').primaryKey().$defaultFn(createId),
-  ownerId: text('owner_id'),
+  ownerId: text('owner_id').notNull(),
 
   displayName: text('display_name').notNull().unique(),
   type: text('type', {
@@ -31,7 +31,7 @@ export const petsTable = pgTable('pets', {
   boughtSlot: boolean('bought_slot').notNull().default(false),
 
   createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 })
 
 export const petRelations = relations(petsTable, ({ one }) => ({
