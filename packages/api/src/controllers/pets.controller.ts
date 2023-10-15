@@ -20,7 +20,7 @@ export const petsController = new Elysia({
 
       return response.success(userRes.data.pets ?? [])
     },
-    { beforeHandle: requireApiSecret },
+    { beforeHandle: requireApiSecret, detail: { tags: ['Pets'] } },
   )
   .put(
     '/giveToUser',
@@ -39,6 +39,7 @@ export const petsController = new Elysia({
         ownerId: t.String(),
         displayName: t.String(),
       }),
+      detail: { tags: ['Pets'] },
     },
   )
 

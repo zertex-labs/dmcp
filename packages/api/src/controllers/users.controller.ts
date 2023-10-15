@@ -19,6 +19,7 @@ export const usersController = new Elysia({
         activePet: t.Optional(t.Boolean()),
         pets: t.Optional(t.Boolean()),
       }),
+      detail: { tags: ['Users'] },
     },
   )
 
@@ -30,6 +31,7 @@ export const usersController = new Elysia({
       body: t.Object({
         id: t.String(),
       }),
+      detail: { tags: ['Users'] },
     },
   )
 
@@ -41,6 +43,7 @@ export const usersController = new Elysia({
         petId: t.String(),
       }),
       beforeHandle: requireApiSecret,
+      detail: { tags: ['Users'] },
     },
   )
   .get(
@@ -57,5 +60,5 @@ export const usersController = new Elysia({
 
       return response.success(user.activePet)
     },
-    { beforeHandle: requireApiSecret },
+    { beforeHandle: requireApiSecret, detail: { tags: ['Users'] } },
   )
