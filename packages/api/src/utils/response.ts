@@ -13,18 +13,18 @@ const baseResponse = {
  */
 export const response = Object.freeze({
   ...baseResponse,
-  predefined: {
+  predefined: Object.freeze({
     notAuthorized: baseResponse.error('Not Authorized', 401),
     notFound: baseResponse.error('Not Found', 404),
     badRequest: baseResponse.error('Bad Request', 400),
     internalError: baseResponse.error('Internal Error', 500),
-    service: {
+    service: Object.freeze({
       internalError: { status: 'error', error: 'Internal Error', statusCode: 500 } as const,
       badRequest: { status: 'error', error: 'Bad Request', statusCode: 400 } as const,
       notFound: { status: 'error', error: 'Not Found', statusCode: 404 } as const,
       notAuthorized: { status: 'error', error: 'Not Authorized', statusCode: 401 } as const,
-    } as const,
-  },
+    }),
+  }),
 })
 
 /**
