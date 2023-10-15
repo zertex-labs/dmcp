@@ -18,6 +18,12 @@ export const response = Object.freeze({
     notFound: baseResponse.error('Not Found', 404),
     badRequest: baseResponse.error('Bad Request', 400),
     internalError: baseResponse.error('Internal Error', 500),
+    service: {
+      internalError: { status: 'error', error: 'Internal Error', statusCode: 500 } as const,
+      badRequest: { status: 'error', error: 'Bad Request', statusCode: 400 } as const,
+      notFound: { status: 'error', error: 'Not Found', statusCode: 404 } as const,
+      notAuthorized: { status: 'error', error: 'Not Authorized', statusCode: 401 } as const,
+    } as const,
   },
 })
 
@@ -37,13 +43,3 @@ export function resolveServiceResponse<T>(res: ServiceResponse<T>, statusCode?: 
 
   return response.success(res.data)
 }
-
-/**
- * A collection of predefined {@link ServiceResponse}s
- */
-export const predefinedServiceResponse = Object.freeze({
-  internalError: { status: 'error', error: 'Internal Error', statusCode: 500 } as const,
-  badRequest: { status: 'error', error: 'Bad Request', statusCode: 400 } as const,
-  notFound: { status: 'error', error: 'Not Found', statusCode: 404 } as const,
-  notAuthorized: { status: 'error', error: 'Not Authorized', statusCode: 401 } as const,
-} satisfies Record<string, ServiceResponse<any>>)

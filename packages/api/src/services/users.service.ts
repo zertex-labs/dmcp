@@ -4,7 +4,7 @@ import type { Pet, Prettify, User } from 'shared'
 
 import db from '../db'
 import { users } from '../db/schema'
-import { predefinedServiceResponse } from '../utils/response'
+import { response } from '../utils/response'
 import { getPet } from './pets.service'
 import type { ServiceResponse } from './types'
 
@@ -29,7 +29,7 @@ export async function getUser(userId: string, withParams?: Partial<{
   }
   catch (e) {
     console.error(e)
-    return predefinedServiceResponse.internalError
+    return response.predefined.service.internalError
   }
 }
 
@@ -58,7 +58,7 @@ export async function createUser(data: typeof users.$inferInsert): Promise<Servi
   }
   catch (e) {
     console.error(e)
-    return predefinedServiceResponse.internalError
+    return response.predefined.service.internalError
   }
 }
 
@@ -86,7 +86,7 @@ export async function selectPet(o: { userId: string; petId: string }): Promise<S
   }
   catch (e) {
     console.error(e)
-    return predefinedServiceResponse.internalError
+    return response.predefined.service.internalError
   }
 
   return {
