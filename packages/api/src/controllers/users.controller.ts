@@ -6,6 +6,11 @@ import { createUser, getUser, getUserWithParamateres, selectPet } from '../servi
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 
+// :) critical brain damage below :)
+const truthfulBooleanVariants = ['1', 'true', 'sure'] as const
+const falsyBooleanVariants = ['0', 'false', 'nah'] as const
+const booleanVariants = [...truthfulBooleanVariants, ...falsyBooleanVariants] as const
+
 export const usersController = new Elysia({
   prefix: '/users',
   name: 'api:users',
@@ -13,11 +18,14 @@ export const usersController = new Elysia({
   .use(ctx)
   .get(
     '/:userId',
-    async ctx => resolveServiceResponse(await getUser(ctx.params.userId, Object.entries(ctx.query ?? {}).reduce((acc, [k, v]) => ({ ...acc, [k]: v === '1' }), {}))),
+    async ctx => resolveServiceResponse(await getUser(
+      ctx.params.userId,
+      Object.entries(ctx.query ?? {}).reduce((acc, [k, v]) => ({ ...acc, [k]: truthfulBooleanVariants.includes(v as any) }), {}),
+    )),
     {
       beforeHandle: requireApiSecret,
       query: t.Object({
-        ...getUserWithParamateres.reduce((acc, cur) => ({ ...acc, [cur]: t.Optional(t.Union([t.Literal('0'), t.Literal('1')])) }), {}),
+        ...getUserWithParamateres.reduce((acc, cur) => ({ ...acc, [cur]: t.Optional(t.Union(booleanVariants.map(x => t.Literal(x)))) }), {}),
       }),
       detail: { tags: ['Users'] },
     },
