@@ -49,11 +49,12 @@ export const usersController = new Elysia({
   .get(
     '/:userId/activePet',
     async (ctx) => {
+      console.log('ctx.params.userId', ctx.params.userId)
       const userRes = await getUser(ctx.params.userId)
       if (userRes.status === 'error') return resolveServiceResponse(userRes) // will be an internal error
 
       const user = userRes.data
-      if (!user) return response.error('User not found', 404)
+      if (!user) return resolveServiceResponse(response.service.error('User not found', 404))
 
       if (!user.activePet)
         return response.error('User has no active pet', 404)

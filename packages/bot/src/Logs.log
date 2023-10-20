@@ -1279,3 +1279,53 @@
 {"level":"info","message":"11:function getMinutes() { [native code] } - 15:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
 {"level":"info","message":"11:function getMinutes() { [native code] } - 15:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
 {"level":"info","message":"11:function getMinutes() { [native code] } - 15:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"22:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Started refreshing 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Commands: farm, pets, leaderboard"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Refreshed 3 commands."}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.guildMemberAdd (/home/endeavour/Code/dmcp/packages/bot/src/events/guildMemberAdd.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.ready (/home/endeavour/Code/dmcp/packages/bot/src/events/$ready.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered on.interactionCreate (/home/endeavour/Code/dmcp/packages/bot/src/events/interactionCreate.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Registered once.error (/home/endeavour/Code/dmcp/packages/bot/src/events/$error.ts)"}
+{"level":"info","message":"23:function getMinutes() {\n    [native code]\n} - 20:9:2023 | Info: Logged in as Zertex Beta#3816"}

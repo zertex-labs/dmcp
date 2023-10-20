@@ -15,7 +15,7 @@ import { createBaseChances, createBaseStats } from '../types'
 import { food as dataFood, perks as dataPerks, upgrades } from '../data'
 import { getPetSkeleton, randomNumber } from '../utils'
 
-type FarmingResponse = ReturnType<typeof doFarm>
+export type FarmingResponse = ReturnType<typeof doFarm>
 
 type NamedFood = Food & { name: AvailableFood }
 type NamedFoodWithChanced = NamedFood & { chance: number }
