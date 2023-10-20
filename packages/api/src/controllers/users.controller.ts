@@ -1,7 +1,8 @@
 import { Elysia, t } from 'elysia'
 
+import { Optional } from '@sinclair/typebox'
 import { ctx } from '../context'
-import { createUser, getUser, selectPet } from '../services/users.service'
+import { createUser, getUser, getUserWithParamateres, selectPet } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 
@@ -12,12 +13,11 @@ export const usersController = new Elysia({
   .use(ctx)
   .get(
     '/:userId',
-    async ctx => resolveServiceResponse(await getUser(ctx.params.userId, ctx.query)),
+    async ctx => resolveServiceResponse(await getUser(ctx.params.userId, Object.entries(ctx.query ?? {}).reduce((acc, [k, v]) => ({ ...acc, [k]: v === '1' }), {}))),
     {
       beforeHandle: requireApiSecret,
       query: t.Object({
-        activePet: t.Optional(t.Boolean()),
-        pets: t.Optional(t.Boolean()),
+        ...getUserWithParamateres.reduce((acc, cur) => ({ ...acc, [cur]: t.Optional(t.Union([t.Literal('0'), t.Literal('1')])) }), {}),
       }),
       detail: { tags: ['Users'] },
     },

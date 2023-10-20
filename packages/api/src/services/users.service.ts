@@ -9,20 +9,24 @@ import { createRedisKey, redis } from '../redis'
 import { getPet } from './pets.service'
 import type { ServiceResponse } from './types'
 
+export const getUserWithParamateres = ['activePet', 'pets'] as const
+export type GetUserWithParamateres = typeof getUserWithParamateres[number]
+
 /**
  * Get a user by their id
  * @param userId The user's id
  * @returns a {@link ServiceResponse}<{@link User} | undefined>
  */
-export async function getUser(userId: string, withParams?: Partial<{
-  activePet: boolean
-  pets: boolean
-}>): Promise<ServiceResponse<User | undefined>> {
+export async function getUser(userId: string, withParams?: Partial<Record<GetUserWithParamateres, boolean>>): Promise<ServiceResponse<User | undefined>> {
   try {
-    const key = createRedisKey('dbUser', userId)
+    const paramEntries = Object.entries(withParams ?? {}).filter(([, v]) => v)
+    console.log(paramEntries)
+    // respect params in cache. If there are no params/all params are used, use the default key
+    const suffixFromParams = paramEntries.length > 0 ? `+${paramEntries.map(([k]) => k).join('&')}` : ''
+    const key = `${createRedisKey('dbUser', userId)}${suffixFromParams}`
 
     const cachedUser = await redis.json.get(key, '$') as [User] | undefined
-    if (cachedUser && cachedUser.length > 0) return { status: 'success', data: cachedUser[0] }
+    if (cachedUser && cachedUser.length > 0 && (withParams?.pets && !cachedUser[0].pets)) return { status: 'success', data: cachedUser[0] }
 
     const user = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, userId),
