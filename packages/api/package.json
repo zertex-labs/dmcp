@@ -17,6 +17,7 @@
     "@tlscipher/holt": "^1.1.2",
     "@upstash/redis": "^1.22.1",
     "drizzle-orm": "^0.28.6",
+    "drizzle-typebox": "^0.1.1",
     "elysia": "latest",
     "pg": "^8.11.3",
     "pino-pretty": "^10.2.3",

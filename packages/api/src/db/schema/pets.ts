@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import {
   boolean,
   integer,
@@ -6,9 +7,9 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm'
 
 import { createId } from '@paralleldrive/cuid2'
+import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 import { type PetUpgrade, availablePets } from 'shared'
 import { users } from '.'
 
@@ -40,3 +41,10 @@ export const petRelations = relations(petsTable, ({ one }) => ({
     references: [users.id],
   }),
 }))
+
+export type PetSelect = typeof petsTable.$inferSelect
+export type PetInsert = typeof petsTable.$inferInsert
+
+// If you're getting a [Kind] typebox error, try reinstalling the dependencies. Sometimes because elysia re-exports typebox it fucks up the actual typebox types for some reason :despairge:
+export const selectPetSchema = createSelectSchema(petsTable)
+export const insertPetSchema = createInsertSchema(petsTable)

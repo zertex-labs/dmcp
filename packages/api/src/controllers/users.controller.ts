@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 
-import { Optional } from '@sinclair/typebox'
 import { ctx } from '../context'
+import { insertUserSchema } from '../db/schema/users'
 import { createUser, getUser, getUserWithParamateres, selectPet } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
@@ -36,9 +36,7 @@ export const usersController = new Elysia({
     async ctx => resolveServiceResponse(await createUser(ctx.body)),
     {
       beforeHandle: requireApiSecret,
-      body: t.Object({
-        id: t.String(),
-      }),
+      body: insertUserSchema,
       detail: { tags: ['Users'] },
     },
   )
