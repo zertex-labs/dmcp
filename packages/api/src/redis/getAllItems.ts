@@ -1,11 +1,6 @@
 import type { PrefixKey } from '.'
 import { PREFIXES, createRedisKey, redis } from '.'
 
-// type Args = <T extends string | PrefixKey>(prefix: T) => T extends string ? [T] : [T, string]
-// type Args<PrefixType extends (string | PrefixKey) & ({})> = PrefixType extends string ? [PrefixType] : [PrefixType, string]
-
-// if prefix is a string args should be just a string
-// if it's PrefixKey there's should a value:string arg as well
 export async function getAllItems<Keys extends PropertyKey, Stored>(
   o: string | { key: PrefixKey; value: string; suffix?: string },
 ): Promise<Record<Keys, Stored>> {
