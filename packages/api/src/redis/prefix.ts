@@ -8,8 +8,8 @@ export type PrefixKey = keyof typeof PREFIXES
 
 export function createRedisKey<
   PKey extends PrefixKey,
->(prefixKey: PKey, value: string) {
-  return `${PREFIXES[prefixKey]}${value}`
+>(prefixKey: PKey, value: string, suffix = '') {
+  return `${PREFIXES[prefixKey]}${value}${suffix}`
 }
 
 export function getPrefix(value: string) {

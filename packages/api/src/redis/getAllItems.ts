@@ -2,13 +2,12 @@ import type { PrefixKey } from '.'
 import { PREFIXES, redis } from '.'
 
 export async function getAllItems<Keys extends PropertyKey, Stored>(
-  prefixKey: PrefixKey,
-  suffix = '*',
+  prefix: string,
 ): Promise<Record<Keys, Stored>> {
   let cursor = 0
   const items = {}
 
-  const match = `${PREFIXES[prefixKey]}${suffix}`
+  const match = prefix
   do {
     const result = await redis.scan(cursor, { match })
 

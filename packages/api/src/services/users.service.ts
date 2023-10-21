@@ -22,8 +22,8 @@ export async function getUser(userId: string, withParams?: Partial<Record<GetUse
     const paramEntries = Object.entries(withParams ?? {}).filter(([, v]) => v)
     console.log(paramEntries)
     // respect params in cache. If there are no params/all params are used, use the default key
-    const suffixFromParams = paramEntries.length > 0 ? `+${paramEntries.map(([k]) => k).join('&')}` : ''
-    const key = `${createRedisKey('dbUser', userId)}${suffixFromParams}`
+    const suffixFromParams = paramEntries.length > 0 ? `+${paramEntries.map(([k]) => k).join('&')}` : undefined
+    const key = createRedisKey('dbUser', userId, suffixFromParams)
 
     const cachedUser = await redis.json.get(key, '$') as [User] | undefined
     if (cachedUser && cachedUser.length > 0 && (withParams?.pets && !cachedUser[0].pets)) return { status: 'success', data: cachedUser[0] }
