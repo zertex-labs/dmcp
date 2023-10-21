@@ -6,6 +6,7 @@ import db from '../db'
 import { users } from '../db/schema'
 import { response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
+import { deleteAllItems } from '../redis/deleteAllItems'
 import { getPet } from './pets.service'
 import type { ServiceResponse } from './types'
 
@@ -90,26 +91,25 @@ export async function selectPet(o: { userId: string; petId: string }): Promise<S
   if (!petRes.data) return { status: 'error', error: 'Invalid petId; petId is either invalid or user doesn\'t own it.' }
 
   try {
-    const userRes = await db
+    const { rowCount: updatedCount } = await db
       .update(users)
       .set({
         activePetId: petId,
       })
       .where(eq(users.id, userId))
-      .returning()
 
-    console.log(userRes)
-
-    if (userRes.length === 0 || !userRes[0].activePetId)
+    if (updatedCount === 0)
       return response.service.error('Failed to update user', 500)
 
-    const user = userRes[0]
-    const key = createRedisKey('dbUser', userId)
+    const deletedIsSuccess = await deleteAllItems({
+      key: 'dbUser',
+      value: userId,
+    })
 
-    console.log(key, user)
-
-    // will overwrite the user if it exists, or create a new one
-    await redis.json.set(key, '$', user)
+    if (!deletedIsSuccess) {
+      console.error('Failed to delete user from cache', userId)
+      console.log(new Error('stack').stack)
+    }
   }
   catch (e) {
     console.error(e)
