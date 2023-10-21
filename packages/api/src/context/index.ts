@@ -28,6 +28,7 @@ export const ctx = new Elysia({
   .state('config', config)
   .state('localData', data)
 
+  // if whole context dies randomly ever again it's 99.9% cause of this shitty logger. Try reinstalling the dependancies again if it happens
   .use(logger(loggerConfig))
   .use(
     // @ts-expect-error ts shits itself and gives up on life
