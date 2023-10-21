@@ -45,9 +45,7 @@ export const usersController = new Elysia({
     '/:userId/selectPet',
     async ctx => resolveServiceResponse(await selectPet({ userId: ctx.params.userId, petId: ctx.body.petId })),
     {
-      body: t.Object({
-        petId: t.String(),
-      }),
+      body: t.Object({ petId: t.String() }),
       beforeHandle: requireApiSecret,
       detail: { tags: ['Users'] },
     },
