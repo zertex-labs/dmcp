@@ -55,11 +55,7 @@ export class UsableClient extends Client {
       if (val) args[k] = val
     }
 
-    console.log(interaction.isCommand())
-
     if (interaction.isCommand()) {
-      console.log(interaction.options.data)
-
       interaction.options.data.forEach((option) => {
         args[`option+${option.name}`] = `${(option?.value?.toString() ?? 'no value')}(type ${option.type})`
       })
