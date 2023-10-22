@@ -20,13 +20,13 @@ export type GetUserWithParamateres = typeof getUserWithParamateres[number]
 export async function getUser(userId: string, withParams?: Partial<Record<GetUserWithParamateres, boolean>>): Promise<ServiceResponse<User | undefined>> {
   try {
     const paramEntries = Object.entries(withParams ?? {}).filter(([, v]) => v)
-    console.log(paramEntries)
     // respect params in cache. If there are no params/all params are used, use the default key
     const suffixFromParams = paramEntries.length > 0 ? `+${paramEntries.map(([k]) => k).join('&')}` : undefined
     const key = createRedisKey('dbUser', userId, suffixFromParams)
 
     const cachedUser = await redis.json.get(key, '$') as [User] | undefined
-    if (cachedUser && cachedUser.length > 0 && (withParams?.pets && !cachedUser[0].pets)) return { status: 'success', data: cachedUser[0] }
+    if (cachedUser?.[0])
+      return { status: 'success', data: cachedUser[0] }
 
     const user = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, userId),

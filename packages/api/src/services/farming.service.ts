@@ -14,7 +14,9 @@ export type FarmingResolvers = {
 }
 
 export const resolverParametersTypes = {
-  farm: t.String(),
+  farm: t.Object({
+    userId: t.String(),
+  }),
 } as const
 
 export function validateActionBody<Action extends FarmingAction>(action: Action, body: any): Static<typeof resolverParametersTypes[Action]> | null {

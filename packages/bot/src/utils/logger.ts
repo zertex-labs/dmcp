@@ -1,5 +1,12 @@
 import winston from 'winston'
 import colors from 'colors'
+import { capitalize } from 'shared'
+
+function formattedDate(d: Date) {
+  return `${d.getDate()}:${d.getMonth()}:${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+}
+
+const trim = (s: string) => s.trim()
 
 class Logger {
   public logger: winston.Logger
@@ -9,18 +16,17 @@ class Logger {
     })
   }
 
-  log(text: string) {
+  log(text: string, level: 'info' | 'error' = 'info') {
     const d = new Date()
-    this.logger.log({
-      level: 'info',
-      message: `${d.getHours()}:${
-        d.getMinutes
-      } - ${d.getDate()}:${d.getMonth()}:${d.getFullYear()} | Info: ${text}`,
-    })
+    const fd = formattedDate(d)
+    const message = `${fd} | ${capitalize(level)}: ${text}`
+    this.logger.log({ level, message })
+
+    const mSplit = message.split('|').map(trim)
     console.log(
-      colors.green(
-        `${d.getDate()}:${d.getMonth()}:${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}`,
-      ) + colors.yellow(` | Info: ${text}`),
+      colors.green(`${mSplit[0]}`),
+      '|',
+      colors[level === 'info' ? 'yellow' : 'red'](mSplit[1]),
     )
   }
 }

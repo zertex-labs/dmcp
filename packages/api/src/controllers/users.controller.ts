@@ -42,6 +42,27 @@ export const usersController = new Elysia({
   )
 
   .post(
+    '/getOrCreateUser',
+    async (ctx) => {
+      const data = ctx.body
+      const userRes = await getUser(data.id)
+      if (userRes.status === 'error') return resolveServiceResponse(userRes) // will be an internal error
+
+      if (userRes.data) return response.success(userRes.data)
+
+      const createRes = await createUser(data)
+      if (createRes.status === 'error') return resolveServiceResponse(createRes) // will be an internal error
+
+      return response.success(createRes.data)
+    },
+    {
+      beforeHandle: requireApiSecret,
+      body: insertUserSchema,
+      detail: { tags: ['Users'] },
+    },
+  )
+
+  .post(
     '/:userId/selectPet',
     async ctx => resolveServiceResponse(await selectPet({ userId: ctx.params.userId, petId: ctx.body.petId })),
     {

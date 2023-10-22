@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "bun run src/main.ts",
-    "dev": "bun run --watch src/main.ts",
+    "dev": "clear && bun run --watch src/main.ts",
     "clearLog": "bun run ./scripts/clearLog.ts"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "winston": "^3.10.0"
   },
   "devDependencies": {
+    "@types/winston": "^2.4.4",
     "prettier": "^3.0.3",
     "tsx": "^3.12.10",
     "typescript": "^5.2.2"

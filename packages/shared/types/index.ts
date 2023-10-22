@@ -32,6 +32,8 @@ export type ServiceResponse<DataType, ErrorType = string> = {
   statusCode?: number
 }
 
+export type KeysMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T]
+
 export * from './rarity'
 export * from './food'
 export * from './perks'

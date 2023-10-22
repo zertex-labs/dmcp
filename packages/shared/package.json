@@ -4,7 +4,10 @@
   "private": true,
   "main": "main.ts",
   "include": [
-    "src/**/*"
+    "composables/*.ts",
+    "data/*",
+    "types/*.ts",
+    "utils/*.ts"
   ],
   "scripts": {
     "syncData": "bun run scripts/syncData.ts",

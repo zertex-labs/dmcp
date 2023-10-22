@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import type { AvailablePet, Pet } from 'shared'
 import { availablePets } from 'shared'
 
@@ -32,6 +32,7 @@ export default {
             .setAutocomplete(true),
         ),
     )
+    .addSubcommand(sub => sub.setName('list').setDescription('List your or someone else\'s pets').addUserOption(opt => opt.setName('user').setDescription('User to list pets of')))
     .addSubcommand(sub =>
       sub.setName('active').setDescription('Get your active pet'),
     )
@@ -103,12 +104,14 @@ export default {
       })),
     )
   },
-  run: async ({ interaction }) => {
+  run: async ({ client, interaction }) => {
     if (!interaction.isCommand()) return
 
-    const subcommand = getSubcommand<['give', 'select', 'active']>(
+    const subcommand = getSubcommand<['give', 'select', 'active', 'list']>(
       interaction.options,
     )
+
+    // TODO please cleanup this
     switch (subcommand) {
       case 'give':
         if (!adminIds.includes(interaction.user.id)) {
@@ -153,7 +156,7 @@ export default {
             )
           }
 
-          console.error('Error giving pet to user', giveRes.data)
+          client.interactionError(interaction, `${giveRes.data}; Giving pet to user`)
           return void interaction.reply('Error giving pet to user')
         }
 
@@ -183,7 +186,7 @@ export default {
         )
 
         if (selectRes.status !== 200) {
-          console.error('Error selecting pet', selectRes.data)
+          client.interactionError(interaction, `${selectRes.data}; Selecting pet`)
           return void reply.edit('Error selecting pet, please try again later')
         }
 
@@ -204,7 +207,7 @@ export default {
         )
 
         if (activeRes.status !== 200) {
-          console.error('Error getting active pet', activeRes.data)
+          client.interactionError(interaction, 'Error getting active pet')
           return activeReply.edit(
             'Error getting active pet, please try again later',
           )
@@ -217,6 +220,43 @@ export default {
         )
 
         break
+      case 'list':
+        const listUser = interaction.options.getUser('user') ?? interaction.user
+
+        try {
+          const listReq = await axios.get<Pet[]>(`http://localhost:3000/api/pets/owned/${listUser.id}`, {
+            headers: {
+              'x-api-secret': process.env.API_SECRET,
+            },
+          })
+          const pets = listReq.data
+
+          if (pets.length === 0) {
+            interaction.reply({
+              content: `**${listUser.username}** has no pets.`,
+              ephemeral: true,
+            })
+          }
+
+          interaction.reply({
+            embeds: [
+              new EmbedBuilder().setTitle(`${listUser.username}'s pets`)
+                .addFields(
+                  ...pets.map(pet => ({
+                    name: `${pet.displayName} - ${pet.type.toUpperCase()}`,
+                    value: `Level: ${pet.level}; Bought slots: ${pet.boughtSlot ? 'yes' : 'no'}`,
+                  })),
+                ),
+            ],
+          })
+        }
+        catch (e: any) {
+          client.interactionError(interaction, e)
+          await interaction.reply('Something went wrong, please try again later.')
+        }
+        break
+      default:
+        interaction.reply('Unknown subcommand')
     }
   },
 } satisfies Command

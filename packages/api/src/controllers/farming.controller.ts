@@ -17,7 +17,7 @@ const allItems = parseAllFoodItemsWithChances()
  * If a resolver returns anything else it will be passed down as a {@link ServiceResponse}
  */
 export const resolvers = {
-  farm: async (userId) => {
+  farm: async ({ userId }) => {
     const userRes = await getUser(userId)
     if (userRes.status === 'error') return userRes
 
@@ -48,6 +48,7 @@ export const farmingController = new Elysia({
   name: 'api:farming',
 }).use(ctx).post('/action/:action', async (ctx) => {
   const { action } = ctx.params
+  console.log(action, ctx.body)
   const res = await handleAction(resolvers, action, ctx.body)
   return resolveServiceResponse(res)
 }, {

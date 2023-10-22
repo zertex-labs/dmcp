@@ -19,8 +19,8 @@ const app = new Elysia()
     },
   }))
   .use(api)
-  .onError(({ error }) => {
-    console.error(error)
+  .onError(({ log, error }) => {
+    log.error(error)
   })
   .listen(3000)
 
