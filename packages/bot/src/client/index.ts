@@ -3,6 +3,7 @@ import type { ClientOptions } from 'discord.js'
 import { Client, Collection } from 'discord.js'
 
 import type { KeysMatching } from 'shared'
+import { AxiosError } from 'axios'
 import Logger from '../utils/logger'
 import type { ClientCommand, Interaction } from '../types'
 
@@ -32,9 +33,14 @@ export class UsableClient extends Client {
   }
 
   private processTextOrError(textOrError: string | Error) {
-    return textOrError instanceof Error
-      ? `${(textOrError?.stack ?? textOrError.message).replace('Error: ', '')}`
-      : textOrError
+    if (textOrError instanceof Error) {
+      if (textOrError instanceof AxiosError)
+        return `${textOrError.response?.status} ${textOrError.response?.statusText} ${JSON.stringify(textOrError.response?.data ?? {})}`
+
+      return `${(textOrError?.stack ?? textOrError.message).replace('Error: ', '')}`
+    }
+
+    return textOrError
   }
 
   private constructStringFromInteraction(interaction: Interaction) {
