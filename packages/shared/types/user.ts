@@ -4,6 +4,7 @@ export interface User {
   id: string
   createdAt: string
   updatedAt: string
+  activePetId: Nullable<string>
 
   pets?: Pet[]
   activePet?: Nullable<Pet>

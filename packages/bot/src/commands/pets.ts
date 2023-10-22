@@ -29,9 +29,17 @@ export default {
             .setAutocomplete(true),
         ),
     )
-    .addSubcommand(sub => sub.setName('list').setDescription('List your or someone else\'s pets').addUserOption(opt => opt.setName('user').setDescription('User to list pets of')))
+    .addSubcommand(sub => sub
+      .setName('list')
+      .setDescription('List your or someone else\'s pets')
+      .addUserOption(opt => opt.setName('user')
+        .setDescription('User to list pets of')))
     .addSubcommand(sub =>
-      sub.setName('active').setDescription('Get your active pet'),
+      sub
+        .setName('active')
+        .setDescription('Get your active pet')
+        .addUserOption(opt => opt.setName('user')
+          .setDescription('User to get active pet of')),
     )
     .addSubcommand(sub =>
       sub
@@ -118,7 +126,7 @@ export default {
 
         const giveRes = await axios.put(
           'http://localhost:3000/api/pets/giveToUser',
-          { ownerId, petType, displayName },
+          { ownerId, type: petType, displayName },
           {
             validateStatus: () => true,
             headers: {
@@ -140,7 +148,7 @@ export default {
             )
           }
 
-          client.interactionError(interaction, `${giveRes.data}; Giving pet to user`)
+          client.interactionError(interaction, `${JSON.stringify(giveRes.data)}; Giving pet to user`)
           return void interaction.reply('Error giving pet to user')
         }
 
@@ -155,6 +163,7 @@ export default {
         if (!uuidAndName) return void interaction.reply('Invalid options')
 
         const [name, uuid] = uuidAndName.split('@')
+        if (!uuid || !name) return void interaction.reply('Invalid options')
 
         const reply = await interaction.reply(`Selecting pet...`)
 
@@ -170,7 +179,7 @@ export default {
         )
 
         if (selectRes.status !== 200) {
-          client.interactionError(interaction, `${selectRes.data}; Selecting pet`)
+          client.interactionError(interaction, `${JSON.stringify(selectRes.data)}; ${uuidAndName}; Selecting pet`)
           return void reply.edit('Error selecting pet, please try again later')
         }
 
@@ -178,10 +187,13 @@ export default {
 
         break
       case 'active':
+        const activeUser = interaction.options.getUser('user') ?? interaction.user
+        if (activeUser.bot) return void interaction.reply('Bots cannot have pets')
+
         const activeReply = await interaction.reply('Getting active pet...')
 
         const activeRes = await axios.get<Pet>(
-          `http://localhost:3000/api/users/${interaction.user.id}/activePet`,
+          `http://localhost:3000/api/users/${activeUser.id}/activePet`,
           {
             validateStatus: () => true,
             headers: {
@@ -191,14 +203,14 @@ export default {
         )
 
         if (activeRes.status !== 200) {
-          client.interactionError(interaction, 'Error getting active pet')
-          return activeReply.edit(
-            'Error getting active pet, please try again later',
-          )
+          let msg = 'Error getting active pet, please try again later'
+          if (activeRes.status < 500) msg = (activeRes.data as any).error.replace('User has', activeUser.id === interaction.user.id ? '**You** have' : `**${activeUser.username}** has`)
+          else client.interactionError(interaction, `${JSON.stringify(activeRes.data)}; Error getting active pet`)
+
+          return activeReply.edit(msg)
         }
 
-        const { data: pet } = activeRes
-
+        const pet = activeRes.data
         activeReply.edit(
           `Your active pet is ${pet.displayName}(Lvl. ${pet.level})`,
         )
@@ -206,6 +218,7 @@ export default {
         break
       case 'list':
         const listUser = interaction.options.getUser('user') ?? interaction.user
+        if (listUser.bot) return void interaction.reply('Bots cannot have pets')
 
         try {
           const listReq = await axios.get<Pet[]>(`http://localhost:3000/api/pets/owned/${listUser.id}`, {

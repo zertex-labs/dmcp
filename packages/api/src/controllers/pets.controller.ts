@@ -4,11 +4,12 @@ import { availablePets } from 'shared'
 
 import { ctx } from '../context'
 import { pets } from '../db/schema'
-import { getUser, userExists } from '../services/users.service'
+import { createUser, getUser, userExists } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
 import { getPet } from '../services/pets.service'
+import { deleteAllItems } from '../redis/deleteAllItems'
 
 export const petsController = new Elysia({
   prefix: '/pets',
@@ -18,11 +19,17 @@ export const petsController = new Elysia({
   .get(
     '/owned/:userId',
     async (ctx) => {
-      const userRes = await getUser(ctx.params.userId, { pets: true })
+      const { userId } = ctx.params
+      const userRes = await getUser(userId, { pets: true })
       if (userRes.status === 'error') return resolveServiceResponse(userRes)
 
       const user = userRes.data
-      if (!user) return response.error('User not found', 404)
+      if (!user) {
+        const createRes = await createUser({ id: userId })
+        if (createRes.status === 'error') return resolveServiceResponse(createRes)
+
+        return response.success([])
+      }
 
       return response.success(user.pets ?? [])
     },
@@ -50,7 +57,12 @@ export const petsController = new Elysia({
           .values(ctx.body)
           .returning({ uuid: pets.uuid })
 
-        await redis.json.del(createRedisKey('dbUser', ctx.body.ownerId))
+        const deletedIsSuccess = await deleteAllItems({
+          key: 'dbUser',
+          value: ctx.body.ownerId,
+        })
+
+        if (!deletedIsSuccess) console.warn('Failed to delete user cache')
 
         return out
       }
