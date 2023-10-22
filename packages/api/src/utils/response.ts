@@ -1,4 +1,4 @@
-import type { ServiceResponse } from '../services/types'
+import type { ServiceResponse } from 'shared'
 
 /**
  * Create a {@link Response} object

@@ -1,10 +1,9 @@
 import { Value } from '@sinclair/typebox/value'
 import { type Static, t } from 'elysia'
 
-import type { AlwaysExist } from 'shared'
+import type { AlwaysExist, ServiceResponse } from 'shared'
 
 import { response } from '../utils/response'
-import type { ServiceResponse } from './types'
 
 export const farmingActions = ['farm'] as const
 

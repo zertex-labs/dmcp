@@ -1,7 +1,7 @@
+import type { ServiceResponse } from 'shared'
 import db from '../db'
 import { createRedisKey, redis } from '../redis'
 import type { PetSelect as Pet } from '../db/schema/pets'
-import type { ServiceResponse } from './types'
 
 export async function getPet(o: { uuid: string; ownerId?: string }): Promise<ServiceResponse<Pet | undefined>> {
   const { uuid, ownerId } = o

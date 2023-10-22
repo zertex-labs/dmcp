@@ -1,14 +1,13 @@
-import { Value } from '@sinclair/typebox/value'
-import Elysia, { type Static, t } from 'elysia'
+import Elysia, { t } from 'elysia'
 import type { Rarity } from 'shared'
 import { createBaseStats, getPetSkeleton } from 'shared'
 
 import { ctx } from '../context'
-import type { FarmingAction, FarmingResolvers, resolverParametersTypes } from '../services/farming.service'
+import type { FarmingResolvers } from '../services/farming.service'
 import { farmingActions, handleAction } from '../services/farming.service'
-import { resolveServiceResponse, response } from '../utils/response'
-import { getUser } from '../services/users.service'
 import { calculateUserStats, doFarm, getFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
+import { getUser } from '../services/users.service'
+import { resolveServiceResponse, response } from '../utils/response'
 
 const allItems = parseAllFoodItemsWithChances()
 

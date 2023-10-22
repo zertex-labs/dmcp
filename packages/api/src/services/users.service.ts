@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 
-import type { Pet, Prettify, User } from 'shared'
+import type { Pet, Prettify, ServiceResponse, User } from 'shared'
 
 import db from '../db'
 import { users } from '../db/schema'
@@ -8,7 +8,6 @@ import { response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
 import { deleteAllItems } from '../redis/deleteAllItems'
 import { getPet } from './pets.service'
-import type { ServiceResponse } from './types'
 
 export const getUserWithParamateres = ['activePet', 'pets'] as const
 export type GetUserWithParamateres = typeof getUserWithParamateres[number]

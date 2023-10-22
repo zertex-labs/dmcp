@@ -21,6 +21,17 @@ export type Nullable<T> = T | null | undefined
 
 export type AlwaysExist<T> = T extends undefined | null ? never : T
 
+export type KeysOf<T> = T extends Record<infer K, any> ? K : never
+
+export type ServiceResponse<DataType, ErrorType = string> = {
+  status: 'success'
+  data: DataType
+} | {
+  status: 'error'
+  error: ErrorType
+  statusCode?: number
+}
+
 export * from './rarity'
 export * from './food'
 export * from './perks'
