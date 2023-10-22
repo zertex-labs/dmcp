@@ -8,8 +8,8 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "start": "tsx src/main.ts",
-    "dev": "tsx watch src/main.ts",
+    "start": "bun run src/main.ts",
+    "dev": "bun run --watch src/main.ts",
     "clearLog": "bun run ./scripts/clearLog.ts"
   },
   "dependencies": {

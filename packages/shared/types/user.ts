@@ -10,8 +10,6 @@ export interface User {
 }
 
 export type FarmingUser = Pick<User, 'id'> & {
-  username: string
-
   total: number
   individual: Record<AvailableFood, number>
 }

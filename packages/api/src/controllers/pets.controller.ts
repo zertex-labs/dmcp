@@ -2,7 +2,11 @@ import { Elysia, t } from 'elysia'
 import { availablePets } from 'shared'
 
 import { ctx } from '../context'
-import { pets, users } from '../db/schema'
+import { pets } from '../db/schema'
+import { getUser, userExists } from '../services/users.service'
+import { requireApiSecret } from '../utils/requireApiSecret'
+import { resolveServiceResponse, response } from '../utils/response'
+import { createRedisKey, redis } from '../redis'
 
 export const petsController = new Elysia({
   prefix: '/pets',
@@ -11,69 +15,45 @@ export const petsController = new Elysia({
   .use(ctx)
   .get(
     '/owned/:userId',
-    async ({ params, db, log }) => {
-      const { userId } = params
+    async (ctx) => {
+      const userRes = await getUser(ctx.params.userId, { pets: true })
+      if (userRes.status === 'error') return resolveServiceResponse(userRes)
 
-      const res = await db.query.pets.findMany({
-        where: (pets, { eq }) => eq(pets.ownerId, userId),
-        with: {
-          owner: true,
-        },
-      })
-      log.error(res)
+      const user = userRes.data
+      if (!user) return response.error('User not found', 404)
 
-      return new Response(JSON.stringify(res), {
-        status: 200,
-      })
+      return response.success(user.pets ?? [])
     },
-    {
-      beforeHandle: ({ isApiSecretPresent }) => {
-        if (!isApiSecretPresent())
-          return new Response('Not Authorized', { status: 401 })
-      },
-    },
+    { beforeHandle: requireApiSecret, detail: { tags: ['Pets'] } },
   )
   .put(
     '/giveToUser',
     async (ctx) => {
-      const { petType, displayName } = ctx.body
-      let { ownerId } = ctx.body
-      const user = await ctx.db.query.users.findFirst({
-        where: (users, { eq }) => eq(users.id, ownerId),
-      })
-      if (!user) {
-        const insertRes = await ctx.db
-          .insert(users)
-          .values({
-            id: ownerId,
-          })
-          .returning({ userId: users.id })
+      if (!(await userExists(ctx.body.ownerId))) return response.error('User not found', 404)
 
-        if (insertRes.length === 0)
-          return new Response('Internal Server Error', { status: 500 })
+      try {
+        const out = await ctx.db
+          .insert(pets)
+          .values(ctx.body)
+          .returning({ uuid: pets.uuid })
 
-        ownerId = insertRes[0].userId
+        await redis.json.del(createRedisKey('dbUser', ctx.body.ownerId))
+
+        return out
       }
-
-      return await ctx.db
-        .insert(pets)
-        .values({
-          ownerId,
-          displayName,
-          type: petType,
-        })
-        .returning({ uuid: pets.uuid })
+      catch (e: any) {
+        console.log(e)
+        return response.predefined.internalError
+      }
     },
     {
-      beforeHandle: ({ isApiSecretPresent }) => {
-        if (!isApiSecretPresent())
-          return new Response('Not Authorized', { status: 401 })
-      },
+      beforeHandle: requireApiSecret,
       body: t.Object({
-        petType: t.Union(availablePets.map(x => t.Literal(x))),
+        type: t.Union(availablePets.map(x => t.Literal(x))),
         ownerId: t.String(),
         displayName: t.String(),
       }),
+      detail: { tags: ['Pets'] },
     },
   )
 

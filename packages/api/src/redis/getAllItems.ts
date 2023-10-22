@@ -1,10 +1,17 @@
-import { redis } from '.'
+import type { PrefixKey } from '.'
+import { PREFIXES, createRedisKey, redis } from '.'
 
 export async function getAllItems<Keys extends PropertyKey, Stored>(
-  match: string,
+  o: string | { key: PrefixKey; value: string; suffix?: string },
 ): Promise<Record<Keys, Stored>> {
   let cursor = 0
   const items = {}
+
+  let match: string
+  if (typeof o === 'string')
+    match = o
+  else
+    match = createRedisKey(o.key, o.value, o.suffix)
 
   do {
     const result = await redis.scan(cursor, { match })
@@ -18,7 +25,7 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
         const item = items[i][0]
         const key = keys[i]!
         const itemName = key.slice(match.length - 1)
-        ;(items as any)[itemName] = item
+          ; (items as any)[itemName] = item
       }
     }
   } while (cursor !== 0)

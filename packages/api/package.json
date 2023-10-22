@@ -4,16 +4,20 @@
   "module": "src/index.js",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "db:push": "drizzle-kit push:pg"
   },
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.0.11",
+    "@elysiajs/swagger": "^0.7.3",
     "@paralleldrive/cuid2": "^2.2.2",
     "@planetscale/database": "^1.11.0",
+    "@sinclair/typebox": "^0.31.17",
     "@t3-oss/env-core": "^0.6.1",
     "@tlscipher/holt": "^1.1.2",
     "@upstash/redis": "^1.22.1",
     "drizzle-orm": "^0.28.6",
+    "drizzle-typebox": "^0.1.1",
     "elysia": "latest",
     "pg": "^8.11.3",
     "pino-pretty": "^10.2.3",
