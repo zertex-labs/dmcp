@@ -1,3 +1,4 @@
+import { resolve } from 'node:dns'
 import { Elysia, t } from 'elysia'
 import { availablePets } from 'shared'
 
@@ -7,6 +8,7 @@ import { getUser, userExists } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
+import { getPet } from '../services/pets.service'
 
 export const petsController = new Elysia({
   prefix: '/pets',
@@ -25,6 +27,17 @@ export const petsController = new Elysia({
       return response.success(user.pets ?? [])
     },
     { beforeHandle: requireApiSecret, detail: { tags: ['Pets'] } },
+  )
+  .get(
+    '/:petId/',
+    async ctx => resolveServiceResponse(await getPet({ uuid: ctx.params.petId, ownerId: ctx.body.ownerId })),
+    {
+      beforeHandle: requireApiSecret,
+      body: t.Object({
+        ownerId: t.Optional(t.String()),
+      }),
+      detail: { tags: ['Pets'] },
+    },
   )
   .put(
     '/giveToUser',

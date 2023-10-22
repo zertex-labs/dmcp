@@ -7,14 +7,11 @@ import axios from 'axios'
 import { getOptions } from '../utils/getOptions'
 import type { Command } from '../types'
 import getSubcommand from '../utils/getSubcommand'
-import usePetsCache from '../utils/usePetsCache'
 
 interface StringOptions {
   name: string
   type: AvailablePet
 }
-
-const petsCache = usePetsCache()
 
 export default {
   name: 'pets',
@@ -64,38 +61,25 @@ export default {
     ),
   autocomplete: async ({ interaction }) => {
     if (!interaction.isAutocomplete()) return // ts is dumb
+
     const focusedOption = interaction.options.getFocused(true)
     if (focusedOption.name !== 'name') return
 
-    let pets: Pet[] = []
-    const cached = petsCache.get(interaction.user.id)
-
-    console.log('isCached', cached)
-    if (cached) {
-      pets = cached
-    }
-    else {
-      const ownedRes = await axios.get<Pet[]>(
+    const ownedRes = await axios.get<Pet[]>(
         `http://localhost:3000/api/pets/owned/${interaction.user.id}`,
         {
           headers: {
             'x-api-secret': process.env.API_SECRET,
           },
         },
-      )
+    )
 
-      if (ownedRes.status !== 200) {
-        return void interaction.respond([
-          { name: 'Error', value: 'Error getting pets' },
-        ])
-      }
-      const { data } = ownedRes
-
-      console.log('not cached', data)
-
-      petsCache.set(interaction.user.id, data)
-      pets = data
+    if (ownedRes.status !== 200) {
+      return void interaction.respond([
+        { name: 'Error', value: 'Error getting pets' },
+      ])
     }
+    const { data: pets } = ownedRes
 
     await interaction.respond(
       pets.map(pet => ({
