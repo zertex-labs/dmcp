@@ -60,7 +60,7 @@ export async function registerCommands(client: UsableClient, computedSlashComman
     client.log(`Refreshed ${slashCommands.length} commands.`)
   }
   catch (error: any) {
-    client.log(error?.message ?? error)
+    client.error(error)
   }
 }
 
