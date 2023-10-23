@@ -8,23 +8,29 @@ import type { Command } from '../types'
 
 const { DISCORD_CLIENT_ID, GUILD_ID } = process.env
 
-export async function registerCommands(client: UsableClient) {
-  const commandsPath = path.join(__dirname, '..', 'commands')
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter(file => file.endsWith('.ts'))
+export async function registerCommands(client: UsableClient, computedSlashCommands?: any[]) {
+  let slashCommands: any[]
+  if (!computedSlashCommands || computedSlashCommands.length === 0) {
+    const commandsPath = path.join(__dirname, '..', 'commands')
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter(file => file.endsWith('.ts'))
 
-  const slashCommands = commandFiles.map((x) => {
+    slashCommands = commandFiles.map((x) => {
     // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
-    const cmd = require(path.join(commandsPath, x)).default as Command
-    const builder = cmd?.withBuilder ?? {}
+      const cmd = require(path.join(commandsPath, x)).default as Command
+      const builder = cmd?.withBuilder ?? {}
 
-    delete cmd.withBuilder
+      delete cmd.withBuilder
 
-    const data = { ...builder, ...cmd }
-    client.commands.set(data.name, data)
-    return data
-  })
+      const data = { ...builder, ...cmd }
+      client.commands.set(data.name, data)
+      return data
+    })
+  }
+  else {
+    slashCommands = computedSlashCommands
+  }
 
   try {
     client.log(`Started refreshing ${slashCommands.length} commands.`)
@@ -42,7 +48,7 @@ export async function registerCommands(client: UsableClient) {
       5000,
       () => {
         client.error('Routes.applicationGuildCommands timedout after 5000ms')
-        registerCommands(client)
+        registerCommands(client, slashCommands)
       },
     )
 
