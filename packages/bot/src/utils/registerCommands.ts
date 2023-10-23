@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { Routes } from 'discord.js'
 
+import { promiseWithTimeout } from 'shared'
 import type { UsableClient } from '../client'
 import type { Command } from '../types'
 
@@ -30,10 +31,18 @@ export async function registerCommands(client: UsableClient) {
 
     client.log(`Commands: ${slashCommands.map(x => x.name).join(', ')}`)
 
-    await client.rest.put(
-      Routes.applicationGuildCommands(DISCORD_CLIENT_ID!, GUILD_ID!),
-      {
-        body: slashCommands,
+    await promiseWithTimeout(
+      client.rest.put(
+        Routes.applicationGuildCommands(DISCORD_CLIENT_ID!, GUILD_ID!),
+        {
+          body: slashCommands,
+          reason: 'Routes.applicationGuildCommands',
+        },
+      ),
+      5000,
+      () => {
+        client.error('Routes.applicationGuildCommands timedout after 5000ms')
+        registerCommands(client)
       },
     )
 
