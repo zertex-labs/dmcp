@@ -8,7 +8,8 @@ import type { redis } from '../src/redis'
 import { type Job, jobs } from '.'
 
 export function isValidJob(arg: string): arg is Job {
-  return jobs.includes(arg as Job)
+  const filename = arg.startsWith('!') ? arg.slice(1) : arg
+  return jobs.includes(filename as Job)
 }
 
 // export function isValidInput(arg: string): arg is `-${string}=${number}` {
@@ -42,9 +43,10 @@ const logger = new Logger('scripts/jobs/jobLogs.log', {
 })
 
 interface Args { db: typeof db; redis: typeof redis }
-interface JobInput { job: Job; timing: number; immediate: boolean }
+interface JobInput { job: Job; timing: number }
 export type JobHandler = (args: Args) => MaybePromise<void>
 type JobWithHandler = JobInput & {
+  immediate: boolean
   handler: JobHandler
 }
 
@@ -52,10 +54,12 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
   const filenames = fs.readdirSync(path.join(__dirname, 'handlers')).map(f => f.replace('.ts', '')).filter(isValidJob)
 
   const handlers: JobWithHandler[] = await Promise.all(filenames.map(async (filename) => {
-    const inputData = inputs.find(({ job }) => job === filename)!
+    const immediate = filename.startsWith('!')
+
+    const inputData = inputs.find(({ job }) => job === (immediate ? filename.slice(1) : filename))!
     const handler = (await import(`./handlers/${filename}.ts`)).default
     console.log(filename)
-    return { handler, ...inputData } as const
+    return { handler, immediate, ...inputData } as const
   }))
 
   handlers.forEach(({ job, timing, handler, immediate }) => {
@@ -72,4 +76,6 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
 
     if (immediate) middleware()
   })
+
+  return handlers
 }

@@ -1,12 +1,8 @@
 // import { swagger } from "@elysiajs/swagger";
 import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
-import type { Job } from '../jobs'
-import { jobs } from '../jobs'
-import { scheduleTasks } from '../jobs/schedule'
 import { api } from './controllers/*'
-import db from './db'
-import { redis } from './redis'
+import { registerTimings } from './timings'
 
 const app = new Elysia()
   .use(swagger({
@@ -27,38 +23,11 @@ const app = new Elysia()
   .onError(({ log, error }) => {
     log.error(error)
   })
+  .listen(3000)
 
-app.listen(3000);
-
-(async () => {
-  console.log(`Started scheduling ${jobs.length} jobs. (${jobs.join(', ')})`)
-
-  const timings: Record<Job, number | { timing: number; immediate: true }> = {
-    syncFarmingUsers: {
-      immediate: true,
-      timing: 10 * 60 * 1000,
-    },
-  }
-
-  const parsedTimings = Object.entries(timings).map(([job, timing]) => typeof timing === 'object'
-    ? ({
-        immediate: timing.immediate,
-        job: job as Job,
-        timing: timing.timing,
-      })
-    : ({
-        immediate: false,
-        job: job as Job,
-        timing,
-      }))
-
-  scheduleTasks(parsedTimings, { db, redis })
-
-  return parsedTimings
-}
-)().then((timings) => {
-  const t = Object.values(timings)
-  console.log(`Scheduled ${t.length} jobs. ${t.map(x => `${x.immediate ? '*' : ''}${x.job}:${x.timing}ms`).join(', ')}`)
+registerTimings().then((handlers) => {
+  const hv = Object.values(handlers)
+  console.log(`Scheduled ${hv.length} jobs. ${hv.map(x => `${x.immediate ? '*' : ''}${x.job}:${x.timing}ms`).join(', ')}`)
 })
 
 export type App = typeof app
