@@ -4,7 +4,7 @@ import { Client, Collection } from 'discord.js'
 
 import type { KeysMatching } from 'shared'
 import { AxiosError } from 'axios'
-import Logger from '../utils/logger'
+import Logger from 'shared/utils/logger'
 import type { ClientCommand, Interaction } from '../types'
 
 export class UsableClient extends Client {

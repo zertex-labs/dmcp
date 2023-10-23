@@ -1,4 +1,3 @@
-import { resolve } from 'node:dns'
 import { Elysia, t } from 'elysia'
 import { availablePets } from 'shared'
 
@@ -7,7 +6,6 @@ import { pets } from '../db/schema'
 import { createUser, getUser, userExists } from '../services/users.service'
 import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
-import { createRedisKey, redis } from '../redis'
 import { getPet } from '../services/pets.service'
 import { deleteAllItems } from '../redis/deleteAllItems'
 

@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 
-import type { Pet, Prettify, ServiceResponse, User } from 'shared'
+import type { ServiceResponse, User } from 'shared'
 
 import db from '../db'
 import { users } from '../db/schema'

@@ -1,10 +1,8 @@
-import { type AvailableFood, type FarmingUser, type RarityOverwrite, type ServiceResponse, type User, randomNumber } from 'shared'
 import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
+import { type AvailableFood, type FarmingUser, type RarityOverwrite, type ServiceResponse, randomNumber } from 'shared'
 
-import useFarmingHandler from 'shared/composables/useFarmingHandler'
-import { clear } from 'winston'
 import type { Command } from '../types'
 
 const baseInterval = 2000

@@ -17,11 +17,9 @@
     "colors": "^1.4.0",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
-    "shared": "workspace:*",
-    "winston": "^3.10.0"
+    "shared": "workspace:*"
   },
   "devDependencies": {
-    "@types/winston": "^2.4.4",
     "prettier": "^3.0.3",
     "tsx": "^3.12.10",
     "typescript": "^5.2.2"

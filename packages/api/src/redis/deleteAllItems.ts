@@ -1,5 +1,5 @@
 import type { PrefixKey } from '.'
-import { PREFIXES, createRedisKey, redis } from '.'
+import { createRedisKey, redis } from '.'
 
 export async function deleteAllItems(
   o: string | { key: PrefixKey; value: string; suffix?: string },

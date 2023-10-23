@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.10.3",
-    "bun-types": "latest",
     "drizzle-kit": "^0.19.13"
   }
 }
