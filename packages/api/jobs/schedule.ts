@@ -13,11 +13,13 @@ export function isValidJob(arg: string): arg is Job {
   return jobs.includes(filename as Job)
 }
 
-const logger = new Logger('jobs/jobLogs.log', {
+export const logger = new Logger('jobs/jobLogs.log', {
   date: 'bgRed',
   info: 'red',
   error: 'bgRed',
 })
+
+export const makeLog = genericMakeLog(logger)
 
 export interface Args { db: typeof db; redis: typeof redis }
 export interface AdditionalJobHandlerArgs { logger: typeof logger; makeLog: ReturnType<typeof genericMakeLog> }
@@ -46,7 +48,7 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
       })
 
       const start = performance.now()
-      const res = await handler({ ...args, logger, makeLog: genericMakeLog(logger) })
+      const res = await handler({ ...args, logger, makeLog })
 
       logger.log(`-${job} (${(performance.now() - start).toFixed(2)}ms)`, 'info', {
         overwriteColors: { info: 'red' },

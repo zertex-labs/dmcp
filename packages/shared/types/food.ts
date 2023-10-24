@@ -12,5 +12,6 @@ export interface Food {
   probability: number
   price: number
   maxItems: number
+  weight: number
   rarityOverwrites: Record<Rarity, RarityOverwrite[]>
 }

@@ -13,4 +13,5 @@ export interface User {
 export type FarmingUser = Pick<User, 'id'> & {
   total: number
   individual: Record<AvailableFood, number>
+  totalWeight: number
 }

@@ -4,11 +4,11 @@ export type MadeLog = ReturnType<ReturnType<typeof genericMakeLog>>
 
 export function genericMakeLog(logger: Logger) {
   return <Prefix = string>(prefix?: Prefix, overwriteColors?: OverwriteColors) => {
-    if (typeof prefix !== 'string') throw new Error('Prefix must be a string')
+    if (prefix && typeof prefix !== 'string') throw new Error('Prefix must be a string')
 
     return (str: string, level?: LogLevel) => {
       logger.log(str, level, {
-        prefix,
+        prefix: prefix as string,
         overwriteColors,
       })
     }

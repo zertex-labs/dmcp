@@ -65,7 +65,10 @@ export async function getFarmingUser(o: {
 }): Promise<FarmingUser> {
   const { farmingResponse, user } = o
   const key = createRedisKey('farmingUser', user.id)
-  let farmingUser = (await redis.json.get(key, '$') as [FarmingUser])?.[0]
+  console.log(key)
+  let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [FarmingUser])?.[0]
+
+  console.log(farmingUser)
 
   // if we have a user we just update it
   if (farmingUser) {
@@ -74,6 +77,8 @@ export async function getFarmingUser(o: {
       if (farmingUser.individual?.[item.name]) farmingUser.individual[item.name] += item.amount
       else farmingUser.individual[item.name] = item.amount
     })
+    console.log(farmingUser.totalWeight)
+    farmingUser.totalWeight += farmingResponse.totalWeight
 
     batcher.createOrUpdate(farmingUser)
 
@@ -83,6 +88,7 @@ export async function getFarmingUser(o: {
   // if we don't have a user we create one
   farmingUser = {
     id: user.id,
+    totalWeight: farmingResponse.totalWeight,
     individual: farmingResponse.items.reduce(
       (acc, curr) => {
         acc[curr.name] = curr.amount
@@ -169,5 +175,6 @@ export function doFarm({
   return {
     items: withAmounts,
     total: withAmounts.reduce((acc, curr) => acc + curr.amount, 0),
+    totalWeight: withAmounts.reduce((acc, curr) => acc + curr.amount * curr.weight, 0),
   }
 }

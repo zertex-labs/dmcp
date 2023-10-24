@@ -27,10 +27,15 @@ export function makeStore() {
     return batches.delete(user.id)
   }
 
+  function get(id: string) {
+    return batches.get(id)
+  }
+
   return {
     createOrUpdate,
     createOrUpdateMultiple,
     remove,
+    get,
     all,
     get _batches() {
       return batches

@@ -8,6 +8,7 @@ import { farmingActions, handleAction } from '../services/farming.service'
 import { calculateUserStats, doFarm, getFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
 import { getUser } from '../services/users.service'
 import { resolveServiceResponse, response } from '../utils/response'
+import { requireApiSecret } from '../utils'
 
 const allItems = parseAllFoodItemsWithChances()
 
@@ -46,34 +47,43 @@ export const resolvers = {
 export const farmingController = new Elysia({
   prefix: '/farming',
   name: 'api:farming',
-}).use(ctx).post('/action/:action', async (ctx) => {
-  const { action } = ctx.params
-  const res = await handleAction(resolvers, action, ctx.body)
-  return resolveServiceResponse(res)
-}, {
-  params: t.Object({
-    action: t.Union(farmingActions.map(x => t.Literal(x))),
-  }),
-  detail: {
-    tags: ['Farming'],
-    parameters: [
-      {
-        in: 'path',
-        name: 'action',
-        required: true,
-        schema: {
-          type: 'string',
-          enum: farmingActions as unknown as string[],
+},
+)
+  .use(ctx)
+  .get('/leaderboard', () => {
+    return response.success([])
+  }, {
+    beforeHandle: requireApiSecret,
+    detail: { tags: ['Farming'], description: 'Get top 10 farming users by total' },
+  })
+  .post('/action/:action', async (ctx) => {
+    const { action } = ctx.params
+    const res = await handleAction(resolvers, action, ctx.body)
+    return resolveServiceResponse(res)
+  }, {
+    params: t.Object({
+      action: t.Union(farmingActions.map(x => t.Literal(x))),
+    }),
+    detail: {
+      tags: ['Farming'],
+      parameters: [
+        {
+          in: 'path',
+          name: 'action',
+          required: true,
+          schema: {
+            type: 'string',
+            enum: farmingActions as unknown as string[],
+          },
+        },
+      ],
+      responses: {
+        400: {
+          description: 'Bad request',
+        },
+        200: {
+          description: 'Success',
         },
       },
-    ],
-    responses: {
-      400: {
-        description: 'Bad request',
-      },
-      200: {
-        description: 'Success',
-      },
     },
-  },
-})
+  })

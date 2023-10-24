@@ -136,6 +136,7 @@ export default {
       return void reply('Something went wrong, please try again later.')
 
     const { farmingResponse, farmingUser } = axiosRes.data.data
+    console.log(axiosRes.data.data)
     intervalId && clearTimeout(intervalId)
 
     interaction.editReply({

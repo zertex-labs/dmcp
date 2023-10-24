@@ -41,21 +41,3 @@ export const ctx = new Elysia({
     isApiSecretPresent: () => headers['x-api-secret'] === config.env.API_SECRET,
     isAdmin: (userId: string) => userId in store.localData.adminIds,
   }))
-
-  .onStart(({ log }) => {
-    if (log && config.env.NODE_ENV === 'production') log.info('Server started')
-  })
-  .onStop(({ log }) => {
-    if (log && config.env.NODE_ENV === 'production') log.info('Server stopped')
-  })
-  .onRequest(({ log, request }) => {
-    if (log && config.env.NODE_ENV === 'production')
-      log.debug(`Request received: ${request.method}: ${request.url}`)
-  })
-  .onResponse(({ log, request }) => {
-    if (log && config.env.NODE_ENV === 'production')
-      log.debug(`Response sent: ${request.method}: ${request.url}`)
-  })
-  .onError(({ log, error }) => {
-    if (log && config.env.NODE_ENV === 'production') log.error(error)
-  })
