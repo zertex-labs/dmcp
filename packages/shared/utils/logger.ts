@@ -10,7 +10,7 @@ function formattedDate(d: Date) {
 
 export type Color = KeysMatching<typeof colors, ColorType>
 
-export type LogLevel = 'info' | 'error' | 'warning'
+export type LogLevel = 'info' | 'error' | 'warn'
 type AdditionalColorsKeys = 'date' | 'prefix'
 
 type ColorKeys = Record<LogLevel | AdditionalColorsKeys, Color>
@@ -22,7 +22,7 @@ export class Logger {
   public colorKeys: ColorKeys = {
     error: 'red',
     info: 'green',
-    warning: 'yellow',
+    warn: 'yellow',
     prefix: 'gray',
     date: 'green',
   }

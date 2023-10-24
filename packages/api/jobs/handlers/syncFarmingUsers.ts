@@ -30,7 +30,7 @@ export default (async ({ redis, makeLog }) => {
   })
 
   if (allUsers.length === 0) {
-    log('No users to sync', 'warning')
+    log('No users to sync', 'warn')
     return
   }
 
