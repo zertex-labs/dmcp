@@ -1,7 +1,4 @@
-import useLeaderboard from 'shared/composables/useLeaderboard'
 import type { Command } from '../types'
-
-const leaderboard = useLeaderboard()
 
 export default {
   name: 'leaderboard',
