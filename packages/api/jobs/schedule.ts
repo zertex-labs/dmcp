@@ -12,30 +12,6 @@ export function isValidJob(arg: string): arg is Job {
   return jobs.includes(filename as Job)
 }
 
-// export function isValidInput(arg: string): arg is `-${string}=${number}` {
-//   return arg.startsWith('-') && arg.includes('=')
-// }
-
-// export function rawToProperJobInput(arg: string): `${Job}=${number}` {
-//   if (!isValidInput(arg)) throw new Error(`Invalid input: ${arg}`)
-
-//   const spl = arg.split('=')
-//   const job = spl[0]!.slice(1)
-//   if (!isValidJob(job)) throw new Error(`Invalid job: ${job}`)
-
-//   const timing = +spl[1]!
-//   if (Number.isNaN(timing)) throw new Error(`Invalid timing: ${timing}`)
-//   return `${job}=${timing}`
-// }
-
-// export function proccessJobInput(input: `${Job}=${number}`): {
-//   job: Job
-//   timing: number
-// } {
-//   const inputSpl = input.split('=')
-//   return { job: inputSpl[0] as Job, timing: +inputSpl[1]! }
-// }
-
 const logger = new Logger('scripts/jobs/jobLogs.log', {
   date: 'bgRed',
   info: 'red',
@@ -58,7 +34,6 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
 
     const inputData = inputs.find(({ job }) => job === (immediate ? filename.slice(1) : filename))!
     const handler = (await import(`./handlers/${filename}.ts`)).default
-    console.log(filename)
     return { handler, immediate, ...inputData } as const
   }))
 
