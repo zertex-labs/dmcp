@@ -79,5 +79,3 @@ export const petsController = new Elysia({
       detail: { tags: ['Pets'] },
     },
   )
-
-// TODO: Add endpoints

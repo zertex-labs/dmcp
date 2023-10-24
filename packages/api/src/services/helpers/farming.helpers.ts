@@ -2,6 +2,7 @@ import type { AvailableFood, AvailablePerk, FarmingUser, Food, PerkType, Pet, Pe
 import { createBaseChances, randomNumber } from 'shared'
 import { food as dataFood, perks as dataPerks, upgrades } from 'shared/data'
 import { createRedisKey, redis } from '../../redis'
+import { useFarmingUsersBatcher } from '../../utils'
 
 export type CalculatedPlayerStats = Record<PlayerStat, number>
 type NamedFood = Food & { name: AvailableFood }
@@ -10,6 +11,8 @@ type NamedFoodWithChance = NamedFood & { chance: number }
 type FarmingResponse = ReturnType<typeof doFarm>
 
 // TODO cleanup and not so much re-computing
+
+const batcher = useFarmingUsersBatcher()
 
 export function calculateUserStats(
   pet: Pet & PetSkeleton,
@@ -67,16 +70,15 @@ export async function getFarmingUser(o: {
 
   // if we have a user we just update it
   if (farmingUser) {
-    // update user in background
-    // TODO instead of updating on each farming request, update in batches every X minutes
-
     farmingUser.total += farmingResponse.total
     farmingResponse.items.forEach((item) => {
       if (farmingUser.individual?.[item.name]) farmingUser.individual[item.name] += item.amount
       else farmingUser.individual[item.name] = item.amount
     })
 
-    redis.json.set(key, '$', farmingUser)
+    batcher.createOrUpdate(farmingUser)
+
+    // redis.json.set(key, '$', farmingUser)
 
     return farmingUser
   }
@@ -95,7 +97,8 @@ export async function getFarmingUser(o: {
   }
 
   // add user in backgroud
-  redis.json.set(key, '$', farmingUser)
+  batcher.createOrUpdate(farmingUser)
+  // redis.json.set(key, '$', farmingUser)
 
   return farmingUser
 }

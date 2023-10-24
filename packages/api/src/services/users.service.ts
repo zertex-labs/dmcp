@@ -60,7 +60,7 @@ export async function createUser(data: typeof users.$inferInsert): Promise<Servi
       .values(data)
       .returning()
 
-    if (res.length === 0 || !res[0].id)
+    if (res.length === 0 || !res[0]?.id)
       return response.service.error('Failed to create user', 500)
 
     const user = res[0]

@@ -42,7 +42,7 @@ const logger = new Logger('scripts/jobs/jobLogs.log', {
   error: 'bgRed',
 })
 
-interface Args { db: typeof db; redis: typeof redis }
+export interface Args { db: typeof db; redis: typeof redis }
 interface JobInput { job: Job; timing: number }
 export type JobHandler = (args: Args) => MaybePromise<void>
 type JobWithHandler = JobInput & {

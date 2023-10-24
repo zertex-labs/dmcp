@@ -10,7 +10,7 @@ function formattedDate(d: Date) {
 
 const trim = (s: string) => s.trim()
 
-type Color = KeysMatching<typeof colors, ColorType>
+export type Color = KeysMatching<typeof colors, ColorType>
 
 interface ColorKeys { info: Color; error: Color; date: Color }
 
