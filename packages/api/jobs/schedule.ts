@@ -68,7 +68,14 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
         info: 'cyan',
       })
 
-      return await handler(args)
+      const start = performance.now()
+      const res = await handler(args)
+
+      logger.log(`-${job} (${(performance.now() - start).toFixed(2)}ms)`, undefined, {
+        info: 'red',
+      })
+
+      return res
     }
 
     logger.log(`Registered ${immediate ? '!' : ''}${job} with timing of ${timing}`)

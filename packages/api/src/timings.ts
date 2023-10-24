@@ -7,7 +7,7 @@ export async function registerTimings() {
   console.log(`Started scheduling ${jobs.length} jobs. (${jobs.join(', ')})`)
 
   const timings: Record<Job, number> = {
-    syncFarmingUsers: 1 * 60 * 1000,
+    syncFarmingUsers: 3 * 60 * 1000,
   }
 
   const parsedTimings = Object.entries(timings).map(([job, timing]) => ({
