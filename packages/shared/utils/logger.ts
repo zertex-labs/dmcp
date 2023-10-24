@@ -8,21 +8,26 @@ function formattedDate(d: Date) {
   return `${d.getDate()}:${d.getMonth()}:${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
 }
 
-const trim = (s: string) => s.trim()
-
 export type Color = KeysMatching<typeof colors, ColorType>
 
-interface ColorKeys { info: Color; error: Color; date: Color }
+export type LogLevel = 'info' | 'error' | 'warning'
+type AdditionalColorsKeys = 'date' | 'prefix'
+
+type ColorKeys = Record<LogLevel | AdditionalColorsKeys, Color>
+
+export type OverwriteColors = Partial<ColorKeys>
 
 export class Logger {
   public logger: winston.Logger
   public colorKeys: ColorKeys = {
     error: 'red',
-    info: 'yellow',
+    info: 'green',
+    warning: 'yellow',
+    prefix: 'gray',
     date: 'green',
   }
 
-  constructor(filename: string, colorKeys?: Partial<ColorKeys>) {
+  constructor(filename: string, colorKeys?: OverwriteColors) {
     this.logger = winston.createLogger({
       transports: [new winston.transports.File({ filename })],
     })
@@ -31,20 +36,22 @@ export class Logger {
       this.colorKeys = { ...this.colorKeys, ...colorKeys }
   }
 
-  log(text: string, level: 'info' | 'error' = 'info', overwriteColors: Partial<ColorKeys> = {}) {
-    const d = new Date()
-    const fd = formattedDate(d)
-    const message = `${fd} | ${capitalize(level)}: ${text}`
-    this.logger.log({ level, message })
+  log(text: string, level: LogLevel = 'info', additional?: Partial<{ prefix: string; overwriteColors: OverwriteColors }>) {
+    const {
+      prefix = capitalize(level),
+      overwriteColors = {},
+    } = additional ?? {}
 
     const ck = { ...this.colorKeys, ...overwriteColors }
+    const withColor = (s: string, key: keyof ColorKeys) => colors[ck[key]](s)
 
-    const mSplit = message.split('|').map(trim)
-    console.log(
-      colors[ck.date](`${mSplit[0]}`),
-      '|',
-      colors[ck[level]](mSplit[1]!),
-    )
+    const d = new Date()
+    const fd = formattedDate(d)
+    const message = `${withColor(fd, 'date')} | ${withColor(prefix, 'prefix')}: ${withColor(text, level)}`
+
+    this.logger.log({ level, message: colors.stripColors(message) })
+
+    console.log(message)
   }
 }
 

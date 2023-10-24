@@ -32,7 +32,12 @@ export type ServiceResponse<DataType, ErrorType = string> = {
   statusCode?: number
 }
 
+export type Tail<T extends any[]> = T extends [infer _, ...infer R] ? R : never
+export type Head<T extends any[]> = T extends [infer H, ...infer _] ? H : never
+export type WithoutLast<T extends any[]> = T extends [...infer R, infer _] ? R : never
+
 export type KeysMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T]
+export type KeysNotMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? never : K }[keyof T]
 
 export * from './rarity'
 export * from './food'

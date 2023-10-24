@@ -1,35 +1,40 @@
-import type { FarmingUser } from 'shared'
-import { log, useFarmingUsersBatcher } from '../../src/utils'
-import type { Args as HandlerArgs, JobHandler } from '../schedule'
+import type { FarmingUser, MadeLog } from 'shared'
 import { createRedisKey } from '../../src/redis'
+import { useFarmingUsersBatcher } from '../../src/utils'
+import type { Args as HandlerArgs, JobHandler } from '../schedule'
+import type { Job } from '..'
 
 const batcher = useFarmingUsersBatcher()
 
-async function syncUser(redis: HandlerArgs['redis'], user: FarmingUser): Promise<{ ok: boolean }> {
+async function syncUser(redis: HandlerArgs['redis'], user: FarmingUser, log: MadeLog): Promise<{ ok: boolean }> {
   try {
     const key = createRedisKey('farmingUser', user.id)
     const jsonRes = await redis.json.set(key, '$', user)
     const ok = !!jsonRes && jsonRes === 'OK'
 
     if (ok && !batcher.remove(user))
-      log(`Failed to remove user ${user.id} from batcher`, 'red')
+      log(`Failed to remove user ${user.id} from batcher`, 'error')
 
     return { ok }
   }
   catch (err) {
-    log(`Failed to sync user ${user.id}: ${err}`, 'red')
+    log(`Failed to sync user ${user.id}: ${err}`, 'error')
     return { ok: false }
   }
 }
 
-export default (async ({ redis }) => {
+export default (async ({ redis, makeLog }) => {
   const allUsers = batcher.all()
+  const log = makeLog<(Job & string) | {}>('syncFarmingUsers', {
+    date: 'bgRed',
+  })
+
   if (allUsers.length === 0) {
-    log('No users to sync', 'yellow')
+    log('No users to sync', 'warning')
     return
   }
 
-  const res = await Promise.all(allUsers.map(user => syncUser(redis, user)))
+  const res = await Promise.all(allUsers.map(user => syncUser(redis, user, log)))
 
   const failed: FarmingUser[] = []
   res.forEach((r, i) => {
@@ -39,8 +44,8 @@ export default (async ({ redis }) => {
   if (failed.length > 0)
     batcher.createOrUpdateMultiple(failed)
 
-  log(`Synced ${allUsers.length - failed.length}/${allUsers.length} users`, 'yellow')
+  log(`Synced ${allUsers.length - failed.length}/${allUsers.length} users`)
 
   const after = batcher.all()
-  if (after.length !== 0) log(`Batcher has leftover users.\n${JSON.stringify(after)}`, 'red')
+  if (after.length !== 0) log(`Batcher has leftover users.\n${JSON.stringify(after)}`, 'error')
 }) satisfies JobHandler

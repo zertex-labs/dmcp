@@ -1,8 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { MaybePromise } from 'shared'
-import { Logger } from 'shared'
+import type { LogLevel, MaybePromise, OverwriteColors, Tail } from 'shared'
+import { Logger, genericMakeLog } from 'shared'
 
+import { log } from 'winston'
 import type db from '../src/db'
 import type { redis } from '../src/redis'
 import { type Job, jobs } from '.'
@@ -12,15 +13,16 @@ export function isValidJob(arg: string): arg is Job {
   return jobs.includes(filename as Job)
 }
 
-const logger = new Logger('scripts/jobs/jobLogs.log', {
+const logger = new Logger('jobs/jobLogs.log', {
   date: 'bgRed',
   info: 'red',
   error: 'bgRed',
 })
 
 export interface Args { db: typeof db; redis: typeof redis }
+export interface AdditionalJobHandlerArgs { logger: typeof logger; makeLog: ReturnType<typeof genericMakeLog> }
 interface JobInput { job: Job; timing: number }
-export type JobHandler = (args: Args) => MaybePromise<void>
+export type JobHandler = (args: Args & AdditionalJobHandlerArgs) => MaybePromise<void>
 type JobWithHandler = JobInput & {
   immediate: boolean
   handler: JobHandler
@@ -39,15 +41,15 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
 
   handlers.forEach(({ job, timing, handler, immediate }) => {
     const middleware = async () => {
-      logger.log(`+${job}`, undefined, {
-        info: 'cyan',
+      logger.log(`+${job}`, 'info', {
+        overwriteColors: { info: 'cyan' },
       })
 
       const start = performance.now()
-      const res = await handler(args)
+      const res = await handler({ ...args, logger, makeLog: genericMakeLog(logger) })
 
-      logger.log(`-${job} (${(performance.now() - start).toFixed(2)}ms)`, undefined, {
-        info: 'red',
+      logger.log(`-${job} (${(performance.now() - start).toFixed(2)}ms)`, 'info', {
+        overwriteColors: { info: 'red' },
       })
 
       return res
