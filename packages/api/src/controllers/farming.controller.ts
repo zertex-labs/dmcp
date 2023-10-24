@@ -1,5 +1,5 @@
 import Elysia, { t } from 'elysia'
-import type { Rarity } from 'shared'
+import type { FarmingUser, Rarity } from 'shared'
 import { createBaseStats, getPetSkeleton } from 'shared'
 
 import { ctx } from '../context'
@@ -8,9 +8,11 @@ import { farmingActions, handleAction } from '../services/farming.service'
 import { calculateUserStats, doFarm, getFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
 import { getUser } from '../services/users.service'
 import { resolveServiceResponse, response } from '../utils/response'
-import { requireApiSecret } from '../utils'
+import { requireApiSecret, useFarmingUsersBatcher } from '../utils'
+import { getAllItems } from '../redis'
 
 const allItems = parseAllFoodItemsWithChances()
+const batcher = useFarmingUsersBatcher()
 
 /**
  * If a resolver returns undefined/null it will be treated as a 400 bad request
@@ -50,8 +52,9 @@ export const farmingController = new Elysia({
 },
 )
   .use(ctx)
-  .get('/leaderboard', () => {
-    return response.success([])
+  .get('/leaderboard', async () => {
+    const cachedUsers = Object.values(await getAllItems<string, FarmingUser>({ key: 'farmingUser' }))
+    return response.success([...batcher.all(), ...cachedUsers].sort((a, b) => b.totalWeight - a.totalWeight).slice(0, 10))
   }, {
     beforeHandle: requireApiSecret,
     detail: { tags: ['Farming'], description: 'Get top 10 farming users by total' },

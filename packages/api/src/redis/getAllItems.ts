@@ -13,11 +13,15 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
   else
     match = createRedisKey(o.key, o?.value ?? '*', o.suffix)
 
+  console.log(match)
+
   do {
     const result = await redis.scan(cursor, { match })
 
     cursor = result[0]
     const keys = result[1]
+
+    console.log(keys)
 
     if (keys.length > 0) {
       const items = await redis.json.mget(keys, '$')
@@ -25,10 +29,13 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
         const item = items[i][0]
         const key = keys[i]!
         const itemName = key.slice(match.length - 1)
+        console.log(itemName)
         out[itemName] = item
       }
     }
   } while (cursor !== 0)
+
+  console.log(out)
 
   return out
 }

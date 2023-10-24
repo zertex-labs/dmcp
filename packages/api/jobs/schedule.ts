@@ -3,7 +3,6 @@ import path from 'node:path'
 import type { LogLevel, MaybePromise, OverwriteColors, Tail } from 'shared'
 import { Logger, genericMakeLog } from 'shared'
 
-import { log } from 'winston'
 import type db from '../src/db'
 import type { redis } from '../src/redis'
 import { type Job, jobs } from '.'

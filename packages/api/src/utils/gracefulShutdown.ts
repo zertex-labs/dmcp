@@ -23,6 +23,7 @@ export function setupGracefulShutdown(app: Elysia) {
 async function syncBatcher() {
   const batcher = useFarmingUsersBatcher()
   const users = batcher.all()
+  console.log(users)
   if (users.length === 0) return
 
   await jobHandlers.syncFarmingUsers!({
