@@ -1,3 +1,4 @@
+import { error } from '../utils'
 import type { PrefixKey } from '.'
 import { createRedisKey, redis } from '.'
 
@@ -22,14 +23,12 @@ export async function deleteAllItems(
       cursor = result[0]
       const keys = result[1]
 
-      if (keys.length > 0) {
-        console.log(`deleting, ${keys}`)
+      if (keys.length > 0)
         await redis.del(...keys)
-      }
     } while (cursor !== 0)
   }
-  catch (e) {
-    console.error(e)
+  catch (e: any) {
+    error(e, `Failed to delete all items ${match}`)
     return false
   }
 

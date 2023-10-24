@@ -64,7 +64,6 @@ export async function getFarmingUser(o: {
   user: User
 }): Promise<FarmingUser> {
   const { farmingResponse, user } = o
-  console.log(user)
   const key = createRedisKey('farmingUser', user.id)
   let farmingUser = (await redis.json.get(key, '$') as [FarmingUser])?.[0]
 
@@ -77,8 +76,6 @@ export async function getFarmingUser(o: {
     })
 
     batcher.createOrUpdate(farmingUser)
-
-    // redis.json.set(key, '$', farmingUser)
 
     return farmingUser
   }
@@ -96,9 +93,7 @@ export async function getFarmingUser(o: {
     total: farmingResponse.total,
   }
 
-  // add user in backgroud
   batcher.createOrUpdate(farmingUser)
-  // redis.json.set(key, '$', farmingUser)
 
   return farmingUser
 }

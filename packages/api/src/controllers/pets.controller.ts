@@ -8,6 +8,7 @@ import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 import { getPet } from '../services/pets.service'
 import { deleteAllItems } from '../redis/deleteAllItems'
+import { error, log } from '../utils'
 
 export const petsController = new Elysia({
   prefix: '/pets',
@@ -65,7 +66,7 @@ export const petsController = new Elysia({
         return out
       }
       catch (e: any) {
-        console.log(e)
+        error(e, `Failed to give pet to user ${JSON.stringify(ctx.body)}`)
         return response.predefined.internalError
       }
     },

@@ -3,6 +3,7 @@ import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
 import { api } from './controllers/*'
 import { registerTimings } from './timings'
+import { log } from './utils'
 
 const app = new Elysia()
   .use(swagger({
@@ -27,11 +28,9 @@ const app = new Elysia()
 
 registerTimings().then((handlers) => {
   const hv = Object.values(handlers)
-  console.log(`Scheduled ${hv.length} jobs. ${hv.map(x => `${x.immediate ? '*' : ''}${x.job}:${x.timing}ms`).join(', ')}`)
+  log(`Scheduled ${hv.length} jobs. ${hv.map(x => `${x.immediate ? '*' : ''}${x.job}:${x.timing}ms`).join(', ')}`)
 })
 
 export type App = typeof app
 
-console.log(
-  `🦊 App is listening on http://${app.server?.hostname}:${app.server?.port}`,
-)
+log(`🦊 App is listening on http://${app.server?.hostname}:${app.server?.port}`)

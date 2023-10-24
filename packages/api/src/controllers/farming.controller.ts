@@ -48,7 +48,6 @@ export const farmingController = new Elysia({
   name: 'api:farming',
 }).use(ctx).post('/action/:action', async (ctx) => {
   const { action } = ctx.params
-  console.log(action, ctx.body)
   const res = await handleAction(resolvers, action, ctx.body)
   return resolveServiceResponse(res)
 }, {

@@ -7,6 +7,7 @@ import { users } from '../db/schema'
 import { response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
 import { deleteAllItems } from '../redis/deleteAllItems'
+import { error, log } from '../utils'
 import { getPet } from './pets.service'
 
 export const getUserWithParamateres = ['activePet', 'pets'] as const
@@ -40,8 +41,8 @@ export async function getUser(userId: string, withParams?: Partial<Record<GetUse
 
     return { status: 'success', data: user }
   }
-  catch (e) {
-    console.error(e)
+  catch (e: any) {
+    error(e, `Failed to get user ${userId}`)
     return response.predefined.service.internalError
   }
 }
@@ -68,10 +69,10 @@ export async function createUser(data: typeof users.$inferInsert): Promise<Servi
 
     return { status: 'success', data: user }
   }
-  catch (e) {
+  catch (e: any) {
     //  TODO handle unique constraints
 
-    console.error(e)
+    error(e, `Failed to create user; ${JSON.stringify(data)}`)
     return response.predefined.service.internalError
   }
 }
@@ -105,13 +106,11 @@ export async function selectPet(o: { userId: string; petId: string }): Promise<S
       value: userId,
     })
 
-    if (!deletedIsSuccess) {
-      console.error('Failed to delete user from cache', userId)
-      console.log(new Error('stack').stack)
-    }
+    if (!deletedIsSuccess)
+      error(new Error(`[selectPet] Failed to delete user cache; ${userId}`))
   }
-  catch (e) {
-    console.error(e)
+  catch (e: any) {
+    error(e, `Failed to select pet ${petId} for user ${userId}`)
     return response.predefined.service.internalError
   }
 

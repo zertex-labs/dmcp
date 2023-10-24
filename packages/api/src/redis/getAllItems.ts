@@ -13,8 +13,6 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
   else
     match = createRedisKey(o.key, o?.value ?? '*', o.suffix)
 
-  console.log(match)
-
   do {
     const result = await redis.scan(cursor, { match })
 

@@ -9,7 +9,7 @@
  * import { getCallerFile } from './getCallerFile'
  *
  * export function someFunction() {
- *  console.log(getCallerFile(new Error('getCallerFile'))) // someFolder/file.ts
+ *  log(getCallerFile(new Error('getCallerFile'))) // someFolder/file.ts
  * }
  */
 export function getCallerFile(err: Error) {

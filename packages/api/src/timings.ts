@@ -2,9 +2,10 @@ import { type Job, jobs } from '../jobs'
 import { scheduleTasks } from '../jobs/schedule'
 import db from './db'
 import { redis } from './redis'
+import { log } from './utils'
 
 export async function registerTimings() {
-  console.log(`Started scheduling ${jobs.length} jobs. (${jobs.join(', ')})`)
+  log(`Started scheduling ${jobs.length} jobs. (${jobs.join(', ')})`)
 
   const timings: Record<Job, number> = {
     syncFarmingUsers: 0.1 * 60 * 1000,

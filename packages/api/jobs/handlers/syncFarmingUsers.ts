@@ -1,6 +1,6 @@
 import type { FarmingUser, MadeLog } from 'shared'
 import { createRedisKey } from '../../src/redis'
-import { useFarmingUsersBatcher } from '../../src/utils'
+import { error, useFarmingUsersBatcher } from '../../src/utils'
 import type { Args as HandlerArgs, JobHandler } from '../schedule'
 import type { Job } from '..'
 
@@ -17,8 +17,8 @@ async function syncUser(redis: HandlerArgs['redis'], user: FarmingUser, log: Mad
 
     return { ok }
   }
-  catch (err) {
-    log(`Failed to sync user ${user.id}: ${err}`, 'error')
+  catch (err: any) {
+    error(err, `Failed to sync user ${user.id}`)
     return { ok: false }
   }
 }
