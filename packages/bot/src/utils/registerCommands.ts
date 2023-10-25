@@ -43,7 +43,7 @@ export async function registerCommands(client: UsableClient) {
     ihateDiscordjsTimeout,
   )) {
     process.on('exit', () => {
-      client.error(`Routes.applicationGuildCommands timed out after ${Math.floor(ihateDiscordjsTimeout / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}s (${ihateDiscordjsTimeout}ms)`)
+      client.error(`Routes.applicationGuildCommands timed out after ${Math.floor(ihateDiscordjsTimeout / 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })}s (${ihateDiscordjsTimeout}ms)`)
     })
     process.exit()
   }
