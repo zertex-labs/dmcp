@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { LogLevel, MaybePromise, OverwriteColors, Tail } from 'shared'
+import type { LogLevel, MaybePromise, OverwriteColors, Prettify, Tail } from 'shared'
 import { Logger, genericMakeLog } from 'shared'
 
 import type db from '../src/db'

@@ -7,12 +7,12 @@ import { log } from './utils'
 
 export const jobHandlers: Partial<Record<Job, JobHandler>> = {}
 
+export const timings: Record<Job, number> = {
+  syncFarmingUsers: 3 * 60 * 1000, // 3 minutes
+}
+
 export async function registerTimings() {
   log(`Started scheduling ${jobs.length} jobs. (${jobs.join(', ')})`)
-
-  const timings: Record<Job, number> = {
-    syncFarmingUsers: 3 * 60 * 1000, // 3 minutes
-  }
 
   const parsedTimings = Object.entries(timings).map(([job, timing]) => ({
     job: job as Job,

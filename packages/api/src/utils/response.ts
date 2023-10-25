@@ -3,35 +3,40 @@ import type { ServiceResponse } from 'shared'
 /**
  * Create a {@link Response} object
  */
-const responseMakers = {
+const baseResponseMakers = {
   success: <Data = any>(data: Data) => new Response(JSON.stringify(data), { status: 200, headers: typeof data === 'object' ? { 'content-type': 'application/json' } : undefined }),
-  error: <ErrorType = string>(error: ErrorType, status = 400) => new Response(JSON.stringify(typeof error == 'string' ? { error } : error), { status }),
+  error: <ErrorType = string>(error: ErrorType, status = 400) => new Response(JSON.stringify(typeof error == 'object' ? error : { error }), { status, headers: typeof error === 'object' ? { 'content-type': 'application/json' } : undefined }),
 }
+
+const serviceResponseMakers = Object.freeze({
+  success: <Data = any>(data: Data) => ({ status: 'success', data }) as const, // as const required so it can be infered as ServiceResponse
+  error: <ErrorType = string>(error: ErrorType, status = 400) => ({ status: 'error', error, statusCode: status }) as const,
+})
 
 /**
  * A collection of {@link Response} objects
  */
 export const response = Object.freeze({
-  ...responseMakers,
+  ...{
+    success: <Data = any>(data: Data) => resolveServiceResponse(serviceResponseMakers.success(data)),
+    error: (error: string, status = 400) => resolveServiceResponse(serviceResponseMakers.error(error, status)),
+  },
 
-  service: Object.freeze({
-    success: <Data = any>(data: Data) => ({ status: 'success', data }) as const, // as const required so it can be infered as ServiceResponse
-    error: <ErrorType = string>(error: ErrorType, status = 400) => ({ status: 'error', error, statusCode: status }) as const,
-  }),
+  service: serviceResponseMakers,
 
   predefined: {
     // we have to use getters here because elysia would "reuse" the same response and everything will die(learned it the hard way)
     get notAuthorized() {
-      return responseMakers.error('Not Authorized', 401)
+      return baseResponseMakers.error('Not Authorized', 401)
     },
     get notFound() {
-      return responseMakers.error('Resource Not Found', 404)
+      return baseResponseMakers.error('Resource Not Found', 404)
     },
     get internalError() {
-      return responseMakers.error('Internal Error', 500)
+      return baseResponseMakers.error('Internal Error', 500)
     },
     get badRequest() {
-      return responseMakers.error('Bad Request', 400)
+      return baseResponseMakers.error('Bad Request', 400)
     },
 
     service: Object.freeze({
@@ -54,8 +59,9 @@ export const response = Object.freeze({
  * If the {@link ServiceResponse} is successfull but the data is undefined, returns a {@link Response} with the status code 404 and the body 'Not Found'
  */
 export function resolveServiceResponse<T>(res: ServiceResponse<T>, statusCode?: number): Response {
-  if (res.status === 'error') return response.error(res, statusCode ?? res.statusCode)
+  console.log(res)
+  if (res.status === 'error') return baseResponseMakers.error(res, statusCode ?? res.statusCode)
   if (!res.data) return response.predefined.notFound
 
-  return response.success(res.data)
+  return baseResponseMakers.success(res)
 }
