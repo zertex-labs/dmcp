@@ -1,6 +1,7 @@
 // import { swagger } from "@elysiajs/swagger";
 import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
+import { staticPlugin } from '@elysiajs/static'
 
 import { api } from './controllers/*'
 import { registerTimings } from './timings'
@@ -8,6 +9,11 @@ import { log } from './utils'
 import { setupGracefulShutdown } from './utils/gracefulShutdown'
 
 const app = new Elysia()
+  // @ts-expect-error not a promise but it's fine
+  .use(staticPlugin({
+    prefix: '/images',
+    alwaysStatic: true,
+  }))
   .use(swagger({
     path: '/docs',
     documentation: {

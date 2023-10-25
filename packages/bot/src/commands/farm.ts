@@ -3,6 +3,7 @@ import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
 import { type AvailableFood, type FarmingUser, type RarityOverwrite, type ServiceResponse, randomNumber } from 'shared'
 
+import { apiSecretHeaders } from 'src/utils/headers'
 import type { Command } from '../types'
 
 const baseInterval = 2000
@@ -83,9 +84,7 @@ export default {
       { userId: interaction.user.id },
       {
         validateStatus: a => a < 500,
-        headers: {
-          'x-api-secret': process.env.API_SECRET,
-        },
+        headers: apiSecretHeaders,
       },
       )
     }
@@ -103,9 +102,7 @@ export default {
             { id: interaction.user.id },
             {
               validateStatus: a => a < 500,
-              headers: {
-                'x-api-secret': process.env.API_SECRET,
-              },
+              headers: apiSecretHeaders,
             },
           )
 
@@ -115,9 +112,7 @@ export default {
             { userId: interaction.user.id },
             {
               validateStatus: a => a < 500,
-              headers: {
-                'x-api-secret': process.env.API_SECRET,
-              },
+              headers: apiSecretHeaders,
             },
           )
         }

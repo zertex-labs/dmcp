@@ -1,5 +1,6 @@
 import type { FarmingUser } from 'shared'
 import axios from 'axios'
+import { apiSecretHeaders } from 'src/utils/headers'
 import type { Command } from '../types'
 
 export default {
@@ -10,9 +11,7 @@ export default {
     if (!interaction.isCommand()) return
 
     const leaderboardReq = await axios.get<FarmingUser[]>(`http://localhost:3000/api/farming/leaderboard`, {
-      headers: {
-        'x-api-secret': process.env.API_SECRET,
-      },
+      headers: apiSecretHeaders,
       validateStatus: s => s < 500,
     })
 

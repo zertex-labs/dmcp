@@ -5,6 +5,7 @@ import { Client, Collection } from 'discord.js'
 import type { KeysMatching } from 'shared'
 import { AxiosError } from 'axios'
 import Logger from 'shared/utils/logger'
+import { config } from 'src/config'
 import type { ClientCommand, Interaction } from '../types'
 
 export class UsableClient extends Client {
@@ -16,7 +17,7 @@ export class UsableClient extends Client {
     this.commands = new Collection()
     this.logger = new Logger(path.join(__dirname, '..', 'Logs.log'))
 
-    this.rest.setToken(process.env.DISCORD_BOT_TOKEN!)
+    this.rest.setToken(config.env.DISCORD_BOT_TOKEN!)
   }
 
   log(text: string, level: Parameters<typeof this.logger.log>['1'] = 'info') {

@@ -16,7 +16,6 @@ export const internalController = new Elysia({
   })
   .post(`/job/:job/execute`, async (ctx) => {
     const { job } = ctx.params
-    console.log(job)
     if (!isValidJob(job)) return response.error(`Invalid job name, valid names are: ${jobs.join(', ')}`)
 
     await jobHandlers[job]!({
@@ -33,7 +32,6 @@ export const internalController = new Elysia({
   })
   .get(`/job/:job/timing`, async (ctx) => {
     const { job } = ctx.params
-    console.log(job)
     if (!isValidJob(job)) return response.error(`Invalid job name, valid names are: ${jobs.join(', ')}`)
 
     return response.success(`Job ${job} is scheduled to run every ${timings[job]}ms`)

@@ -4,6 +4,7 @@ import { availablePets } from 'shared'
 
 import { adminIds } from 'shared/data'
 import axios from 'axios'
+import { apiSecretHeaders } from 'src/utils/headers'
 import { getOptions } from '../utils/getOptions'
 import type { Command } from '../types'
 import getSubcommand from '../utils/getSubcommand'
@@ -76,9 +77,7 @@ export default {
     const ownedRes = await axios.get<Pet[]>(
         `http://localhost:3000/api/pets/owned/${interaction.user.id}`,
         {
-          headers: {
-            'x-api-secret': process.env.API_SECRET,
-          },
+          headers: apiSecretHeaders,
         },
     )
 
@@ -129,9 +128,7 @@ export default {
           { ownerId, type: petType, displayName },
           {
             validateStatus: () => true,
-            headers: {
-              'x-api-secret': process.env.API_SECRET,
-            },
+            headers: apiSecretHeaders,
           },
         )
 
@@ -172,9 +169,7 @@ export default {
           { petId: uuid },
           {
             validateStatus: () => true,
-            headers: {
-              'x-api-secret': process.env.API_SECRET,
-            },
+            headers: apiSecretHeaders,
           },
         )
 
@@ -196,9 +191,7 @@ export default {
           `http://localhost:3000/api/users/${activeUser.id}/activePet`,
           {
             validateStatus: () => true,
-            headers: {
-              'x-api-secret': process.env.API_SECRET,
-            },
+            headers: apiSecretHeaders,
           },
         )
 
@@ -222,9 +215,7 @@ export default {
 
         try {
           const listReq = await axios.get<Pet[]>(`http://localhost:3000/api/pets/owned/${listUser.id}`, {
-            headers: {
-              'x-api-secret': process.env.API_SECRET,
-            },
+            headers: apiSecretHeaders,
           })
           const pets = listReq.data
 
