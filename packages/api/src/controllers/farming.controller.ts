@@ -1,15 +1,16 @@
 import Elysia, { t } from 'elysia'
-import type { FarmingUser, Rarity } from 'shared'
+import type { FarmingUser, Rarity, Shop } from 'shared'
 import { createBaseStats, getPetSkeleton } from 'shared'
 
 import { ctx } from '../context'
+import { createRedisKey, getAllItems } from '../redis'
 import type { FarmingResolvers } from '../services/farming.service'
 import { farmingActions, handleAction } from '../services/farming.service'
 import { calculateUserStats, doFarm, getFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
 import { getUser } from '../services/users.service'
+import { error, log, requireApiSecret, useFarmingUsersBatcher } from '../utils'
 import { resolveServiceResponse, response } from '../utils/response'
-import { requireApiSecret, useFarmingUsersBatcher } from '../utils'
-import { getAllItems } from '../redis'
+import { generateShopItems } from '../services/helpers/shop.helpers'
 
 const allItems = parseAllFoodItemsWithChances()
 const batcher = useFarmingUsersBatcher()
@@ -52,6 +53,36 @@ export const farmingController = new Elysia({
 },
 )
   .use(ctx)
+  .get('/shop/:date', async ({ params, redis }) => {
+    const { date } = params
+    const key = createRedisKey('shop', date)
+    let shop: Shop = await redis.json.get(key)
+
+    if (!shop) {
+      shop = {
+        items: generateShopItems(),
+        generatedAt: new Date().toISOString(),
+      }
+
+      try {
+        await redis.json.set(key, '$', shop as any)
+
+        // expire in 1 week
+        const [serverTime] = await redis.time()
+        const unix = (serverTime + (7 * 24 * 60 * 60)) * 1000
+        redis.pexpireat(key, unix).then((res) => { res === 1 && log(`Set shop ${date} to expire at ${new Date(unix)}(1 week);`) })
+      }
+      catch (e: any) {
+        error(e, `trying to json.set shop ${date}`)
+        return response.predefined.internalError
+      }
+    }
+
+    return response.success(shop)
+  }, {
+    beforeHandle: requireApiSecret,
+    detail: { tags: ['Farming'], description: 'Get shop items for a specific date' },
+  })
   .get('/leaderboard', async () => {
     const cachedUsers = Object.values(await getAllItems<string, FarmingUser>({ key: 'farmingUser' }))
     return response.success([...batcher.all(), ...cachedUsers].sort((a, b) => b.totalWeight - a.totalWeight).slice(0, 10))

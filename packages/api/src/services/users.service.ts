@@ -88,7 +88,7 @@ export async function selectPet(o: { userId: string; petId: string }): Promise<S
   const { petId, userId } = o
   const petRes = await getPet({ uuid: petId, ownerId: userId })
   if (petRes.status === 'error') return petRes
-  if (!petRes.data) return { status: 'error', error: 'Invalid petId; petId is either invalid or user doesn\'t own it.' }
+  if (!petRes.data) return response.service.error('Invalid petId; petId is either invalid or user doesn\'t own it.')
 
   try {
     const { rowCount: updatedCount } = await db

@@ -4,7 +4,7 @@ import pg from 'pg'
 import { config } from '../config'
 import * as schema from './schema'
 
-const pgClient = new pg.Client({
+export const pgClient = new pg.Client({
   connectionString: config.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,

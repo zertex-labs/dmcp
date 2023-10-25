@@ -1,4 +1,6 @@
 import { Logger, genericMakeLog } from 'shared'
+import { sql } from 'drizzle-orm'
+import db, { pgClient } from '../db'
 
 export const systemLogger = new Logger('system.log')
 
@@ -11,7 +13,22 @@ export function error(err: string | Error, additionalInfo?: string) {
   }
   else {
     const log = makeLog(err.name)
+
     log(`${err.message}; ${additionalInfo}`, 'error')
-    if (err.stack) log(err.stack, 'error')
+    if (err.stack) log(err.stack.replace('Error: ', ''), 'error')
+
+    // -- Error handling --
+    console.log(err.message)
+    if (err.message === 'Client has encountered a connection error and is not queryable') {
+      try {
+        db.execute(sql`SELECT 1`)
+        log('executed select 1')
+      }
+      catch (e) {
+        pgClient.connect().then(() => {
+          log('Reconnected to database', 'warn')
+        })
+      }
+    }
   }
 }
