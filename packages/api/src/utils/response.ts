@@ -27,16 +27,16 @@ export const response = Object.freeze({
   predefined: {
     // we have to use getters here because elysia would "reuse" the same response and everything will die(learned it the hard way)
     get notAuthorized() {
-      return baseResponseMakers.error('Not Authorized', 401)
+      return resolveServiceResponse(this.service.notAuthorized)
     },
     get notFound() {
-      return baseResponseMakers.error('Resource Not Found', 404)
+      return resolveServiceResponse(this.service.notFound)
     },
     get internalError() {
-      return baseResponseMakers.error('Internal Error', 500)
+      return resolveServiceResponse(this.service.internalError)
     },
     get badRequest() {
-      return baseResponseMakers.error('Bad Request', 400)
+      return resolveServiceResponse(this.service.badRequest)
     },
 
     service: Object.freeze({
