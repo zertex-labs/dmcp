@@ -227,9 +227,15 @@ export default {
         if (listUser.bot) return void interaction.reply('Bots cannot have pets')
 
         try {
-          const listReq = await axios.get<Pet[]>(`http://localhost:3000/api/pets/owned/${listUser.id}`, {
+          const listReq: ServiceResponse<Pet[]> = await fetch(`${config.env.API_URL}/api/pets/owned/${listUser.id}`, {
             headers: apiSecretHeaders,
-          })
+          }).then(res => res.json())
+
+          if (listReq.status === 'error') {
+            client.interactionError(interaction, `Error getting pets for ${listUser.id}; ${listReq.error}`)
+            return void interaction.reply(`Error getting pets. ${listReq.statusCode < 500 ? `Error: ${listReq.error}` : ''}`)
+          }
+
           const pets = listReq.data
 
           if (pets.length === 0) {
