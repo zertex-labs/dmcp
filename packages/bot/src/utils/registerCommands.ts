@@ -8,6 +8,7 @@ import type { UsableClient } from '../client'
 import type { Command } from '../types'
 
 const { DISCORD_CLIENT_ID, GUILD_ID } = config.env
+const ihateDiscordjsTimeout = 1000
 
 export async function registerCommands(client: UsableClient) {
   const commandsPath = path.join(__dirname, '..', 'commands')
@@ -39,10 +40,10 @@ export async function registerCommands(client: UsableClient) {
         reason: 'Routes.applicationGuildCommands',
       },
     ),
-    2500,
+    ihateDiscordjsTimeout,
   )) {
     process.on('exit', () => {
-      client.error('Routes.applicationGuildCommands timed out after 2.5s (2500ms)')
+      client.error(`Routes.applicationGuildCommands timed out after ${Math.floor(ihateDiscordjsTimeout / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}s (${ihateDiscordjsTimeout}ms)`)
     })
     process.exit()
   }
