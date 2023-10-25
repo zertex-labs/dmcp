@@ -75,22 +75,19 @@ export default {
     const focusedOption = interaction.options.getFocused(true)
     if (focusedOption.name !== 'name') return
 
-    const ownedRes = await axios.get<Pet[]>(
-        `http://localhost:3000/api/pets/owned/${interaction.user.id}`,
-        {
-          headers: apiSecretHeaders,
-        },
-    )
+    const ownedRes: ServiceResponse<Pet[]> = await fetch(`${config.env.API_URL}/api/pets/owned/${interaction.user.id}`, {
+      headers: apiSecretHeaders,
+    }).then((res) => { console.log(res); return res.json() })
 
-    if (ownedRes.status !== 200) {
+    if (ownedRes.status === 'error') {
       return void interaction.respond([
-        { name: 'Error', value: 'Error getting pets' },
+        { name: 'Error', value: `Error getting pets. ${ownedRes.statusCode < 500 ? `Error: ${ownedRes.error}` : ''}` },
       ])
     }
-    const { data: pets } = ownedRes
+    const pets = ownedRes.data
 
     await interaction.respond(
-      pets.map(pet => ({
+      pets.filter(x => x.displayName.includes(focusedOption.value)).slice(0, 25).map(pet => ({
         name: pet.displayName,
         value: `${pet.displayName}@${pet.uuid}`,
       })),
