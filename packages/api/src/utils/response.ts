@@ -59,7 +59,6 @@ export const response = Object.freeze({
  * If the {@link ServiceResponse} is successfull but the data is undefined, returns a {@link Response} with the status code 404 and the body 'Not Found'
  */
 export function resolveServiceResponse<T>(res: ServiceResponse<T>, statusCode?: number): Response {
-  console.log(res)
   if (res.status === 'error') return baseResponseMakers.error(res, statusCode ?? res.statusCode)
   if (!res.data) return response.predefined.notFound
 

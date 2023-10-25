@@ -33,5 +33,5 @@ Promise<ServiceResponse<AlwaysExist<ReturnType<Resolvers[Action]>>>> {
   const resolved: any = await resolvers[action](body)
   if (!resolved) return response.predefined.service.badRequest
 
-  return { status: 'success', data: resolved }
+  return resolved?.status ? resolved : response.service.success(resolved)
 }
