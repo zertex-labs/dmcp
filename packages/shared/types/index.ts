@@ -29,7 +29,7 @@ export type ServiceResponse<DataType, ErrorType = string> = {
 } | {
   status: 'error'
   error: ErrorType
-  statusCode?: number
+  statusCode: number
 }
 
 export type Tail<T extends any[]> = T extends [infer _, ...infer R] ? R : never

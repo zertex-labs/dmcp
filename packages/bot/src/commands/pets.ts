@@ -1,10 +1,11 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
-import type { AvailablePet, Pet } from 'shared'
+import { Embed, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import type { AvailablePet, Pet, ServiceResponse } from 'shared'
 import { availablePets } from 'shared'
 
 import { adminIds } from 'shared/data'
 import axios from 'axios'
 import { apiSecretHeaders } from 'src/utils/headers'
+import { config } from 'src/config'
 import { getOptions } from '../utils/getOptions'
 import type { Command } from '../types'
 import getSubcommand from '../utils/getSubcommand'
@@ -187,25 +188,40 @@ export default {
 
         const activeReply = await interaction.reply('Getting active pet...')
 
-        const activeRes = await axios.get<Pet>(
-          `http://localhost:3000/api/users/${activeUser.id}/activePet`,
-          {
-            validateStatus: () => true,
-            headers: apiSecretHeaders,
-          },
-        )
+        const activeRes: ServiceResponse<Pet> = await fetch(`${config.env.API_URL}/api/users/${activeUser.id}/activePet`, {
+          headers: apiSecretHeaders,
+        }).then((res) => { console.log(res); return res.json() })
 
-        if (activeRes.status !== 200) {
-          let msg = 'Error getting active pet, please try again later'
-          if (activeRes.status < 500) msg = (activeRes.data as any).error.replace('User has', activeUser.id === interaction.user.id ? '**You** have' : `**${activeUser.username}** has`)
-          else client.interactionError(interaction, `${JSON.stringify(activeRes.data)}; Error getting active pet`)
-
-          return activeReply.edit(msg)
+        if (activeRes.status === 'error') {
+          return activeReply.edit({
+            content: `We encountered an error while getting your active pet, please try again later. ${activeRes.statusCode < 500 ? `Error: ${activeRes.error}` : ''}`,
+          })
         }
 
         const pet = activeRes.data
+        const slotFields = pet.upgradeSlots.map((slot, i) => ({
+          name: `Slot ${i + 1}`,
+          value: slot,
+        }))
+
+        console.log(pet)
+
         activeReply.edit(
-          `Your active pet is ${pet.displayName}(Lvl. ${pet.level})`,
+          {
+            embeds: [
+              new EmbedBuilder()
+                .setTitle(`${pet.displayName} (Lvl. ${pet.level})`)
+                .addFields(
+                  {
+                    name: 'Bought slot',
+                    value: pet.boughtSlot ? 'Yes' : 'No',
+                  },
+                  ...slotFields,
+                )
+                .setThumbnail(`${config.env.API_URL}/images/${pet.type}.png`), // needs to be https, so use ngrok and set API_URL to ngrok url
+              // .setImage('https://avatars.githubusercontent.com/u/106680301?s=48&v=4'),
+            ],
+          },
         )
 
         break
