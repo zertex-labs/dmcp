@@ -42,7 +42,7 @@ export const response = Object.freeze({
     service: Object.freeze({
       internalError: { status: 'error', error: 'Internal Error', statusCode: 500 } as const,
       badRequest: { status: 'error', error: 'Bad Request', statusCode: 400 } as const,
-      notFound: { status: 'error', error: 'Not Found', statusCode: 404 } as const,
+      notFound: { status: 'error', error: 'Resource Not Found', statusCode: 404 } as const,
       notAuthorized: { status: 'error', error: 'Not Authorized', statusCode: 401 } as const,
     }),
   },
