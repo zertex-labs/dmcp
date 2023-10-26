@@ -15,7 +15,7 @@ const client = new UsableClient({
 })
 
 async function start(token: string | undefined) {
-  await registerCommands(client)
+  // await registerCommands(client)
   registerEvents(client)
 
   client.login(token)
