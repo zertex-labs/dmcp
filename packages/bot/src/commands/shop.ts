@@ -61,7 +61,7 @@ export default {
 
     const res: ServiceResponse<Shop> = await fetch(`${config.env.API_URL}/api/shop/${date}`, {
       headers: apiSecretHeaders,
-    }).then(res => res.json()).catch(client.error)
+    }).then(res => res.json()).catch(client.error.bind(client))
 
     if (res.status === 'error') {
       const msg = `Something went wrong while fetching the shop for date ${date}.`

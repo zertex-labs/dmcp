@@ -1,13 +1,14 @@
 import Elysia, { t } from 'elysia'
-import type { FarmingUser, Rarity } from 'shared'
-import { createBaseStats, getPetSkeleton } from 'shared'
+import type { Crop, FarmingUser, Rarity } from 'shared'
+import { calculateCropPrice, createBaseStats, crops, getPetSkeleton, validSellCropInputs } from 'shared'
 
+import { resolve } from 'bun'
 import { ctx } from '../context'
 import { getAllItems } from '../redis'
 import type { FarmingResolvers } from '../services/farming.service'
 import { farmingActions, handleAction } from '../services/farming.service'
 import { calculateUserStats, doFarm, getFarmingUser, getOrCreateFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
-import { getUser } from '../services/users.service'
+import { getUser, giveUserBalance } from '../services/users.service'
 import { requireApiSecret, useFarmingUsersBatcher } from '../utils'
 import { resolveServiceResponse, response } from '../utils/response'
 
@@ -63,12 +64,71 @@ export const farmingController = new Elysia({
 
   .get('/user/:userId', async (ctx) => {
     const fuser = await getFarmingUser(ctx.params.userId, true)
-    console.log('inreq', fuser)
+    console.log(fuser, 'fuser')
     if (!fuser) return response.service.error('User not found', 404)
     return response.success(fuser)
   }, {
     beforeHandle: requireApiSecret,
     detail: { tags: ['Farming'], description: 'Get farming user by discord id' },
+  })
+
+  .post('/sell/:crop', async ({ params, body }) => {
+    const { crop } = params
+    const { userId } = body
+
+    const farmingUser = await getFarmingUser(userId, true)
+    if (!farmingUser) return response.service.error('User not found', 404)
+
+    let totalValue = 0
+    let cropAmount = 0
+    if (crop === 'ALL') {
+      const individual = Object.entries(farmingUser.individual) as [Crop, number][]
+      cropAmount = farmingUser.total
+      totalValue = individual.reduce((acc, [cropName, userAmount]) => {
+        const cropPrice = calculateCropPrice(cropName, userAmount)
+        return acc + cropPrice
+      }, 0)
+
+      farmingUser.total = 0
+      farmingUser.individual = {
+        CARROT: 0,
+        CHORUS_FRUIT: 0,
+        SUGAR_CANE: 0,
+        WHEAT: 0,
+      }
+    }
+    else {
+      const { amount } = body
+
+      const userAmount = farmingUser.individual[crop]
+      cropAmount = amount ? Math.min(amount, userAmount) : userAmount
+      const cropPrice = calculateCropPrice(crop, cropAmount)
+      totalValue = cropPrice
+
+      farmingUser.individual[crop] -= cropAmount
+    }
+
+    console.log(userId, totalValue)
+
+    const giveRes = await giveUserBalance(userId, totalValue)
+    if (giveRes.status === 'error') return resolveServiceResponse(giveRes)
+
+    batcher.createOrUpdate(farmingUser)
+
+    return response.success({
+      totalValue,
+      amount: cropAmount,
+    })
+  }, {
+    beforeHandle: requireApiSecret,
+    detail: { tags: ['Farming'], description: 'Sell a crop' },
+    params: t.Object({
+      crop: t.Union(validSellCropInputs.map(x => t.Literal(x))),
+    }),
+    body: t.Object({
+      userId: t.String(),
+      amount: t.Optional(t.Integer({ minimum: 1 })),
+    }),
   })
 
   .post('/action/:action', async (ctx) => {

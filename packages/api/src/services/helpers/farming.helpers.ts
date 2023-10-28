@@ -1,11 +1,13 @@
-import type { AvailableFood, AvailablePerk, FarmingUser, Food, PerkType, Pet, PetSkeleton, PlayerStat, Rarity, User } from 'shared'
+import type { AvailablePerk, Crop, FarmingUser, Food, PerkType, Pet, PetSkeleton, PlayerStat, Rarity, User } from 'shared'
 import { createBaseChances, randomNumber } from 'shared'
 import { food as dataFood, perks as dataPerks, upgrades } from 'shared/data'
+import { JoinNullability } from 'drizzle-orm/query-builders/select.types'
 import { createRedisKey, redis } from '../../redis'
+import type { SyncableFarmingUser } from '../../utils'
 import { useFarmingUsersBatcher } from '../../utils'
 
 export type CalculatedPlayerStats = Record<PlayerStat, number>
-type NamedFood = Food & { name: AvailableFood }
+type NamedFood = Food & { name: Crop }
 type NamedFoodWithChance = NamedFood & { chance: number }
 
 type FarmingResponse = ReturnType<typeof doFarm>
@@ -59,18 +61,19 @@ export function calculateUserStats(
   return base
 }
 
-export async function getFarmingUser(userId: string, ifExistStoreInBatcher = false) {
+export async function getFarmingUser(userId: string, ifExistStoreInMemory = false) {
   const user = batcher.get(userId)
-  console.log('buser', user)
+  console.log(user, 'user')
   if (user) return user
 
   const key = createRedisKey('farmingUser', userId)
-  const redisRes = await redis.json.get(key, '$') as FarmingUser[]
-  if (redisRes.length === 0) return
+  console.log(key)
+  const redisRes = await redis.json.get(key, '$') as FarmingUser[] | null
+  console.log(redisRes, 'redisRes')
+  if (!redisRes || redisRes.length === 0) return
 
   const fuser = redisRes[0]!
-  console.log('fuser', fuser)
-  if (ifExistStoreInBatcher) batcher.createOrUpdate({ ...fuser, onlyMemory: true })
+  if (ifExistStoreInMemory) batcher.createOrUpdate({ ...fuser, onlyMemory: true })
 
   return fuser
 }
@@ -81,19 +84,23 @@ export async function getOrCreateFarmingUser(o: {
 }): Promise<FarmingUser> {
   const { farmingResponse, user } = o
   const key = createRedisKey('farmingUser', user.id)
-  let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [FarmingUser])?.[0]
+  let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [SyncableFarmingUser])?.[0]
 
   // if we have a user we just update it
+  console.log('farmingUser gg', farmingUser)
   if (farmingUser) {
     farmingUser.total += farmingResponse.total
     farmingResponse.items.forEach((item) => {
       if (farmingUser.individual?.[item.name]) farmingUser.individual[item.name] += item.amount
       else farmingUser.individual[item.name] = item.amount
     })
-    console.log(farmingUser.totalWeight)
+
     farmingUser.totalWeight += farmingResponse.totalWeight
+    farmingUser.onlyMemory = false
 
     batcher.createOrUpdate(farmingUser)
+
+    console.log('farmingUser 2', farmingUser)
 
     return farmingUser
   }
@@ -107,12 +114,14 @@ export async function getOrCreateFarmingUser(o: {
         acc[curr.name] = curr.amount
         return acc
       },
-      {} as Record<AvailableFood, number>,
+      {} as Record<Crop, number>,
     ),
     total: farmingResponse.total,
   }
 
   batcher.createOrUpdate(farmingUser)
+
+  console.log('farmingUser 3', farmingUser)
 
   return farmingUser
 }
@@ -128,7 +137,7 @@ function parseFoodBasedOnProbability(): {
     if (typeof food == 'string') return
 
     const e = food.probability === 0 ? guaranteed : other
-    e.push({ ...(food as Food), name: name as AvailableFood })
+    e.push({ ...(food as Food), name: name as Crop })
   })
 
   return {

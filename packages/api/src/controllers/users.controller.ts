@@ -1,5 +1,6 @@
 import { Elysia, t } from 'elysia'
 
+import { eq } from 'drizzle-orm'
 import { ctx } from '../context'
 import { insertUserSchema } from '../db/schema/users'
 import { createUser, getUser, getUserWithParamateres, selectPet } from '../services/users.service'

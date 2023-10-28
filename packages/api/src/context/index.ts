@@ -8,6 +8,7 @@ import pretty from 'pino-pretty'
 import { config } from '../config'
 import { db } from '../db'
 import { redis } from '../redis'
+import * as schema from '../db/schema'
 
 const loggerConfig
   = config.env.NODE_ENV === 'development'
@@ -27,6 +28,7 @@ export const ctx = new Elysia({
 
   .state('config', config)
   .state('localData', data)
+  .state('schema', schema)
 
   // if whole context dies randomly ever again it's 99.9% cause of this shitty logger. Try reinstalling the dependancies again if it happens
   .use(logger(loggerConfig))

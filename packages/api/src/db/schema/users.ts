@@ -1,13 +1,25 @@
 import { relations } from 'drizzle-orm'
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { customType, decimal, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 import { pets } from '.'
 
+const currency = customType<{ data: number }>({
+  dataType() {
+    return 'decimal(15, 2)'
+  },
+  fromDriver(value) {
+    return Number(value)
+  },
+})
+
 export const userTable = pgTable('user', {
   id: text('id').primaryKey(), // discord snowflake
 
-  balance: integer('balance').default(0).notNull(), // drizzle still doesn't support unsigned integers so maximum balance is 2^31 - 1
+  balance: currency('balance', {
+    precision: 11,
+    scale: 2,
+  }).default(0).notNull(),
 
   activePetId: text('active_pet_id').references(() => pets.uuid),
 

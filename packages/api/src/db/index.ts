@@ -4,12 +4,16 @@ import pg from 'pg'
 import { config } from '../config'
 import * as schema from './schema'
 
-export const pgClient = new pg.Client({
+export const pgClient = new pg.Pool({
   connectionString: config.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
 })
+
+export async function reconnectClient() {
+
+}
 
 await pgClient.connect()
 

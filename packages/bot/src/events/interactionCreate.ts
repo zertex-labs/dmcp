@@ -47,18 +47,18 @@ export const run: Event<'interactionCreate'> = (client, interaction) => {
         })
       },
       helpers,
-    })?.catch(client.error)
+    })?.catch(client.error.bind(client))
   }
 
   else if (interaction.isAutocomplete()) {
-    return void command.autocomplete?.({ interaction, client, state, helpers, invokeHelper: (helper, o) => {
-      const overwrites = o ?? {}
-      helpers[helper]({
-        client: overwrites.client ?? client,
-        helpers: overwrites.helpers ?? helpers,
-        interaction: overwrites.interaction ?? interaction,
-        state: overwrites.state ?? commandStateStorage[command.name] ?? {},
-      })
-    } })?.catch(client.error.bind(client))
+    return void command.autocomplete?.({ interaction,client,state,helpers,invokeHelper: (helper, o) => {
+        const overwrites = o ?? {}
+        helpers[helper]({
+          client: overwrites.client ?? client,
+          helpers: overwrites.helpers ?? helpers,
+          interaction: overwrites.interaction ?? interaction,
+          state: overwrites.state ?? commandStateStorage[command.name] ?? {},
+        })
+      } })?.catch(client.error.bind(client))
   }
 }

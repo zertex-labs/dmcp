@@ -7,7 +7,7 @@ import { users } from '../db/schema'
 import { response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
 import { deleteAllItems } from '../redis/deleteAllItems'
-import { error, log } from '../utils'
+import { error, log, useFarmingUsersBatcher } from '../utils'
 import { getPet } from './pets.service'
 
 export const getUserWithParamateres = ['activePet', 'pets'] as const
@@ -37,12 +37,77 @@ export async function getUser(userId: string, withParams?: Partial<Record<GetUse
       },
     })
 
+    console.log('no cache', user)
+
     if (user) redis.json.set(key, '$', user)
 
     return { status: 'success', data: user }
   }
   catch (e: any) {
     error(e, `Failed to get user ${userId}`)
+    return response.predefined.service.internalError
+  }
+}
+
+export async function getUserFromUserOrId(userOrId: User | string, withParams?: Partial<Record<GetUserWithParamateres, boolean>>): Promise<ServiceResponse<User | undefined>> {
+  if (typeof userOrId === 'string') return getUser(userOrId, withParams)
+
+  return response.service.success(userOrId)
+}
+
+export async function giveUserBalance(userOrId: User | string, amount: number): Promise<ServiceResponse<{ id: string }>> {
+  const userRes = await getUserFromUserOrId(userOrId)
+  if (userRes.status === 'error') return userRes
+
+  const user = userRes.data
+  if (!user) return response.service.error('User not found', 404)
+
+  console.log(user.balance)
+
+  if (Number.isNaN(user.balance)) user.balance = 0
+  user.balance += amount
+
+  console.log(user.balance)
+
+  const updateRes = await updateUser(user, { balance: user.balance })
+  console.log(updateRes, 'bal')
+  if (updateRes.status === 'error') return updateRes
+
+  return response.service.success(updateRes.data)
+}
+
+export async function updateUser(userOrId: string | User, data: Partial<User>): Promise<ServiceResponse<{ id: string }>> {
+  const userRes = await getUserFromUserOrId(userOrId)
+  if (userRes.status === 'error') return userRes
+
+  const user = userRes.data
+  if (!user) return response.service.error('User not found', 404)
+
+  console.log('before update', user)
+  Object.assign(user, data)
+  console.log('after update', user)
+
+  try {
+    const updateRes = await db
+      .update(users)
+      .set(user)
+      .where(eq(users.id, user.id))
+      .returning()
+
+    if (updateRes.length === 0 || !updateRes[0]?.id)
+      return response.service.error('Failed to update user', 500)
+
+    await deleteAllItems({
+      key: 'dbUser',
+      value: user.id,
+    })
+
+    await redis.json.set(createRedisKey('dbUser', user.id), '$', updateRes[0])
+
+    return response.service.success({ id: updateRes[0].id })
+  }
+  catch (e: any) {
+    error(e, `Error updating user; ${JSON.stringify({ userOrId, user: userRes, data })}`)
     return response.predefined.service.internalError
   }
 }

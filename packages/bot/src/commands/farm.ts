@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
-import { type AvailableFood, type FarmingUser, type RarityOverwrite, type ServiceResponse, randomNumber } from 'shared'
+import { type Crop, type FarmingUser, type RarityOverwrite, type ServiceResponse, randomNumber } from 'shared'
 
 import { apiSecretHeaders } from 'src/utils/headers'
 import type { Command } from '../types'
@@ -69,7 +69,7 @@ export default {
           price: number
           maxItems: number
           rarityOverwrites: RarityOverwrite[]
-          name: AvailableFood
+          name: Crop
           chance: number
         }[]
       }
