@@ -59,16 +59,29 @@ export function calculateUserStats(
   return base
 }
 
-export async function getFarmingUser(o: {
+export async function getFarmingUser(userId: string, ifExistStoreInBatcher = false) {
+  const user = batcher.get(userId)
+  console.log('buser', user)
+  if (user) return user
+
+  const key = createRedisKey('farmingUser', userId)
+  const redisRes = await redis.json.get(key, '$') as FarmingUser[]
+  if (redisRes.length === 0) return
+
+  const fuser = redisRes[0]!
+  console.log('fuser', fuser)
+  if (ifExistStoreInBatcher) batcher.createOrUpdate({ ...fuser, onlyMemory: true })
+
+  return fuser
+}
+
+export async function getOrCreateFarmingUser(o: {
   farmingResponse: FarmingResponse
   user: User
 }): Promise<FarmingUser> {
   const { farmingResponse, user } = o
   const key = createRedisKey('farmingUser', user.id)
-  console.log(key)
   let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [FarmingUser])?.[0]
-
-  console.log(farmingUser)
 
   // if we have a user we just update it
   if (farmingUser) {

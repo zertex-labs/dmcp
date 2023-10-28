@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import type { FarmingUser, MadeLog } from 'shared'
 
 import { createRedisKey } from '../../src/redis'
+import type { SyncableFarmingUser } from '../../src/utils'
 import { error, useFarmingUsersBatcher } from '../../src/utils'
 import type { Args as HandlerArgs, JobHandler } from '../schedule'
 import type { Job } from '..'
@@ -26,13 +27,20 @@ async function syncUser(redis: HandlerArgs['redis'], user: FarmingUser, log: Mad
 }
 
 export default (async ({ redis, makeLog }) => {
-  const allUsers = batcher.all()
   const log = makeLog<(Job & string) | {}>('syncFarmingUsers', {
     date: 'bgRed',
   })
 
+  const allUsers: SyncableFarmingUser[] = []
+  batcher.all().forEach((u) => {
+    // if they should sync, add them to allUsers, otherwise remove them from the batcher
+    if (u.onlyMemory) batcher.remove(u)
+    else allUsers.push(u)
+  })
+
   if (allUsers.length === 0) {
-    log('No users to sync', 'warn')
+    log('No users to sync, flushing', 'warn')
+    batcher.flush()
     return
   }
 

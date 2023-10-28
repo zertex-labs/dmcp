@@ -6,7 +6,7 @@ import { ctx } from '../context'
 import { getAllItems } from '../redis'
 import type { FarmingResolvers } from '../services/farming.service'
 import { farmingActions, handleAction } from '../services/farming.service'
-import { calculateUserStats, doFarm, getFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
+import { calculateUserStats, doFarm, getFarmingUser, getOrCreateFarmingUser, parseAllFoodItemsWithChances } from '../services/helpers/farming.helpers'
 import { getUser } from '../services/users.service'
 import { requireApiSecret, useFarmingUsersBatcher } from '../utils'
 import { resolveServiceResponse, response } from '../utils/response'
@@ -37,7 +37,7 @@ export const resolvers = {
     }
 
     const farmingResponse = doFarm({ stats, rarity, allItems })
-    const farmingUser = await getFarmingUser({
+    const farmingUser = await getOrCreateFarmingUser({
       farmingResponse,
       user,
     })
@@ -60,6 +60,17 @@ export const farmingController = new Elysia({
     beforeHandle: requireApiSecret,
     detail: { tags: ['Farming'], description: 'Get top 10 farming users by total' },
   })
+
+  .get('/user/:userId', async (ctx) => {
+    const fuser = await getFarmingUser(ctx.params.userId, true)
+    console.log('inreq', fuser)
+    if (!fuser) return response.service.error('User not found', 404)
+    return response.success(fuser)
+  }, {
+    beforeHandle: requireApiSecret,
+    detail: { tags: ['Farming'], description: 'Get farming user by discord id' },
+  })
+
   .post('/action/:action', async (ctx) => {
     const { action } = ctx.params
     const res = await handleAction(resolvers, action, ctx.body)
