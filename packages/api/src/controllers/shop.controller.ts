@@ -1,10 +1,7 @@
 import { Elysia, t } from 'elysia'
-import type { Shop } from 'shared'
-import { error } from 'winston'
 import { ctx } from '../context'
-import { createRedisKey } from '../redis'
-import { generateShopItems, getShop } from '../services/helpers/shop.helpers'
-import { log, requireApiSecret, resolveServiceResponse, response } from '../utils'
+import { getShop } from '../services/helpers/shop.helpers'
+import { requireApiSecret, resolveServiceResponse, response } from '../utils'
 import { getUser } from '../services/users.service'
 
 export const shopController = new Elysia({

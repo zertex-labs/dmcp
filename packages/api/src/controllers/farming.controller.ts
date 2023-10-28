@@ -1,8 +1,7 @@
 import Elysia, { t } from 'elysia'
 import type { Crop, FarmingUser, Rarity } from 'shared'
-import { calculateCropPrice, createBaseStats, crops, getPetSkeleton, validSellCropInputs } from 'shared'
+import { calculateCropPrice, createBaseStats, getPetSkeleton, validSellCropInputs } from 'shared'
 
-import { resolve } from 'bun'
 import { ctx } from '../context'
 import { getAllItems } from '../redis'
 import type { FarmingResolvers } from '../services/farming.service'

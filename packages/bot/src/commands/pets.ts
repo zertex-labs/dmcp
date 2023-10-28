@@ -1,4 +1,4 @@
-import { Embed, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import type { AvailablePet, Pet, ServiceResponse } from 'shared'
 import { availablePets } from 'shared'
 
@@ -75,7 +75,7 @@ export default {
 
     const ownedRes: ServiceResponse<Pet[]> = await fetch(`${config.env.API_URL}/api/pets/owned/${interaction.user.id}`, {
       headers: apiSecretHeaders,
-    }).then((res) => { console.log(res); return res.json() })
+    }).then(res => res.json())
 
     if (ownedRes.status === 'error') {
       return void interaction.respond([
@@ -156,7 +156,7 @@ export default {
         const [name, uuid] = uuidAndName.split('@')
         if (!uuid || !name) return void interaction.reply('Invalid options')
 
-        const reply = await interaction.reply(`Selecting pet...`)
+        const reply = await interaction.reply('Selecting pet...')
 
         const selectRes = await axios.post(
           `http://localhost:3000/api/users/${interaction.user.id}/selectPet`,
@@ -183,7 +183,7 @@ export default {
 
         const activeRes: ServiceResponse<Pet> = await fetch(`${config.env.API_URL}/api/users/${activeUser.id}/activePet`, {
           headers: apiSecretHeaders,
-        }).then((res) => { console.log(res); return res.json() })
+        }).then(res => res.json())
 
         if (activeRes.status === 'error') {
           return activeReply.edit({

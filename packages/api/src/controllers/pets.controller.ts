@@ -8,7 +8,7 @@ import { requireApiSecret } from '../utils/requireApiSecret'
 import { resolveServiceResponse, response } from '../utils/response'
 import { getPet } from '../services/pets.service'
 import { deleteAllItems } from '../redis/deleteAllItems'
-import { error, log } from '../utils'
+import { error } from '../utils'
 
 export const petsController = new Elysia({
   prefix: '/pets',

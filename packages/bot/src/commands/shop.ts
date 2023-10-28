@@ -1,10 +1,8 @@
-import { heapSize } from 'bun:jsc'
-import type { ButtonBuilder, ButtonInteraction } from 'discord.js'
-import { ActionRowBuilder, ButtonStyle, ComponentType, EmbedBuilder, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js'
+import { ActionRowBuilder, ComponentType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js'
 import type { ServiceResponse, Shop, ShopItem } from 'shared'
 import { config } from 'src/config'
 import type { Command } from 'src/types'
-import { makeButton, makeButtonRow, predefinedButtons } from 'src/utils'
+import { makeButtonRow, predefinedButtons } from 'src/utils'
 import { apiSecretHeaders } from 'src/utils/headers'
 
 function constructShopReply(date: string, shop: Shop) {
@@ -82,7 +80,9 @@ export default {
       time: 30 * 1000,
     })
 
-    const onEnd = () => { interaction.deleteReply().catch() }
+    const onEnd = () => {
+      interaction.deleteReply().catch()
+    }
     collector.on('collect', async (i) => {
       console.log(i.message.id)
       invokeHelper('handleMenu', {
@@ -125,7 +125,9 @@ export default {
         time: 2 * 1000,
       })
 
-      const onEnd = () => { interaction.deleteReply().catch() }
+      const onEnd = () => {
+        interaction.deleteReply().catch()
+      }
       collector.on('collect', (i) => {
         console.log('collct btn')
         const action = i.customId.split(':')[1] as 'confirm' | 'cancel'

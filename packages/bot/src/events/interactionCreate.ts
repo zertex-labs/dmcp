@@ -51,14 +51,15 @@ export const run: Event<'interactionCreate'> = (client, interaction) => {
   }
 
   else if (interaction.isAutocomplete()) {
-    return void command.autocomplete?.({ interaction,client,state,helpers,invokeHelper: (helper, o) => {
-        const overwrites = o ?? {}
-        helpers[helper]({
-          client: overwrites.client ?? client,
-          helpers: overwrites.helpers ?? helpers,
-          interaction: overwrites.interaction ?? interaction,
-          state: overwrites.state ?? commandStateStorage[command.name] ?? {},
-        })
-      } })?.catch(client.error.bind(client))
+    // eslint-disable-next-line style/object-property-newline
+    return void command.autocomplete?.({ interaction, client, state, helpers, invokeHelper: (helper, o) => {
+      const overwrites = o ?? {}
+      helpers[helper]({
+        client: overwrites.client ?? client,
+        helpers: overwrites.helpers ?? helpers,
+        interaction: overwrites.interaction ?? interaction,
+        state: overwrites.state ?? commandStateStorage[command.name] ?? {},
+      })
+    } })?.catch(client.error.bind(client))
   }
 }

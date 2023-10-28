@@ -8,7 +8,7 @@ export default {
   description: 'leaderboard',
 
   run: async ({ client, interaction }) => {
-    const leaderboardReq = await axios.get<FarmingUser[]>(`http://localhost:3000/api/farming/leaderboard`, {
+    const leaderboardReq = await axios.get<FarmingUser[]>('http://localhost:3000/api/farming/leaderboard', {
       headers: apiSecretHeaders,
       validateStatus: s => s < 500,
     })
@@ -16,7 +16,7 @@ export default {
     if (leaderboardReq.status !== 200) {
       console.log(leaderboardReq.status, leaderboardReq.data)
       await interaction.reply({
-        content: `Something went wrong. Please try again later.`,
+        content: 'Something went wrong. Please try again later.',
         ephemeral: true,
       })
       return

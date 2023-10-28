@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { customType, decimal, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { customType, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 import { pets } from '.'

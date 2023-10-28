@@ -1,7 +1,6 @@
-import axios from 'axios'
-import { AllowedMentionsTypes, SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder } from 'discord.js'
 import type { Crop, FarmingUser, ServiceResponse } from 'shared'
-import { capitalize, crops, data, isValidCrop, isValidSellCropInput, validSellCropInputs } from 'shared'
+import { capitalize, isValidSellCropInput, validSellCropInputs } from 'shared'
 
 import { config } from 'src/config'
 import type { Command } from 'src/types'
@@ -11,7 +10,7 @@ const normalizeStr = (name: string) => name.toLowerCase().split('_').map(capital
 
 export default {
   name: 'sell',
-  description: `Sell all or a specific crop. Run /farm to start farming!`,
+  description: 'Sell all or a specific crop. Run /farm to start farming!',
 
   withBuilder: new SlashCommandBuilder()
     .addStringOption(opt => opt
@@ -57,7 +56,7 @@ export default {
     const individual = Object.entries(farmingUser.individual).filter(([,value]) => value > 0) as [Crop, number][]
 
     const responses = [
-      { name: `All ${farmingUser.total} crops (ignores amount)`, value: `ALL` },
+      { name: `All ${farmingUser.total} crops (ignores amount)`, value: 'ALL' },
       ...individual.map(([cropName, amount]) => ({ name: `${normalizeStr(cropName)} (${amount} crops)`, value: cropName })),
     ]
 

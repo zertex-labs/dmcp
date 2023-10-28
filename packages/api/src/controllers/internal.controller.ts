@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { ctx } from '../context'
-import { requireApiSecret, resolveServiceResponse, response } from '../utils'
+import { requireApiSecret, response } from '../utils'
 import { jobs } from '../../jobs'
 import { isValidJob, logger, makeLog } from '../../jobs/schedule'
 import { jobHandlers, timings } from '../timings'
@@ -16,7 +16,7 @@ export const internalController = new Elysia({
   .get('/ping', () => 'Pong', {
     detail: { tags: ['Internal'], description: 'Ping the API' },
   })
-  .post(`/job/:job/invoke`, async (ctx) => {
+  .post('/job/:job/invoke', async (ctx) => {
     const { job } = ctx.params
     if (!isValidJob(job)) return response.error(`Invalid job name, valid names are: ${jobs.join(', ')}`)
 
@@ -44,11 +44,11 @@ export const internalController = new Elysia({
     }),
     detail: { tags: ['Internal'], description: 'Stop the API' },
   })
-  .get(`/job/timings`, () => response.success(Object.entries(timings).reduce((acc, [job, timing]) => ({ ...acc, [job]: timing }), {})), {
+  .get('/job/timings', () => response.success(Object.entries(timings).reduce((acc, [job, timing]) => ({ ...acc, [job]: timing }), {})), {
     beforeHandle: requireApiSecret,
     detail: { tags: ['Internal'], description: 'Get all the job itmings' },
   })
-  .get(`/job/:job/timing`, async (ctx) => {
+  .get('/job/:job/timing', async (ctx) => {
     const { job } = ctx.params
     if (!isValidJob(job)) return response.error(`Invalid job name, valid names are: ${jobs.join(', ')}`)
 

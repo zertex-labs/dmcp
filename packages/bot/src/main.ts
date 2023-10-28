@@ -2,7 +2,6 @@ import 'dotenv/config'
 
 import { GatewayIntentBits } from 'discord.js'
 import { UsableClient } from './client'
-import { registerCommands } from './utils'
 import { registerEvents } from './utils/registerEvents'
 import { config } from './config'
 

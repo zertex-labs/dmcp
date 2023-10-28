@@ -1,6 +1,5 @@
 import { Logger, genericMakeLog } from 'shared'
-import { sql } from 'drizzle-orm'
-import db, { pgClient } from '../db'
+import { pgClient } from '../db'
 
 export const systemLogger = new Logger('system.log')
 

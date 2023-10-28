@@ -7,7 +7,7 @@ import { users } from '../db/schema'
 import { response } from '../utils/response'
 import { createRedisKey, redis } from '../redis'
 import { deleteAllItems } from '../redis/deleteAllItems'
-import { error, log, useFarmingUsersBatcher } from '../utils'
+import { error } from '../utils'
 import { getPet } from './pets.service'
 
 export const getUserWithParamateres = ['activePet', 'pets'] as const

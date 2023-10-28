@@ -78,12 +78,12 @@ export default {
     // TODO move these axios request to actual functions cause it looks so cancer
     try {
       axiosRes = await axios.post(
-      `http://localhost:3000/api/farming/action/farm`,
-      { userId: interaction.user.id },
-      {
-        validateStatus: a => a < 500,
-        headers: apiSecretHeaders,
-      },
+        'http://localhost:3000/api/farming/action/farm',
+        { userId: interaction.user.id },
+        {
+          validateStatus: a => a < 500,
+          headers: apiSecretHeaders,
+        },
       )
     }
     catch (e: any) {
@@ -96,7 +96,7 @@ export default {
       if (error === 'User not found') {
         try {
           await axios.put(
-            `http://localhost:3000/api/users/create`,
+            'http://localhost:3000/api/users/create',
             { id: interaction.user.id },
             {
               validateStatus: a => a < 500,
@@ -106,7 +106,7 @@ export default {
 
           // retry
           axiosRes = await axios.post(
-            `http://localhost:3000/api/farming/action/farm`,
+            'http://localhost:3000/api/farming/action/farm',
             { userId: interaction.user.id },
             {
               validateStatus: a => a < 500,

@@ -93,7 +93,9 @@ export async function getShop(date: string): Promise<Shop | undefined> {
       // expire in 1 week
       const [serverTime] = await redis.time()
       const unix = (serverTime + (7 * 24 * 60 * 60)) * 1000
-      redis.pexpireat(key, unix).then((res) => { res === 1 && log(`Set shop ${date} to expire at ${new Date(unix)}(1 week);`) })
+      redis.pexpireat(key, unix).then((res) => {
+        if (res === 1) log(`Set shop ${date} to expire at ${new Date(unix)}(1 week);`)
+      })
     }
     catch (e: any) {
       error(e, `trying to json.set shop ${date}`)

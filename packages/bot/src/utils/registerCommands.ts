@@ -2,7 +2,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { Routes } from 'discord.js'
 
-import { promiseWithTimeout } from 'shared'
 import { config } from 'src/config'
 import type { UsableClient } from '../client'
 import type { Command } from '../types'

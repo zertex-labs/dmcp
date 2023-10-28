@@ -1,7 +1,7 @@
 import {
-  crops,
   availablePerks,
   availablePets,
+  crops,
   petUpgrades,
 } from '../types'
 
