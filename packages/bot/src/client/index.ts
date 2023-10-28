@@ -28,9 +28,9 @@ export class UsableClient extends Client<true> {
     this.log(this.processTextOrError(textOrError), 'error')
   }
 
-  interactionError(interaction: InteractionLike, textOrError: string | Error) {
+  interactionError(interaction: InteractionLike, textOrError: string | Error, additional?: string) {
     const baseMsg = this.processTextOrError(textOrError)
-    this.error(`${this.constructStringFromInteraction(interaction)}\n${baseMsg}`)
+    this.error(`${this.constructStringFromInteraction(interaction)}\n${baseMsg}${additional ? `; ${additional}` : ''}`)
   }
 
   private processTextOrError(textOrError: string | Error) {
