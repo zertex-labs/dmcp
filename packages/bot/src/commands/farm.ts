@@ -37,8 +37,6 @@ export default {
   description: 'Run this command to start farming',
 
   run: async ({ client, interaction }) => {
-    if (!interaction.isCommand()) return
-
     let intervalCounter = 1 // skip first message
     let intervalId: NodeJS.Timeout | null = setTimeout(async () => {
       if (intervalId && intervalCounter >= intervalMessages.length) {

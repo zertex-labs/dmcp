@@ -18,6 +18,8 @@ export async function registerCommands(client: UsableClient) {
   const slashCommands = commandFiles.map((x) => {
     // eslint-disable-next-line ts/no-var-requires, ts/no-require-imports
     const cmd = require(path.join(commandsPath, x)).default as Command
+    cmd.state = cmd.state ?? {}
+
     const builder = cmd?.withBuilder ?? {}
 
     delete cmd.withBuilder

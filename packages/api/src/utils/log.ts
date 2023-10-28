@@ -20,7 +20,8 @@ export function error(err: string | Error, additionalInfo?: string) {
     // -- Error handling --
     console.log(err.message)
     if (err.message === 'Client has encountered a connection error and is not queryable') {
-      pgClient.connect().then(() => {
+      pgClient.end().then(async () => {
+        await pgClient.connect()
         log('Reconnected to database', 'warn')
       })
     }

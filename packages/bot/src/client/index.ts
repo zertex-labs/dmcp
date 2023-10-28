@@ -6,10 +6,10 @@ import type { KeysMatching } from 'shared'
 import { AxiosError } from 'axios'
 import Logger from 'shared/utils/logger'
 import { config } from 'src/config'
-import type { ClientCommand, Interaction } from '../types'
+import type { ClientCommand, Interaction, InteractionLike } from '../types'
 
-export class UsableClient extends Client {
-  public commands: Collection<string, ClientCommand>
+export class UsableClient extends Client<true> {
+  public commands: Collection<string, ClientCommand<unknown, []>>
   public logger: Logger
 
   constructor(o: ClientOptions) {
@@ -28,7 +28,7 @@ export class UsableClient extends Client {
     this.log(this.processTextOrError(textOrError), 'error')
   }
 
-  interactionError(interaction: Interaction, textOrError: string | Error) {
+  interactionError(interaction: InteractionLike, textOrError: string | Error) {
     const baseMsg = this.processTextOrError(textOrError)
     this.error(`${this.constructStringFromInteraction(interaction)}\n${baseMsg}`)
   }
@@ -44,7 +44,7 @@ export class UsableClient extends Client {
     return textOrError
   }
 
-  private constructStringFromInteraction(interaction: Interaction) {
+  private constructStringFromInteraction(interaction: InteractionLike) {
     const args: Record<string, string> = {}
     const add = (k: KeysMatching<Interaction, string> | {
       key: string

@@ -8,8 +8,6 @@ export default {
   description: 'leaderboard',
 
   run: async ({ client, interaction }) => {
-    if (!interaction.isCommand()) return
-
     const leaderboardReq = await axios.get<FarmingUser[]>(`http://localhost:3000/api/farming/leaderboard`, {
       headers: apiSecretHeaders,
       validateStatus: s => s < 500,

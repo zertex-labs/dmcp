@@ -1,14 +1,14 @@
 // import { swagger } from "@elysiajs/swagger";
+import { staticPlugin } from '@elysiajs/static'
 import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
-import { staticPlugin } from '@elysiajs/static'
 
 import { api } from './controllers/*'
 import { registerTimings } from './timings'
 import { log } from './utils'
 import { setupGracefulShutdown } from './utils/gracefulShutdown'
 
-const app = new Elysia()
+export const app = new Elysia()
   // @ts-expect-error not a promise but it's fine
   .use(staticPlugin({
     prefix: '/images',
@@ -30,7 +30,6 @@ const app = new Elysia()
   }))
   .use(api)
 
-// TODO sometimes doesn't trigger. Not a big deal if in prod but sucks in dev...easdqwe321
 setupGracefulShutdown(app)
 
 registerTimings().then((handlers) => {

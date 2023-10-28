@@ -70,8 +70,6 @@ export default {
         ),
     ),
   autocomplete: async ({ interaction }) => {
-    if (!interaction.isAutocomplete()) return // ts is dumb
-
     const focusedOption = interaction.options.getFocused(true)
     if (focusedOption.name !== 'name') return
 
@@ -94,8 +92,6 @@ export default {
     )
   },
   run: async ({ client, interaction }) => {
-    if (!interaction.isCommand()) return
-
     const subcommand = getSubcommand<['give', 'select', 'active', 'list']>(
       interaction.options,
     )

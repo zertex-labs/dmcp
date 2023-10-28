@@ -1,6 +1,8 @@
+import type { Rarity, Shop, ShopItem, ShopItemType } from 'shared'
 import { availablePets, getRandomFromArray, greedyRound, petUpgrades, randomNumber, rarities, shopItemTypes, shuffledArray } from 'shared'
-import type { Rarity, ShopItem, ShopItemType } from 'shared'
 import { upgrades } from 'shared/data'
+import { createRedisKey, redis } from '../../redis'
+import { error, log } from '../../utils'
 
 const maxPets = 2
 const chances: Record<ShopItemType, number> = {
@@ -32,7 +34,7 @@ const priceRanges = {
   pet: Record<Rarity, [min: number, max: number]>
 }
 
-export function generateShopItems(amount = 5): ShopItem[] {
+export function generateShopItems(amount = 6): ShopItem[] {
   // equal chance for all type
   const typesWithChances = shopItemTypes.map(type => ({ type, chance: chances[type] }))
   let types = ['pet'] as ShopItemType[]
@@ -73,4 +75,30 @@ export function generateShopItems(amount = 5): ShopItem[] {
       price: upgrades[upgrade].price,
     } satisfies ShopItem
   })
+}
+
+export async function getShop(date: string): Promise<Shop | undefined> {
+  const key = createRedisKey('shop', date)
+  let shop = await redis.json.get(key)
+
+  if (!shop) {
+    shop = {
+      items: generateShopItems(),
+      generatedAt: new Date().toISOString(),
+    }
+
+    try {
+      await redis.json.set(key, '$', shop as any)
+
+      // expire in 1 week
+      const [serverTime] = await redis.time()
+      const unix = (serverTime + (7 * 24 * 60 * 60)) * 1000
+      redis.pexpireat(key, unix).then((res) => { res === 1 && log(`Set shop ${date} to expire at ${new Date(unix)}(1 week);`) })
+    }
+    catch (e: any) {
+      error(e, `trying to json.set shop ${date}`)
+    }
+  }
+
+  return shop
 }

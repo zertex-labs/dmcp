@@ -1,4 +1,6 @@
+import fs from 'node:fs'
 import type { FarmingUser, MadeLog } from 'shared'
+
 import { createRedisKey } from '../../src/redis'
 import { error, useFarmingUsersBatcher } from '../../src/utils'
 import type { Args as HandlerArgs, JobHandler } from '../schedule'
@@ -34,6 +36,12 @@ export default (async ({ redis, makeLog }) => {
     return
   }
 
+  // create backup
+  const backupDir = './jobs/backups/syncFarmingUsers'
+  const backupName = `${allUsers.length}-${Date.now()}.json`
+  if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true })
+  await Bun.write(`${backupDir}/${backupName}`, JSON.stringify(allUsers))
+
   const res = await Promise.all(allUsers.map(user => syncUser(redis, user, log)))
 
   const failed: FarmingUser[] = []
@@ -41,8 +49,14 @@ export default (async ({ redis, makeLog }) => {
     if (!r.ok) failed.push(allUsers[i]!)
   })
 
-  if (failed.length > 0)
+  if (failed.length > 0) {
+    console.log(`syncFarmingUsers: ${failed.length}/${allUsers.length} users failed to sync; adding failed back in batcher`)
     batcher.createOrUpdateMultiple(failed)
+  }
+  else {
+    console.log(`syncFarmingUsers: all users synced successfully; deleting backup ${backupName}`)
+    fs.unlinkSync(`${backupDir}/${backupName}`)
+  }
 
   log(`Synced ${allUsers.length - failed.length}/${allUsers.length} users`)
 

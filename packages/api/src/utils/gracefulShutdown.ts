@@ -8,23 +8,26 @@ import { useFarmingUsersBatcher } from './useFarmingUsersBatcher'
 export function setupGracefulShutdown(app: Elysia) {
   const signals = ['SIGINT', 'SIGTERM', 'SIGKILL', 'beforeExit'] as const
 
-  const stop = async () => {
-    logger.log('Stopping...')
+  signals.forEach(signal => process.on(signal, app.stop))
+
+  app.onStop(async () => {
+    signals.forEach(signal => process.off(signal, app.stop))
+    logger.log('Stopping')
 
     await syncBatcher()
-    app.stop()
 
-    logger.log('Stopped.')
+    logger.log('Stopped')
 
     new Promise(res => setTimeout(res, 10)).then(() => process.exit())
-  }
-  signals.forEach(signal => process.on(signal, stop))
+  })
 }
 async function syncBatcher() {
   const batcher = useFarmingUsersBatcher()
   const users = batcher.all()
-  console.log(users)
-  if (users.length === 0) return
+  if (users.length === 0) {
+    logger.log('No users to sync, skipping syncBatcher')
+    return
+  }
 
   await jobHandlers.syncFarmingUsers!({
     db,
