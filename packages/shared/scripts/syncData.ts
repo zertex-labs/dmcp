@@ -1,9 +1,10 @@
 import fs from 'node:fs'
+
 import type { MaybePromise } from '../types'
 import {
-  crops,
   availablePerks,
   availablePets,
+  crops,
   playerStats,
   rarities,
 } from '../types'

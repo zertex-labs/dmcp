@@ -20,7 +20,7 @@ export interface Food {
 }
 
 export function calculateCropPrice(cropName: Crop, amount: number) {
-  const cropData = data.food[cropName]
+  const cropData = data.crops[cropName]
   return cropData.price * amount
 }
 

@@ -1,7 +1,7 @@
 import type { AvailablePerk, Crop, FarmingUser, Food, PerkType, Pet, PetSkeleton, PlayerStat, Rarity, User } from 'shared'
 import { createBaseChances, randomNumber } from 'shared'
-import { food as dataFood, perks as dataPerks, upgrades } from 'shared/data'
-import { JoinNullability } from 'drizzle-orm/query-builders/select.types'
+import { crops, perks as dataPerks, upgrades } from 'shared/data'
+
 import { createRedisKey, redis } from '../../redis'
 import type { SyncableFarmingUser } from '../../utils'
 import { useFarmingUsersBatcher } from '../../utils'
@@ -133,7 +133,7 @@ function parseFoodBasedOnProbability(): {
   const guaranteed: NamedFood[] = []
   const other: NamedFood[] = []
 
-  Object.entries(dataFood).forEach(([name, food]) => {
+  Object.entries(crops).forEach(([name, food]) => {
     if (typeof food == 'string') return
 
     const e = food.probability === 0 ? guaranteed : other
