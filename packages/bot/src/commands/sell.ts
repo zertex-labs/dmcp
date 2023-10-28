@@ -1,10 +1,10 @@
-import { SlashCommandBuilder, userMention } from 'discord.js'
+import { SlashCommandBuilder } from 'discord.js'
 import type { AvailableFood, FarmingUser, ServiceResponse } from 'shared'
-import { availableFoods, capitalize, data } from 'shared'
+import { capitalize, data } from 'shared'
+
 import { config } from 'src/config'
 import type { Command } from 'src/types'
 import getOptions from 'src/utils/getOptions'
-import farm from './farm'
 
 const normalizeStr = (name: string) => name.toLowerCase().split('_').map(capitalize).join(' ')
 
@@ -15,7 +15,7 @@ function calculateCropPrice(cropName: AvailableFood, amount: number) {
 
 export default {
   name: 'sell',
-  description: `Sell your farmed crops for $\{todoCurrency}}`,
+  description: `Sell all or a specific crop. Run /farm to start farming!`,
 
   withBuilder: new SlashCommandBuilder()
     .addStringOption(opt => opt
