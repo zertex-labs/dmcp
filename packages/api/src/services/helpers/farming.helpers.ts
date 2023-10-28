@@ -61,7 +61,7 @@ export function calculateUserStats(
   return base
 }
 
-export async function getFarmingUser(userId: string, ifExistStoreInMemory = false) {
+export async function getFarmingUser(userId: string, addToBatcher = false) {
   const user = batcher.get(userId)
   console.log(user, 'user')
   if (user) return user
@@ -73,7 +73,7 @@ export async function getFarmingUser(userId: string, ifExistStoreInMemory = fals
   if (!redisRes || redisRes.length === 0) return
 
   const fuser = redisRes[0]!
-  if (ifExistStoreInMemory) batcher.createOrUpdate({ ...fuser, onlyMemory: true })
+  if (addToBatcher) batcher.createOrUpdate(fuser) // might need some additional computation for "redisIgnored" property to cheap out on redis cmds. Disabled for now
 
   return fuser
 }
@@ -87,7 +87,6 @@ export async function getOrCreateFarmingUser(o: {
   let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [SyncableFarmingUser])?.[0]
 
   // if we have a user we just update it
-  console.log('farmingUser gg', farmingUser)
   if (farmingUser) {
     farmingUser.total += farmingResponse.total
     farmingResponse.items.forEach((item) => {
@@ -96,11 +95,9 @@ export async function getOrCreateFarmingUser(o: {
     })
 
     farmingUser.totalWeight += farmingResponse.totalWeight
-    farmingUser.onlyMemory = false
+    farmingUser.redisIgnored = false
 
     batcher.createOrUpdate(farmingUser)
-
-    console.log('farmingUser 2', farmingUser)
 
     return farmingUser
   }
@@ -120,8 +117,6 @@ export async function getOrCreateFarmingUser(o: {
   }
 
   batcher.createOrUpdate(farmingUser)
-
-  console.log('farmingUser 3', farmingUser)
 
   return farmingUser
 }

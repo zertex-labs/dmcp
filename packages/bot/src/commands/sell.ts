@@ -35,7 +35,6 @@ export default {
       return
     }
 
-    console.log('fetch')
     const res: ServiceResponse<FarmingUser> = await fetch(`${process.env.API_URL}/api/farming/user/${interaction.user.id}`, {
       headers: { 'x-api-secret': config.env.API_SECRET },
     })
@@ -76,13 +75,26 @@ export default {
       })
     }
 
-    const updateRes: ServiceResponse<{ totalValue: string; amount: string }> = await fetch(`${process.env.API_URL}/api/farming/sell/${type}`, {
-      headers: { 'x-api-secret': config.env.API_SECRET, 'Content-Type': 'application/json' },
-      method: 'POST',
-      body: JSON.stringify({ amount, userId: interaction.user.id }),
+    let updateRes: ServiceResponse<{ totalValue: number; amount: number }>
+    const { farmingUser } = state
+    // if no crops to sell just return 0 instead of making an useless request
+    if (
+      amount === 0
+      || (type === 'ALL'
+        ? farmingUser.total
+        : farmingUser.individual?.[type]) === 0
+    ) {
+      updateRes = { status: 'success', data: { amount: 0, totalValue: 0 } }
+    }
+    else {
+      updateRes = await fetch(`${process.env.API_URL}/api/farming/sell/${type}`, {
+        headers: { 'x-api-secret': config.env.API_SECRET, 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify({ amount, userId: interaction.user.id }),
 
-    }).then(res => res.json())
-      .catch(client.error.bind(client))
+      }).then(res => res.json())
+        .catch(client.error.bind(client))
+    }
 
     if (!updateRes || updateRes.status === 'error') {
       interaction.followUp(`An error occured; ${updateRes?.statusCode < 500 ? updateRes.error : 'please try again later'}`)

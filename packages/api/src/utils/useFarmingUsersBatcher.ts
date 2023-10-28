@@ -9,7 +9,7 @@ export function useFarmingUsersBatcher() {
 
 export type SyncableFarmingUser = FarmingUser & {
 /** If set to true user won't be synced with redis on the sync job, just removed from batcher (default: false)  */
-  onlyMemory?: boolean
+  redisIgnored?: boolean
 }
 
 /**

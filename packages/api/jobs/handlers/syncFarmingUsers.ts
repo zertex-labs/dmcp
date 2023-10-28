@@ -31,10 +31,12 @@ export default (async ({ redis, makeLog }) => {
     date: 'bgRed',
   })
 
+  const all = batcher.all()
+  log(`batcher all ${all}`)
   const allUsers: SyncableFarmingUser[] = []
-  batcher.all().forEach((u) => {
+  all.forEach((u) => {
     // if they should sync, add them to allUsers, otherwise remove them from the batcher
-    if (u.onlyMemory) batcher.remove(u)
+    if (u.redisIgnored) batcher.remove(u)
     else allUsers.push(u)
   })
 
