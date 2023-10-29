@@ -1,10 +1,9 @@
 import { Value } from '@sinclair/typebox/value'
 import { type Static, t } from 'elysia'
 
-import type { AlwaysExist } from 'shared'
+import type { AlwaysExist, ServiceResponse } from 'shared'
 
 import { response } from '../utils/response'
-import type { ServiceResponse } from './types'
 
 export const farmingActions = ['farm'] as const
 
@@ -15,7 +14,9 @@ export type FarmingResolvers = {
 }
 
 export const resolverParametersTypes = {
-  farm: t.String(),
+  farm: t.Object({
+    userId: t.String(),
+  }),
 } as const
 
 export function validateActionBody<Action extends FarmingAction>(action: Action, body: any): Static<typeof resolverParametersTypes[Action]> | null {
@@ -32,5 +33,5 @@ Promise<ServiceResponse<AlwaysExist<ReturnType<Resolvers[Action]>>>> {
   const resolved: any = await resolvers[action](body)
   if (!resolved) return response.predefined.service.badRequest
 
-  return { status: 'success', data: resolved }
+  return resolved?.status ? resolved : response.service.success(resolved)
 }

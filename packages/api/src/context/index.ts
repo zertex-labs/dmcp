@@ -8,6 +8,7 @@ import pretty from 'pino-pretty'
 import { config } from '../config'
 import { db } from '../db'
 import { redis } from '../redis'
+import * as schema from '../db/schema'
 
 const loggerConfig
   = config.env.NODE_ENV === 'development'
@@ -27,6 +28,7 @@ export const ctx = new Elysia({
 
   .state('config', config)
   .state('localData', data)
+  .state('schema', schema)
 
   // if whole context dies randomly ever again it's 99.9% cause of this shitty logger. Try reinstalling the dependancies again if it happens
   .use(logger(loggerConfig))
@@ -41,21 +43,3 @@ export const ctx = new Elysia({
     isApiSecretPresent: () => headers['x-api-secret'] === config.env.API_SECRET,
     isAdmin: (userId: string) => userId in store.localData.adminIds,
   }))
-
-  .onStart(({ log }) => {
-    if (log && config.env.NODE_ENV === 'production') log.info('Server started')
-  })
-  .onStop(({ log }) => {
-    if (log && config.env.NODE_ENV === 'production') log.info('Server stopped')
-  })
-  .onRequest(({ log, request }) => {
-    if (log && config.env.NODE_ENV === 'production')
-      log.debug(`Request received: ${request.method}: ${request.url}`)
-  })
-  .onResponse(({ log, request }) => {
-    if (log && config.env.NODE_ENV === 'production')
-      log.debug(`Response sent: ${request.method}: ${request.url}`)
-  })
-  .onError(({ log, error }) => {
-    if (log && config.env.NODE_ENV === 'production') log.error(error)
-  })

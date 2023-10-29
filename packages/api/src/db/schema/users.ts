@@ -1,11 +1,25 @@
 import { relations } from 'drizzle-orm'
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { customType, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 import { pets } from '.'
 
+const currency = customType<{ data: number }>({
+  dataType() {
+    return 'decimal(15, 2)'
+  },
+  fromDriver(value) {
+    return Number(value)
+  },
+})
+
 export const userTable = pgTable('user', {
   id: text('id').primaryKey(), // discord snowflake
+
+  balance: currency('balance', {
+    precision: 11,
+    scale: 2,
+  }).default(0).notNull(),
 
   activePetId: text('active_pet_id').references(() => pets.uuid),
 

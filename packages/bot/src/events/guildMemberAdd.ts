@@ -12,7 +12,7 @@ export const run: Event<'guildMemberAdd'> = async (client, member) => {
   )
 
   if (res.status !== 200) {
-    console.error('Failed to add user to db', (res.data as any).message)
+    client.error(`Failed to add user to db: ${(res.data as any).message}`)
     return
   }
   const { id } = res.data

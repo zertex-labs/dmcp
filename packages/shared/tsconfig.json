@@ -6,8 +6,5 @@
     "outDir": "dist"
   },
   "files": ["main.ts"],
-  "include": ["data", "data/**/*.json", "composables", "types"],
-  "types": [
-    "bun-types" // add Bun global
-  ]
+  "include": ["data", "data/**/*.json", "composables", "types", "utils", "scripts"]
 }

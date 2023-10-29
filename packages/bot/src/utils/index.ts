@@ -1,4 +1,5 @@
 export * from './registerCommands'
 export * from './registerEvents'
-export * from './logger'
+export * from 'shared/utils/logger'
 export * from './file'
+export * from './components'

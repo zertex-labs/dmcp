@@ -2,6 +2,7 @@ export const PREFIXES = Object.freeze({
   farmingUser: 'user:farming:',
   dbUser: 'user:db:',
   pet: 'pet:',
+  shop: 'shop:',
 })
 
 export type PrefixKey = keyof typeof PREFIXES

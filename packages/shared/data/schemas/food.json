@@ -23,6 +23,10 @@
           "type": "number",
           "minimum": 0.1
         },
+        "weight": {
+          "type": "integer",
+          "minimum": 1
+        },
         "probability": {
           "type": "integer",
           "minimum": 0
@@ -49,13 +53,17 @@
               "maxItems": {
                 "type": "integer",
                 "minimum": 1
+              },
+              "weight": {
+                "type": "integer",
+                "minimum": 1
               }
             },
-            "required": ["price", "probability", "maxItems"]
+            "required": ["price", "probability", "maxItems", "weight"]
           }
         }
       },
-      "required": ["price", "probability", "rarityOverwrites", "maxItems"]
+      "required": ["price", "probability", "rarityOverwrites", "maxItems", "weight"]
     }
   }
 }

@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "bun run src/main.ts",
-    "dev": "bun run --watch src/main.ts",
+    "dev": "clear && bun run --watch src/main.ts",
     "clearLog": "bun run ./scripts/clearLog.ts"
   },
   "dependencies": {
@@ -17,8 +17,7 @@
     "colors": "^1.4.0",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
-    "shared": "workspace:*",
-    "winston": "^3.10.0"
+    "shared": "workspace:*"
   },
   "devDependencies": {
     "prettier": "^3.0.3",

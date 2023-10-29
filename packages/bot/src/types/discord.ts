@@ -1,43 +1,43 @@
-import type {
-  ApplicationCommandOptionType,
-  Interaction as CringeInteraction,
-} from 'discord.js'
-
-import type { MaybePromise } from 'shared'
-import type { UsableClient } from '../client'
-
-export interface RunOptions {
-  client: UsableClient
-  interaction: Interaction
-}
+import type { MaybePromise, Prettify } from 'shared'
+import type { UsableClient } from 'src/client'
+import type { AutocompleteInteraction, ButtonInteraction, ChatInputCommandInteraction, Interaction as CringeInteraction, StringSelectMenuInteraction } from 'discord.js'
 
 export type Interaction = CringeInteraction & {
   client: UsableClient
 }
 
-interface CommandStringOption {
-  name: string
-  description: string
-  required?: boolean
-  type: ApplicationCommandOptionType
-  choices?: {
-    name: string
-    value: string
-  }[]
+export type InteractionLike = CringeInteraction | ButtonInteraction | StringSelectMenuInteraction | ChatInputCommandInteraction
+
+export type Helper<State, HelperKeys extends string[], Self extends string> = (o: Omit<RunOptions<State, Exclude<HelperKeys, Self>>, 'invokeHelper'>) => MaybePromise<void>
+
+export interface RunOptions<State, HelperKeys extends string[], InteractionType = InteractionLike> {
+  state: State
+
+  client: UsableClient
+  interaction: InteractionType
+
+  helpers: Helpers<State, HelperKeys>
+
+  invokeHelper: HelperKeys extends string[] ? <K extends HelperKeys[number]>(k: K, overwrite?: Partial<RunOptions<State, HelperKeys>>) => MaybePromise<void> : undefined
 }
 
-interface CommonCommand {
+export interface CommonCommand<State, HelperKeys extends string[]> {
   name: string
   description: string
-  run: (o: RunOptions) => MaybePromise<any>
-  autocomplete?: (o: RunOptions) => MaybePromise<void>
+  run: (o: RunOptions<State, HelperKeys, ChatInputCommandInteraction>) => MaybePromise<any>
+  autocomplete?: (o: RunOptions<State, HelperKeys, AutocompleteInteraction>) => MaybePromise<void>
 }
 
-export type Command = CommonCommand & {
-  // use new SlashCommandBuilder() to create a builder. Their typings are broken (well mine are but..)
+export type Helpers<State, HelperKeys extends string[]> = Prettify<{
+  [K in HelperKeys[number]]: Helper<State, HelperKeys, K>
+}>
+
+export type Command<State = never, HelperKeys extends string[] = never> = CommonCommand<State, HelperKeys> & {
   withBuilder?: any
+
+  helpers?: Helpers<State, HelperKeys>
 }
 
-export type ClientCommand = CommonCommand & {
-  options?: CommandStringOption[]
+export type ClientCommand<State, HelperKeys extends string[]> = CommonCommand<State, HelperKeys> & {
+  helpers?: Helpers<State, HelperKeys>
 }

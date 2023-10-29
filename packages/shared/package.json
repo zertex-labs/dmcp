@@ -3,9 +3,6 @@
   "type": "module",
   "private": true,
   "main": "main.ts",
-  "include": [
-    "src/**/*"
-  ],
   "scripts": {
     "syncData": "bun run scripts/syncData.ts",
     "validateData": "bun run scripts/validateData.ts"
@@ -13,7 +10,10 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "devDependencies": {
-    "bun-types": "latest"
-  }
+  "include": [
+    "composables/*.ts",
+    "data/*",
+    "types/*.ts",
+    "utils/*.ts"
+  ]
 }

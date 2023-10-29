@@ -1,15 +1,20 @@
-import type { AvailableFood, AvailablePerk, FarmingUser, Food, PerkType, Pet, PetSkeleton, PlayerStat, Rarity, User } from 'shared'
+import type { AvailablePerk, Crop, FarmingUser, Food, PerkType, Pet, PetSkeleton, PlayerStat, Rarity, User } from 'shared'
 import { createBaseChances, randomNumber } from 'shared'
-import { food as dataFood, perks as dataPerks, upgrades } from 'shared/data'
+import { crops, perks as dataPerks, upgrades } from 'shared/data'
+
 import { createRedisKey, redis } from '../../redis'
+import type { SyncableFarmingUser } from '../../utils'
+import { useFarmingUsersBatcher } from '../../utils'
 
 export type CalculatedPlayerStats = Record<PlayerStat, number>
-type NamedFood = Food & { name: AvailableFood }
+type NamedFood = Food & { name: Crop }
 type NamedFoodWithChance = NamedFood & { chance: number }
 
 type FarmingResponse = ReturnType<typeof doFarm>
 
 // TODO cleanup and not so much re-computing
+
+const batcher = useFarmingUsersBatcher()
 
 export function calculateUserStats(
   pet: Pet & PetSkeleton,
@@ -56,27 +61,43 @@ export function calculateUserStats(
   return base
 }
 
-export async function getFarmingUser(o: {
+export async function getFarmingUser(userId: string, addToBatcher = false) {
+  const user = batcher.get(userId)
+  console.log(user, 'user')
+  if (user) return user
+
+  const key = createRedisKey('farmingUser', userId)
+  console.log(key)
+  const redisRes = await redis.json.get(key, '$') as FarmingUser[] | null
+  console.log(redisRes, 'redisRes')
+  if (!redisRes || redisRes.length === 0) return
+
+  const fuser = redisRes[0]!
+  if (addToBatcher) batcher.createOrUpdate(fuser) // might need some additional computation for "redisIgnored" property to cheap out on redis cmds. Disabled for now
+
+  return fuser
+}
+
+export async function getOrCreateFarmingUser(o: {
   farmingResponse: FarmingResponse
   user: User
 }): Promise<FarmingUser> {
   const { farmingResponse, user } = o
-  console.log(user)
   const key = createRedisKey('farmingUser', user.id)
-  let farmingUser = (await redis.json.get(key, '$') as [FarmingUser])?.[0]
+  let farmingUser = batcher.get(user.id) ?? (await redis.json.get(key, '$') as [SyncableFarmingUser])?.[0]
 
   // if we have a user we just update it
   if (farmingUser) {
-    // update user in background
-    // TODO instead of updating on each farming request, update in batches every X minutes
-
     farmingUser.total += farmingResponse.total
     farmingResponse.items.forEach((item) => {
       if (farmingUser.individual?.[item.name]) farmingUser.individual[item.name] += item.amount
       else farmingUser.individual[item.name] = item.amount
     })
 
-    redis.json.set(key, '$', farmingUser)
+    farmingUser.totalWeight += farmingResponse.totalWeight
+    farmingUser.redisIgnored = false
+
+    batcher.createOrUpdate(farmingUser)
 
     return farmingUser
   }
@@ -84,18 +105,18 @@ export async function getFarmingUser(o: {
   // if we don't have a user we create one
   farmingUser = {
     id: user.id,
+    totalWeight: farmingResponse.totalWeight,
     individual: farmingResponse.items.reduce(
       (acc, curr) => {
         acc[curr.name] = curr.amount
         return acc
       },
-      {} as Record<AvailableFood, number>,
+      {} as Record<Crop, number>,
     ),
     total: farmingResponse.total,
   }
 
-  // add user in backgroud
-  redis.json.set(key, '$', farmingUser)
+  batcher.createOrUpdate(farmingUser)
 
   return farmingUser
 }
@@ -107,11 +128,11 @@ function parseFoodBasedOnProbability(): {
   const guaranteed: NamedFood[] = []
   const other: NamedFood[] = []
 
-  Object.entries(dataFood).forEach(([name, food]) => {
+  Object.entries(crops).forEach(([name, food]) => {
     if (typeof food == 'string') return
 
     const e = food.probability === 0 ? guaranteed : other
-    e.push({ ...(food as Food), name: name as AvailableFood })
+    e.push({ ...(food as Food), name: name as Crop })
   })
 
   return {
@@ -171,5 +192,6 @@ export function doFarm({
   return {
     items: withAmounts,
     total: withAmounts.reduce((acc, curr) => acc + curr.amount, 0),
+    totalWeight: withAmounts.reduce((acc, curr) => acc + curr.amount * curr.weight, 0),
   }
 }
