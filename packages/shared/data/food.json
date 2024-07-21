@@ -4,34 +4,40 @@
     "price": 0.5,
     "probability": 0,
     "maxItems": 50,
-    "rarityOverwrites": {}
+    "rarityOverwrites": {},
+    "weight": 1
   },
   "CARROT": {
     "price": 0.3,
     "probability": 5,
     "maxItems": 40,
-    "rarityOverwrites": {}
+    "rarityOverwrites": {},
+    "weight": 2
   },
   "SUGAR_CANE": {
     "price": 0.5,
     "probability": 4,
     "maxItems": 40,
-    "rarityOverwrites": {}
+    "rarityOverwrites": {},
+    "weight": 5
   },
   "CHORUS_FRUIT": {
     "price": 10,
     "probability": 1,
     "maxItems": 5,
+    "weight": 10,
     "rarityOverwrites": {
       "MYTHICAL": {
         "price": 10,
         "probability": 2,
-        "maxItems": 5
+        "maxItems": 5,
+        "weight": 10
       },
       "LEGENDARY": {
         "price": 12,
         "probability": 1,
-        "maxItems": 10
+        "maxItems": 10,
+        "weight": 10
       }
     }
   }

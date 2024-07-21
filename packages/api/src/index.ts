@@ -1,9 +1,19 @@
 // import { swagger } from "@elysiajs/swagger";
-import { Elysia } from 'elysia'
+import { staticPlugin } from '@elysiajs/static'
 import swagger from '@elysiajs/swagger'
-import { api } from './controllers/*'
+import { Elysia } from 'elysia'
 
-const app = new Elysia()
+import { api } from './controllers/*'
+import { registerTimings } from './timings'
+import { log } from './utils'
+import { setupGracefulShutdown } from './utils/gracefulShutdown'
+
+export const app = new Elysia()
+  // @ts-expect-error not a promise but it's fine
+  .use(staticPlugin({
+    prefix: '/images',
+    alwaysStatic: true,
+  }))
   .use(swagger({
     path: '/docs',
     documentation: {
@@ -19,13 +29,15 @@ const app = new Elysia()
     },
   }))
   .use(api)
-  .onError(({ error }) => {
-    console.error(error)
-  })
-  .listen(3000)
+
+setupGracefulShutdown(app)
+
+registerTimings().then((handlers) => {
+  const hv = Object.values(handlers)
+  log(`Scheduled ${hv.length} jobs. ${hv.map(x => `${x.immediate ? '*' : ''}${x.job}:${x.timing}ms`).join(', ')}`)
+})
+
+app.listen(3000)
+log(`🦊 App is listening on http://${app.server?.hostname}:${app.server?.port}`)
 
 export type App = typeof app
-
-console.log(
-  `🦊 App is listening on http://${app.server?.hostname}:${app.server?.port}`,
-)

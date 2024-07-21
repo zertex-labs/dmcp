@@ -2,10 +2,8 @@ import 'dotenv/config'
 
 import { GatewayIntentBits } from 'discord.js'
 import { UsableClient } from './client'
-import { registerCommands } from './utils'
 import { registerEvents } from './utils/registerEvents'
-
-const { DISCORD_BOT_TOKEN } = process.env
+import { config } from './config'
 
 const client = new UsableClient({
   intents: [
@@ -16,10 +14,10 @@ const client = new UsableClient({
 })
 
 async function start(token: string | undefined) {
-  await registerCommands(client)
+  // await registerCommands(client)
   registerEvents(client)
 
   client.login(token)
 }
 
-start(DISCORD_BOT_TOKEN)
+start(config.env.DISCORD_BOT_TOKEN)

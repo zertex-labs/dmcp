@@ -1,7 +1,7 @@
 import {
-  availableFoods,
   availablePerks,
   availablePets,
+  crops,
   petUpgrades,
 } from '../types'
 
@@ -10,7 +10,7 @@ type DataEntry = (typeof dataEntries)[number]
 type Data = Readonly<any[]> | any[]
 
 const entryToKeys = {
-  food: availableFoods,
+  food: crops,
   perks: availablePerks,
   pets: availablePets,
   upgrades: petUpgrades,

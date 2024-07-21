@@ -1,9 +1,10 @@
 import fs from 'node:fs'
+
 import type { MaybePromise } from '../types'
 import {
-  availableFoods,
   availablePerks,
   availablePets,
+  crops,
   playerStats,
   rarities,
 } from '../types'
@@ -61,7 +62,7 @@ const actions: Record<Step, AnyFn[]> = {
     () =>
       syncSchema({
         type: 'food',
-        data: [...availableFoods],
+        data: [...crops],
         definition: 'food',
       }),
   ],
