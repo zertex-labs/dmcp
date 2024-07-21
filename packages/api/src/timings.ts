@@ -2,7 +2,6 @@ import { type Job, jobs } from '../jobs'
 import type { JobHandler } from '../jobs/schedule'
 import { scheduleTasks } from '../jobs/schedule'
 import db from './db'
-import { redis } from './redis'
 import { log } from './utils'
 
 export const jobHandlers: Partial<Record<Job, JobHandler>> = {}
@@ -19,7 +18,7 @@ export async function registerTimings() {
     timing,
   }))
 
-  const handlers = await scheduleTasks(parsedTimings, { db, redis })
+  const handlers = await scheduleTasks(parsedTimings, { db })
   handlers.forEach(({ job, handler }) => {
     jobHandlers[job] = handler
   })

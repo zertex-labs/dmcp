@@ -4,7 +4,7 @@ import type { MaybePromise } from 'shared'
 import { Logger, genericMakeLog } from 'shared'
 
 import type db from '../src/db'
-import type { redis } from '../src/redis'
+import { redis } from '../src/redis'
 import { type Job, jobs } from '.'
 
 export function isValidJob(arg: string): arg is Job {
@@ -20,10 +20,12 @@ export const logger = new Logger('jobs/jobLogs.log', {
 
 export const makeLog = genericMakeLog(logger)
 
-export interface Args { db: typeof db; redis: typeof redis }
-export interface AdditionalJobHandlerArgs { logger: typeof logger; makeLog: ReturnType<typeof genericMakeLog> }
+export interface Args { db: typeof db }
+export interface AdditionalJobHandlerArgs { logger: typeof logger; redis: typeof redis; makeLog: ReturnType<typeof genericMakeLog> }
 interface JobInput { job: Job; timing: number }
-export type JobHandler = (args: Args & AdditionalJobHandlerArgs) => MaybePromise<void>
+export interface JobArgs extends Args, AdditionalJobHandlerArgs{}
+
+export type JobHandler = (args: JobArgs) => MaybePromise<void>
 type JobWithHandler = JobInput & {
   immediate: boolean
   handler: JobHandler
@@ -47,7 +49,7 @@ export async function scheduleTasks(inputs: JobInput[], args: Args) {
       })
 
       const start = performance.now()
-      const res = await handler({ ...args, logger, makeLog })
+      const res = await handler({ ...args, redis, logger, makeLog })
 
       logger.log(`-${job} (${(performance.now() - start).toFixed(2)}ms)`, 'info', {
         overwriteColors: { info: 'red' },

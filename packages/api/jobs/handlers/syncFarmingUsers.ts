@@ -4,12 +4,12 @@ import type { FarmingUser, MadeLog } from 'shared'
 import { createRedisKey } from '../../src/redis'
 import type { SyncableFarmingUser } from '../../src/utils'
 import { error, useFarmingUsersBatcher } from '../../src/utils'
-import type { Args as HandlerArgs, JobHandler } from '../schedule'
+import type { JobArgs, JobHandler } from '../schedule'
 import type { Job } from '..'
 
 const batcher = useFarmingUsersBatcher()
 
-async function syncUser(redis: HandlerArgs['redis'], user: FarmingUser, log: MadeLog): Promise<{ ok: boolean }> {
+async function syncUser(redis: JobArgs['redis'], user: FarmingUser, log: MadeLog): Promise<{ ok: boolean }> {
   try {
     const key = createRedisKey('farmingUser', user.id)
     const jsonRes = await redis.json.set(key, '$', user)

@@ -23,7 +23,7 @@ export const usersController = new Elysia({
       Object.entries(ctx.query ?? {}).reduce((acc, [k, v]) => ({ ...acc, [k]: truthfulBooleanVariants.includes(v as any) }), {}),
     )),
     {
-      beforeHandle: requireApiSecret,
+      
       query: t.Object({
         ...getUserWithParamateres.reduce((acc, cur) => ({ ...acc, [cur]: t.Optional(t.Union(booleanVariants.map(x => t.Literal(x)))) }), {}),
       }),
@@ -35,7 +35,7 @@ export const usersController = new Elysia({
     '/create',
     async ctx => resolveServiceResponse(await createUser(ctx.body)),
     {
-      beforeHandle: requireApiSecret,
+      
       body: insertUserSchema,
       detail: { tags: ['Users'] },
     },
@@ -56,7 +56,7 @@ export const usersController = new Elysia({
       return response.success(createRes.data)
     },
     {
-      beforeHandle: requireApiSecret,
+      
       body: insertUserSchema,
       detail: { tags: ['Users'] },
     },
@@ -67,7 +67,7 @@ export const usersController = new Elysia({
     async ctx => resolveServiceResponse(await selectPet({ userId: ctx.params.userId, petId: ctx.body.petId })),
     {
       body: t.Object({ petId: t.String() }),
-      beforeHandle: requireApiSecret,
+      
       detail: { tags: ['Users'] },
     },
   )
@@ -85,5 +85,5 @@ export const usersController = new Elysia({
 
       return response.success(user.activePet)
     },
-    { beforeHandle: requireApiSecret, detail: { tags: ['Users'] } },
+    {  detail: { tags: ['Users'] } },
   )

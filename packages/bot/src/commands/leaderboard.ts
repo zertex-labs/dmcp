@@ -1,14 +1,14 @@
 import type { FarmingUser } from 'shared'
 import axios from 'axios'
 import { apiSecretHeaders } from 'src/utils/headers'
-import type { Command } from '../types'
+import type { Command,ApiResponse } from '../types'
 
 export default {
   name: 'leaderboard',
   description: 'leaderboard',
 
   run: async ({ client, interaction }) => {
-    const leaderboardReq = await axios.get<FarmingUser[]>('http://localhost:3000/api/farming/leaderboard', {
+    const leaderboardReq = await axios.get<ApiResponse<FarmingUser[]>>('http://localhost:3000/api/farming/leaderboard', {
       headers: apiSecretHeaders,
       validateStatus: s => s < 500,
     })
@@ -22,7 +22,7 @@ export default {
       return
     }
 
-    const leaderboard = leaderboardReq.data
+    const {data: leaderboard} = leaderboardReq.data
     const username = (id: string) => client.users.cache.get(id)?.username ?? 'Unknown'
     const leaderboardText = leaderboard.map((user, i) => `${i + 1}. **${username(user.id)}** - ${user.totalWeight}p. (${user.total} items)`).join('\n')
 

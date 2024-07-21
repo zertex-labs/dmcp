@@ -4,8 +4,9 @@ import { redis } from '../redis'
 import { jobHandlers } from '../timings'
 import { logger, makeLog } from '../../jobs/schedule'
 import { useFarmingUsersBatcher } from './useFarmingUsersBatcher'
+import { App } from '..'
 
-export function setupGracefulShutdown(app: Elysia) {
+export function setupGracefulShutdown(app: App) {
   const signals = ['SIGINT', 'SIGTERM', 'SIGKILL', 'beforeExit'] as const
 
   signals.forEach(signal => process.on(signal, app.stop))

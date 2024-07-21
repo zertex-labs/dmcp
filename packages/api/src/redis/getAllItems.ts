@@ -18,7 +18,7 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
   do {
     const result = await redis.scan(cursor, { match })
 
-    cursor = result[0]
+    cursor = Number(result[0])
     const keys = result[1]
 
     console.log(keys)
@@ -35,7 +35,7 @@ export async function getAllItems<Keys extends PropertyKey, Stored>(
     }
   } while (cursor !== 0)
 
-  console.log(out)
+  console.log('out',out)
 
   return out
 }

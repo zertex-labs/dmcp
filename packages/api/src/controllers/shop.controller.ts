@@ -17,7 +17,6 @@ export const shopController = new Elysia({
 
     return response.success(shop)
   }, {
-    beforeHandle: requireApiSecret,
     detail: { tags: ['Shop'], description: 'Get shop items for a specific date' },
   })
   .post('/purchase/:date', async ({ params, body }) => {
@@ -41,7 +40,6 @@ export const shopController = new Elysia({
       user,
     })
   }, {
-    beforeHandle: requireApiSecret,
     detail: { tags: ['Shop'], description: 'Purchase an item from the shop' },
     body: t.Object({
       itemIndex: t.Number({ minimum: 0 }),

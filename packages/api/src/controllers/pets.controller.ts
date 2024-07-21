@@ -32,13 +32,13 @@ export const petsController = new Elysia({
 
       return response.success(user.pets ?? [])
     },
-    { beforeHandle: requireApiSecret, detail: { tags: ['Pets'] } },
+    {  detail: { tags: ['Pets'] } },
   )
   .get(
     '/:petId/',
     async ctx => resolveServiceResponse(await getPet({ uuid: ctx.params.petId, ownerId: ctx.body.ownerId })),
     {
-      beforeHandle: requireApiSecret,
+      
       body: t.Object({
         ownerId: t.Optional(t.String()),
       }),
@@ -71,7 +71,6 @@ export const petsController = new Elysia({
       }
     },
     {
-      beforeHandle: requireApiSecret,
       body: t.Object({
         type: t.Union(availablePets.map(x => t.Literal(x))),
         ownerId: t.String(),

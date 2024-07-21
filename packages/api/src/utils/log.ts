@@ -1,5 +1,4 @@
 import { Logger, genericMakeLog } from 'shared'
-import { pgClient } from '../db'
 
 export const systemLogger = new Logger('system.log')
 
@@ -18,11 +17,11 @@ export function error(err: string | Error, additionalInfo?: string) {
 
     // -- Error handling --
     console.log(err.message)
-    if (err.message === 'Client has encountered a connection error and is not queryable') {
-      pgClient.end().then(async () => {
-        await pgClient.connect()
-        log('Reconnected to database', 'warn')
-      })
-    }
+    // if (err.message === 'Client has encountered a connection error and is not queryable') {
+    //   pgClient.end().then(async () => {
+    //     await pgClient.connect()
+    //     log('Reconnected to database', 'warn')
+    //   })
+    // }
   }
 }

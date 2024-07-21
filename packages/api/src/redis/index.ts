@@ -1,4 +1,4 @@
-import { Redis } from '@upstash/redis/nodejs'
+import { Redis } from '@upstash/redis'
 
 export const redis = Redis.fromEnv()
 

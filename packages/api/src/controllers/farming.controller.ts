@@ -52,12 +52,10 @@ export const farmingController = new Elysia({
 },
 )
   .use(ctx)
-
   .get('/leaderboard', async () => {
     const cachedUsers = Object.values(await getAllItems<string, FarmingUser>({ key: 'farmingUser' }))
     return response.success([...batcher.all(), ...cachedUsers].sort((a, b) => b.totalWeight - a.totalWeight).slice(0, 10))
   }, {
-    beforeHandle: requireApiSecret,
     detail: { tags: ['Farming'], description: 'Get top 10 farming users by total' },
   })
 
@@ -67,7 +65,6 @@ export const farmingController = new Elysia({
     if (!fuser) return response.service.error('User not found', 404)
     return response.success(fuser)
   }, {
-    beforeHandle: requireApiSecret,
     detail: { tags: ['Farming'], description: 'Get farming user by discord id' },
   })
 

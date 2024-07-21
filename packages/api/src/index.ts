@@ -9,7 +9,6 @@ import { log } from './utils'
 import { setupGracefulShutdown } from './utils/gracefulShutdown'
 
 export const app = new Elysia()
-  // @ts-expect-error not a promise but it's fine
   .use(staticPlugin({
     prefix: '/images',
     alwaysStatic: true,
