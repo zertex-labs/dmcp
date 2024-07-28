@@ -3,16 +3,14 @@
   "type": "module",
   "private": true,
   "main": "main.ts",
-  "scripts": {
-    "syncData": "bun run scripts/syncData.ts",
-    "validateData": "bun run scripts/validateData.ts"
+  "dependencies": {
+    "winston": "^3.13.1",
+    "colors": "^1.4.0"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+  "devDependencies": {
+    "tsconfig": "workspace:*"
   },
   "include": [
-    "composables/*.ts",
-    "data/*",
     "types/*.ts",
     "utils/*.ts"
   ]

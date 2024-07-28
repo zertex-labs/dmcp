@@ -1,8 +1,9 @@
 import winston from 'winston'
 import type { Color as ColorType } from 'colors'
 import colors from 'colors'
-import type { KeysMatching } from 'shared'
-import { capitalize } from 'shared'
+
+import { capitalize } from './string'
+import { KeysMatching } from '../types'
 
 function formattedDate(d: Date) {
   return `${d.getDate()}:${d.getMonth()}:${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`

@@ -1,4 +1,3 @@
-import { data } from '..'
 import type { Rarity, RarityOverwrite } from '.'
 
 export const crops = [
@@ -17,11 +16,6 @@ export interface Food {
   maxItems: number
   weight: number
   rarityOverwrites: Record<Rarity, RarityOverwrite[]>
-}
-
-export function calculateCropPrice(cropName: Crop, amount: number) {
-  const cropData = data.crops[cropName]
-  return cropData.price * amount
 }
 
 export const validSellCropInputs = [...crops, 'ALL'] as const

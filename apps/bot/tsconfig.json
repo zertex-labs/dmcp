@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "resolveJsonModule": true,
-    "outDir": "dist"
+    "skipLibCheck": true
   },
-  "files": ["index.ts"],
-  "include": ["types", "utils"]
+  "files": ["src/main.ts"],
+  "include": ["src/**/*", "src/**/*.json", "scripts/**/*",]
 }
